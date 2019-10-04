@@ -23,28 +23,22 @@ public class JournalpostFactory {
     @Autowired
     private TilsagnsbrevTilXml tilsagnsbrevTilXml;
 
-    public Journalpost konverterTilJournalpost(Tilsagnsbrev tilsagnsbrev) {
+    public Journalpost konverterTilJournalpost(Tilsagnsbrev tilsagnsbrev, final byte[] pdfBytes) {
 
         Bruker bruker = new Bruker();
         bruker.setId(tilsagnsbrev.getOrgNummer());
         Journalpost journalpost = new Journalpost();
         journalpost.setBruker(bruker);
 
-        final byte[] dokumentPdfAsBytes = tilsagnsbrevTilPdfBytes(tilsagnsbrev);
         final String dokumentXml = tilsagnsbrevTilXml.genererXml(tilsagnsbrev);
 
         Dokument dokument = new Dokument();
         dokument.setDokumentVarianter(Arrays.asList(
                 new DokumentVariant(FILTYPE_XML, VARIANFORMAT_XML ,encodeToBase64(dokumentXml.getBytes())),
-                new DokumentVariant(FILTYPE_PDF, VARIANFORMAT_PDF, encodeToBase64(dokumentPdfAsBytes)))
+                new DokumentVariant(FILTYPE_PDF, VARIANFORMAT_PDF, encodeToBase64(pdfBytes)))
         );
         journalpost.setDokumenter(Collections.singletonList(dokument));
         return journalpost;
-    }
-
-    private byte[] tilsagnsbrevTilPdfBytes(Tilsagnsbrev tilsagnsbrev) {
-        //TODO PDF herfra
-        return null;
     }
 
     private String encodeToBase64(final byte[] dokumentBytes) {
