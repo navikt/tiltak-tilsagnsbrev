@@ -42,7 +42,6 @@
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -57,65 +56,11 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.10</version>
 		</dependency>
-
-		<!-- Pdf -->
 		<dependency>
-			<groupId>com.openhtmltopdf</groupId>
-			<artifactId>openhtmltopdf-core</artifactId>
-			<version>${openhtml.version}</version>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20190722</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.openhtmltopdf</groupId>
-			<artifactId>openhtmltopdf-pdfbox</artifactId>
-			<version>${openhtml.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.openhtmltopdf</groupId>
-			<artifactId>openhtmltopdf-svg-support</artifactId>
-			<version>${openhtml.version}</version>
-		</dependency>
-
-		<!-- Handlebars -->
-		<dependency>
-			<groupId>com.github.jknack</groupId>
-			<artifactId>handlebars</artifactId>
-			<version>${handlebars.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.jknack</groupId>
-			<artifactId>handlebars-jackson2</artifactId>
-			<version>${handlebars.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>1.11.3</version>
-		</dependency>
-
-		<!-- Kotlin
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.ktor</groupId>
-			<artifactId>ktor-server-netty</artifactId>
-			<version>1.1.3</version>
-			<scope>test</scope>
-		</dependency>
--->
-
-
 	</dependencies>
 
 	<build>

@@ -1,0 +1,97 @@
+
+{
+  "table": "ORCL.ARENA_TAG.TAG_TILSAGNSBREV",
+  "op_type": "I",
+  "op_ts": "2019-10-04 10:24:34.000327",
+  "current_ts": "2019-10-04 10:24:34.637000",
+  "pos": "00000000020000003830",
+  "primary_keys": [
+    "TILSAGNSBREV_ID"
+  ],
+  "tokens": {
+    "txid": "9.32.6726",
+    "csn": "13906131"
+  },
+  "before": null,
+  "after": {
+    "TILSAGNSBREV_ID": 776,
+    "TILSAGN_ID": 182469,
+
+    "TILSAGN_DATA": {
+      "tilsagnNummer": {
+        "aar": 2019,
+        "loepenrSak": 319383,
+        "loepenrTilsagn": 1
+      },
+      "tilsagnDato": "2019-09-25",
+      "periode": {
+        "fraDato": "2019-09-14",
+        "tilDato": "2019-12-31"
+      },
+      "tiltakKode": "ENKFAGYRKE",
+      "tiltakNavn": "Enkeltplass Fag- og yrkesopplæring VGS og høyere yrkesfaglig utdanning",
+      "administrasjonKode": "IND",
+      "tiltakArrangor": {
+        "arbgiverNavn": "TREIDER KOMPETANSE AS",
+        "landKode": "NO",
+        "postAdresse": "Nedre Vollgate 8",
+        "postNummer": "0158",
+        "postSted": "OSLO",
+        "orgNummerMorselskap": 920053106,
+        "orgNummer": 920130283,
+        "kontoNummer": "32600596984",
+        "maalform": "NO"
+      },
+      "totaltTilskuddbelop": 59300,
+      "valutaKode": "NOK",
+      "tilskuddListe": [
+        {
+          "tilskuddType": "Drift",
+          "tilskuddBelop": 48000
+        },
+        {
+          "tilskuddType": "Drift",
+          "tilskuddBelop": 1800
+        },
+        {
+          "tilskuddType": "Drift",
+          "tilskuddBelop": 9500
+        }
+      ],
+      "deltaker": {
+        "fodselsnr": "0101011990",
+        "fornavn": "OLA",
+        "etternavn": "NORDMANN",
+        "landKode": "NO",
+        "postAdresse": "Veien 1",
+        "postNummer": "2013",
+        "postSted": "SKJETTEN"
+      },
+      "antallDeltakere": 1,
+      "antallTimeverk": 120,
+      "navEnhet": {
+        "navKontor": "0231",
+        "navKontorNavn": "NAV Skedsmo",
+        "postAdresse": "Postboks 294",
+        "postNummer": "2001",
+        "postSted": "LILLESTRØM",
+        "telefon": "55553333",
+        "faks": null
+      },
+      "beslutter": {
+        "fornavn": "Bjarne",
+        "etternavn": "Beslutter"
+      },
+      "saksbehandler": {
+        "fornavn": "Stine",
+        "etternavn": "Saksbehandler"
+      },
+      "kommentar": "Ingen"
+    },
+
+    "REG_DATO": "2019-10-04 10:24:34",
+    "REG_USER": "CG_TR2",
+    "MOD_DATO": "2019-10-04 10:24:34",
+    "MOD_USER": "CG_TR2"
+  }
+}

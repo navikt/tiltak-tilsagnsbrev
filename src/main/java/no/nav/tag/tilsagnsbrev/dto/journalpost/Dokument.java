@@ -1,10 +1,10 @@
-package no.nav.tag.tilsagnsbrev.domene.journalpost;
+package no.nav.tag.tilsagnsbrev.dto.journalpost;
 
 import lombok.Data;
 
 import java.util.List;
 
-import static no.nav.tag.tilsagnsbrev.domene.journalpost.Journalpost.TITTEL_MIDLERTIDIG;
+import static no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost.TITTEL_MIDLERTIDIG;
 
 @Data
 public class Dokument {
