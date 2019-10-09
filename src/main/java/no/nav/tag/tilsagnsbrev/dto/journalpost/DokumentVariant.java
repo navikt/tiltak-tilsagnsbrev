@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev.domene.journalpost;
+package no.nav.tag.tilsagnsbrev.dto.journalpost;
 
 import lombok.Data;
 
