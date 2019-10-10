@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @ActiveProfiles("dev")
 @DirtiesContext
-public class TilsagnsbrevProsessApplicationTests {
+public class TilsagnsbrevApplicationTests {
 
 	@Test
 	public void contextLoads() {

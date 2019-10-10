@@ -2,7 +2,7 @@ server.servlet.context-path: /tilsagnsbrev
 
 spring:
   kafka:
-    bootstrap-servers: ${spring.embedded.kafka.brokers}
+    bootstrap-servers:
     consumer:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer

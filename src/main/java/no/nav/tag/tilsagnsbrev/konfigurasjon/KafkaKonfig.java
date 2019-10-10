@@ -10,7 +10,7 @@ import org.springframework.kafka.test.EmbeddedKafkaBroker;
 @Configuration
 @Profile("dev")
 @Slf4j
-public class KafkaConfig {
+public class KafkaKonfig {
 
     @Autowired
     public EmbeddedKafkaBroker kafkaBroker() {
