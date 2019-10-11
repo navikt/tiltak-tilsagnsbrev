@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>no.nav.tag</groupId>
-	<artifactId>tag-tilsagnsbrev</artifactId>
+	<artifactId>tiltak-tilsagnsbrev</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>tag-tilsagnsbrev</name>
+	<name>tiltak-tilsagnsbrev</name>
 	<description>Oppretter tilsagnsbrev</description>
 
 	<properties>
