@@ -1,8 +1,8 @@
-server.servlet.context-path: /tag-tilsagnsbrev
+server.servlet.context-path: /tiltak-tilsagnsbrev
 
 spring:
   application:
-    name: tag-tilsagnsbrev
+    name: tiltak-tilsagnsbrev
     main:
       banner-mode: "off"
 
