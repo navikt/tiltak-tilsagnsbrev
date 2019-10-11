@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Pusher Docker image
           command: |
-            echo $DOCKER_PASS docker password | $DOCKER_USER docker login
+            echo $DOCKER_PASSWORD docker password | $DOCKER_LOGIN docker login
             docker push "navikt/tilsagnsbrev:$CIRCLE_SHA1"
             echo "Docker image: $CIRCLE_SHA1"
   deploy-til-dev:
