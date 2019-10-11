@@ -1,4 +1,4 @@
 {
-  "ingress": "https://arbeidsgiver.nais.preprod.local/tilsagnsbrev/",
+  "ingress": "https://arbeidsgiver.nais.preprod.local/tag-tilsagnsbrev/",
   "spring-profil": "preprod"
 }
