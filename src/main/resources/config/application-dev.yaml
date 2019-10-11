@@ -1,20 +1,2 @@
-spring:
-  kafka:
-    admin:
-      fail-fast: true
-    consumer:
-      bootstrap-servers: ${spring.embedded.kafka.brokers}
-    producer:
-      bootstrap-servers: ${spring.embedded.kafka.brokers}
 
-  main:
-    banner-mode: "console"
-
-tilsagnsbrev:
-  joark:
-    uri: http://localhost:8090
-  sts:
-    uri: http://localhost:8090
-    bruker: ${SRVBRUKER}
-    passord: ${SRVPASSORD}
 
