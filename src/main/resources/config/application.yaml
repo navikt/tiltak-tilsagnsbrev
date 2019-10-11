@@ -1,6 +1,11 @@
 server.servlet.context-path: /tilsagnsbrev
 
 spring:
+  application:
+    name: tilsagnsbrev
+    main:
+      banner-mode: "off"
+
   kafka:
     bootstrap-servers:
     consumer:
@@ -8,7 +13,7 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
-    main:
-      banner-mode: "off"
+
+
 
 
