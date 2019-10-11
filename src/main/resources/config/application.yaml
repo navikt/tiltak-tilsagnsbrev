@@ -1,7 +1,7 @@
-server.servlet.context-path: /tilsagnsbrev
+server.servlet.context-path: /tag-tilsagnsbrev
 
 spring:
   application:
-    name: tilsagnsbrev
+    name: tag-tilsagnsbrev
 
 
