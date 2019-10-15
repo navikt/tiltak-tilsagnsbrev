@@ -17,12 +17,10 @@ spec:
   readiness:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
   vault:
-    enabled: true
+    enabled: false
   env:
     name: SPRING_PROFILES_ACTIVE
     value: {{spring-profil}}
   webproxy: true
   prometheus:
     enabled: false
-
-
