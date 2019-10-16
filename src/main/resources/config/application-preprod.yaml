@@ -2,20 +2,18 @@
 spring:
   kafka:
     bootstrap-servers: d26apvl00159.test.local:8443,d26apvl00160.test.local:8443,d26apvl00161.test.local:8443
-#    consumer:
-#      ssl:
-#        protocol: SASL_SSL
-#        trust-store-location: ${javax.net.ssl.trustStore}
-#        trust-store-password: ${javax.net.ssl.trustStorePassword}
-#      properties:
-#        #security.protocol: SASL_SSL
-#        sasl:
-#          mechanism: PLAIN
-#          jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tiltak.tilsagnsbrev.serviceuser}";
-#        ssl.truststore:
-#          location: ${javax.net.ssl.trustStore}
-#          password: ${javax.net.ssl.trustStorePassword}
-
+    client-id: tiltak-tilsagnsbrev
+      properties:
+        security.protocol: SASL_SSL
+        sasl:
+          mechanism: PLAIN
+          jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tiltak.tilsagnsbrev.serviceuser}" password="${tiltak.tilsagnsbrev.serviceuser.password}";
+        ssl.truststore:
+          location: ${javax.net.ssl.trustStore}
+          password: ${javax.net.ssl.trustStorePassword}
+      producer:
+        key-serializer: org.apache.kafka.common.serialization.StringSerializer
+        value-serializer: org.apache.kafka.common.serialization.StringSerializer
 tilsagnsbrev:
   joark:
     uri: http://localhost:8090
