@@ -5,3 +5,6 @@ spring:
     name: tiltak-tilsagnsbrev
 
 
+
+  jms:
+    jndi-name:
