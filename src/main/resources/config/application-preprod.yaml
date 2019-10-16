@@ -11,9 +11,11 @@ spring:
         ssl.truststore:
           location: ${javax.net.ssl.trustStore}
           password: ${javax.net.ssl.trustStorePassword}
-      producer:
-        key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+
 tilsagnsbrev:
   joark:
     uri: http://localhost:8090
@@ -21,6 +23,3 @@ tilsagnsbrev:
     uri: http://localhost:8090
     bruker: ${SRVBRUKER}
     passord: ${SRVPASSORD}
-
-
-#password="${tiltak.tilsagnsbrev.serviceuser.password}"
