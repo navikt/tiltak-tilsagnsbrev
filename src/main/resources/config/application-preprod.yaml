@@ -11,7 +11,7 @@ spring:
         #security.protocol: SASL_SSL
         sasl:
           mechanism: PLAIN
-          jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tiltak.tilsagnsbrev.serviceuser}" password="${tiltak.tilsagnsbrev.serviceuser.password}";
+          jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tiltak.tilsagnsbrev.serviceuser}";
 #        ssl.truststore:
 #          location: ${javax.net.ssl.trustStore}
 #          password: ${javax.net.ssl.trustStorePassword}
@@ -28,3 +28,5 @@ tilsagnsbrev:
     bruker: ${SRVBRUKER}
     passord: ${SRVPASSORD}
 
+
+#password="${tiltak.tilsagnsbrev.serviceuser.password}"
