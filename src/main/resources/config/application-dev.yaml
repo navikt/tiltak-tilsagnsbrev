@@ -1,2 +1,27 @@
+server.servlet.context-path: /tiltak-tilsagnsbrev
+
+spring:
+  application:
+    name: tiltak-tilsagnsbrev
 
 
+
+  jms:
+    jndi-name:
+    template:
+      default-destination: # Default destination to use on send and receive operations that do not have a destination parameter.
+      delivery-delay: # Delivery delay to use for send calls.
+      delivery-mode: # Delivery mode. Enables QoS (Quality of Service) when set.
+      priority: # Priority of a message when sending. Enables QoS (Quality of Service) when set.
+      qos-enabled: # Whether to enable explicit QoS (Quality of Service) when sending a message.
+      receive-timeout: # Timeout to use for receive calls.
+      time-to-live:
+    cache:
+      consumers: # Whether to cache message consumers.
+      enabled: # Whether to cache sessions.
+      producers: # Whether to cache message producers.
+      session-cache-size: # Size of the session cache (per JMS Session type).
+
+
+
+      # QA:Q1_EMOTTAK:ALTUT_INN:
