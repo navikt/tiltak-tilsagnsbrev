@@ -7,6 +7,7 @@ spring:
       security.protocol: SASL_SSL
       sasl:
         mechanism: PLAIN
+        #TODO Få logget inne med den vault stien i basta
         jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tiltak.tilsagnsbrev.serviceuser.username}" password="${tiltak.tilsagnsbrev.serviceuser.passord}";
       ssl.truststore:
         location: ${javax.net.ssl.trustStore}
