@@ -7,7 +7,7 @@ spring:
       security.protocol: SASL_SSL
       sasl:
         mechanism: PLAIN
-        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tiltak.tilsagnsbrev.arenauser}" password="${tiltak.tilsagnsbrev.arenauser.password}";
+        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tiltak.tilsagnsbrev.arena.bruker}" password="${tiltak.tilsagnsbrev.arena.passord}";
       ssl.truststore:
         location: ${javax.net.ssl.trustStore}
         password: ${javax.net.ssl.trustStorePassword}
