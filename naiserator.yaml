@@ -25,7 +25,6 @@ spec:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
   vault:
     enabled: true
-    paths-kvpath: /kv/environment/fss/tiltak-tilsagnsbrev/default
   env:
   - name: SPRING_PROFILES_ACTIVE
     value: {{spring-profil}}
