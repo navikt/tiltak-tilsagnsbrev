@@ -7,4 +7,9 @@ spring:
   main:
     banner-mode: "console"
 
+tilsagnsbrev:
+  integrasjon:
+    pdfuri:
+
+
 

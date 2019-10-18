@@ -2,6 +2,7 @@ package no.nav.tag.tilsagnsbrev;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
+import no.nav.tag.tilsagnsbrev.integrasjon.PdfService;
 import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,14 @@ public class Tilsagnsbehandler {
     @Autowired
     TilsagnJsonMapper tilsagnJsonMapper;
 
+    @Autowired
+    PdfService pdfService;
+
     public void behandleTilsagn(String tilsagnJson) {
             final Tilsagn tilsagn = tilsagnJsonMapper.jsonTilTilsagn(tilsagnJson);
             log.info("Behandler tilsagn {}", tilsagn.getTilsagnNummer().getLoepenrTilsagn());
+
+            final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagn);
 
     }
 }
