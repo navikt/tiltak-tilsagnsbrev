@@ -25,6 +25,13 @@ spec:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
   vault:
     enabled: true
+    paths:
+      - kvPath: "serviceuser/data/dev/srvtiltak-tilsagns"
+        mountPath: "/secrets/serviceuser/"
+# production:
+#      - kvPath: "serviceuser/data/dev/srvtiltak-tilsagns"
+#        mountPath: "/secrets/serviceuser/"
+
   env:
   - name: SPRING_PROFILES_ACTIVE
     value: {{spring-profil}}
