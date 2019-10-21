@@ -27,10 +27,10 @@ spec:
     enabled: true
     paths:
       - kvPath: "serviceuser/data/dev/srvtiltak-tilsagns"
-        mountPath: "/secrets/serviceuser/"
+        mountPath: "/secrets/serviceuser/srvtiltak-tilsagns/"
 # production:
-#      - kvPath: "serviceuser/data/dev/srvtiltak-tilsagns"
-#        mountPath: "/secrets/serviceuser/"
+#      - kvPath: "serviceuser/data/prod/srvtiltak-tilsagns"
+#        mountPath: "/secrets/serviceuser/srvtiltak-tilsagns/"
 
   env:
   - name: SPRING_PROFILES_ACTIVE
