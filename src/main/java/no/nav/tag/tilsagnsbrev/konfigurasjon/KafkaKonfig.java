@@ -20,8 +20,8 @@ import java.util.Map;
 @Slf4j
 public class KafkaKonfig {
 
-    @Bean
-    public KafkaKonfig secret(){
+
+    public KafkaKonfig(){
         Map<String, String> env = System.getenv();
 
 
@@ -34,11 +34,6 @@ public class KafkaKonfig {
         if(StringUtils.isEmpty(srvPwd)){
             log.error("srv-passord mangler");
         }
-
-
-        System.setProperty("tiltak.tilsagnsbrev.serviceuser.bruker", srvUser);
-        System.setProperty("tiltak.tilsagnsbrev.serviceuser.passord", srvPwd);
-        return new KafkaKonfig();
     }
 
 }
