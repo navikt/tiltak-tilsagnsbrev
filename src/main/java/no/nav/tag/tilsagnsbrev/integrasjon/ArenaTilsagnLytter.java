@@ -26,7 +26,7 @@ public class ArenaTilsagnLytter {
     @KafkaListener(groupId = group, topics = topic)
     public void lyttPaArenaTilsagn(ConsumerRecord<String, String> tilsagnsMelding){
 
-        log.info("Henter melding med id {}", tilsagnsMelding.key());
+        log.info("Henter melding {}", tilsagnsMelding.value()); //TODO ta vekk før prod
 
         try {
             tilsagnsbehandler.behandleTilsagn(tilsagnsMelding.value());
