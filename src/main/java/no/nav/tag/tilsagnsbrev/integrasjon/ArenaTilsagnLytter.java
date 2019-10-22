@@ -18,11 +18,12 @@ public class ArenaTilsagnLytter {
     @Autowired
     private Tilsagnsbehandler tilsagnsbehandler;
 
+    public static final String group = "tiltak-tilsagnsbrev";
     public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
 
     private CountDownLatch latch; //For testing
 
-    @KafkaListener(topics = topic)
+    @KafkaListener(groupId = group, topics = topic)
     public void lyttPaArenaTilsagn(ConsumerRecord<String, String> tilsagnsMelding){
 
         log.info("Henter melding med id {}", tilsagnsMelding.key());
