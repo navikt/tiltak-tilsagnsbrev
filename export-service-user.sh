@@ -15,7 +15,7 @@ if [ -z "$KAFKA_USERNAME" ] ;
 then
     printf "KAFKA_USERNAME er ikke satt \n";
 else
-    printf "KAFKA_USERNAME er satt \n" ;
+    printf "KAFKA_USERNAME er ${KAFKA_USERNAME} \n" ;
 fi
 
 if [ -z "$KAFKA_PASSWORD" ] ;

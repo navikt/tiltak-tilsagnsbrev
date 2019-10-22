@@ -22,7 +22,7 @@ public class ArenaTilsagnLytter {
 
     private CountDownLatch latch; //For testing
 
-    @KafkaListener(topics = topic, groupId = "tag-tiltak")
+    @KafkaListener(topics = topic)
     public void lyttPaArenaTilsagn(ConsumerRecord<String, String> tilsagnsMelding){
 
         log.info("Henter melding med id {}", tilsagnsMelding.key());
