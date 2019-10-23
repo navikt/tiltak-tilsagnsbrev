@@ -9,7 +9,7 @@ spring:
       security.protocol: SASL_SSL
       sasl:
         mechanism: PLAIN
-        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${KAFKA_USERNAME}" password="${KAFKA_PASSWORD}";
+        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tilsagnsbrev_srvuser}" password="${tilsagnsbrev_srvpwd}";
       ssl.truststore:
         location: ${javax.net.ssl.trustStore}
         password: ${javax.net.ssl.trustStorePassword}
