@@ -3,5 +3,19 @@ server.servlet.context-path: /tiltak-tilsagnsbrev
 spring:
   application:
     name: tiltak-tilsagnsbrev
+    main:
+      banner-mode: "off"
+
+  kafka:
+    bootstrap-servers:
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+tilsagnsbrev:
+  integrasjon:
+    pdfurl: url
+
 
 

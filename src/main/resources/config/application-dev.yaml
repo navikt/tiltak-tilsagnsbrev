@@ -1,2 +1,15 @@
 
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: ${spring.embedded.kafka.brokers}
+
+  main:
+    banner-mode: "console"
+
+tilsagnsbrev:
+  integrasjon:
+    pdfurl: http://localhost:5913
+
+
 

@@ -14,18 +14,20 @@ spec:
     max: 1
   liveness:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
-    initialDelay: 30
   readiness:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
-    initialDelay: 30
   vault:
     enabled: true
+    paths:
+      - kvPath: "serviceuser/data/test/srvtiltak-tilsagns"
+        mountPath: "/secrets/serviceuser/srvtiltak-tilsagns/"
+# production:
+#      - kvPath: "serviceuser/data/prod/srvtiltak-tilsagns"
+#        mountPath: "/secrets/serviceuser/srvtiltak-tilsagns/"
+
   env:
-    - name: SPRING_PROFILES_ACTIVE
-      value: {{spring-profil}}
+  - name: SPRING_PROFILES_ACTIVE
+    value: {{spring-profil}}
   webproxy: true
   prometheus:
     enabled: false
-    path: /tiltak-tilsagnsbrev/internal/actuator/prometheus
-
-
