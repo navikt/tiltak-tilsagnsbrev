@@ -10,6 +10,18 @@ then
     export tilsagnsbrev_srvpwd=$(cat /secrets/serviceuser/srvtiltak-tilsagns/password)
 fi
 
+if [ -z "$tilsagnsbrev_srvuser" ] ;
+then
+    printf "tilsagnsbrev_srvuser er ikke satt \n";
+else
+    printf "tilsagnsbrev_srvuser er ${tilsagnsbrev_srvuser} \n" ;
+fi
 
+if [ -z "$tilsagnsbrev_srvpwd" ] ;
+then
+    printf "tilsagnsbrev_srvpwd er ikke satt \n";
+else
+    printf "tilsagnsbrev_srvpwd er satt \n" ;
+fi
 
 
