@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -28,8 +29,8 @@ public class  Tilsagn {
     private Periode periode;
     
     private Person saksbehandler;
-    
-    private String tilsagnDato;
+
+    private LocalDate tilsagnDato;
     
     private TilsagnNummer tilsagnNummer;
     

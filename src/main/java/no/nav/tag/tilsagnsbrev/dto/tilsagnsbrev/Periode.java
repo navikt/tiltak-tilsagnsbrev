@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Periode {
 
-    private String fraDato;
-    private String tilDato;
+    private LocalDate fraDato;
+    private LocalDate tilDato;
 }

@@ -1,29 +1,33 @@
 package no.nav.tag.tilsagnsbrev.mapping;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import java.time.LocalDate;
 
 @Slf4j
 @Component
 public class TilsagnJsonMapper {
 
-    static final ObjectMapper objectMapper = new ObjectMapper();
-
     private static final String JSON_ELEM_AFTER = "after";
     private static final String JSON_ELEM_TILSAGN = "TILSAGN_DATA";
+    private static final String JSON_DATOFORMAT = "dd MMM YYYY";
 
-    public Tilsagn jsonTilTilsagn(String json) {
-        JSONObject jsonObj = new JSONObject(json).getJSONObject(JSON_ELEM_AFTER).getJSONObject(JSON_ELEM_TILSAGN);
-        try {
-            return objectMapper.readValue(jsonObj.toString(), Tilsagn.class);
-        } catch (IOException e) {
-            log.error("Feil v/mapping fra arena-json: {}", e.getMessage());
-            throw new RuntimeException(e);
-        }
+    public String tilsagnTilJson(Tilsagn tilsagn) {
+        Gson gson = new GsonBuilder().setDateFormat(JSON_DATOFORMAT).create();
+        return gson.toJson(tilsagn);
     }
+
+    public Tilsagn goldengateJsonTilTilsagn(String goldengateJson) {
+        JsonObject jsonObject = JsonParser.parseString(goldengateJson).getAsJsonObject();
+        JsonElement tilsagnJsonElement = jsonObject.getAsJsonObject(JSON_ELEM_AFTER).getAsJsonObject(JSON_ELEM_TILSAGN);
+
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, type, jsonDeserializationContext) ->
+              LocalDate.parse(json.getAsJsonPrimitive().getAsString())).create();
+
+        return gson.fromJson(tilsagnJsonElement, Tilsagn.class);
+    }
+
 }

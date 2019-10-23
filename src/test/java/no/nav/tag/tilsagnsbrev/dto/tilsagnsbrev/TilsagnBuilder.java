@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class TilsagnBuilder {
@@ -12,7 +13,7 @@ public class TilsagnBuilder {
     private NavEnhet navEnhet;
     private Periode periode;
     private Person saksbehandler;
-    private String tilsagnDato;
+    private LocalDate tilsagnDato;
     private TilsagnNummer tilsagnNummer;
     private List<Tilskudd> tilskuddListe;
     private TiltakArrangor tiltakArrangor;
@@ -66,7 +67,7 @@ public class TilsagnBuilder {
         return this;
     }
 
-    public TilsagnBuilder medTilsagnDato(String tilsagnDato) {
+    public TilsagnBuilder medTilsagnDato(LocalDate tilsagnDato) {
         this.tilsagnDato = tilsagnDato;
         return this;
     }

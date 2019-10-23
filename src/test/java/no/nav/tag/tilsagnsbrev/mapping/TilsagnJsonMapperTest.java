@@ -4,6 +4,7 @@ import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import org.junit.Test;
 
+import static no.nav.tag.tilsagnsbrev.Testdata.*;
 import static org.junit.Assert.*;
 
 public class TilsagnJsonMapperTest {
@@ -11,22 +12,22 @@ public class TilsagnJsonMapperTest {
     TilsagnJsonMapper tilsagnJsonMapper = new TilsagnJsonMapper();
 
     @Test
-    public void mapperTilsagnTilJson() {
-        String requestJson = Testdata.hentJsonFil();
+    public void mapperGoldengateJsonTilTilsagn() {
 
-        Tilsagn tilsagn = tilsagnJsonMapper.jsonTilTilsagn(requestJson);
+        String requestJson = Testdata.hentJsonFil();
+        Tilsagn tilsagn = tilsagnJsonMapper.goldengateJsonTilTilsagn(requestJson);
 
         assertEquals("tilsagnNummer.aar", "2019", tilsagn.getTilsagnNummer().getAar());
         assertEquals("tilsagnNummer.loepenrSak", "319383", tilsagn.getTilsagnNummer().getLoepenrSak());
         assertEquals("tilsagnNummer.loepenrTilsagn", "1", tilsagn.getTilsagnNummer().getLoepenrTilsagn());
 
-        assertEquals("tilsagnDato", "2019-09-25", tilsagn.getTilsagnDato());
+        assertEquals("tilsagnDato", TILSAGNSDATO, tilsagn.getTilsagnDato());
         assertEquals("tiltakKode", "ENKFAGYRKE", tilsagn.getTiltakKode());
         assertEquals("tiltakNavn", "Enkeltplass Fag- og yrkesopplæring VGS og høyere yrkesfaglig utdanning", tilsagn.getTiltakNavn());
         assertEquals("administrasjonKode", "IND", tilsagn.getAdministrasjonKode());
 
-        assertEquals("periode.fraDato", "2019-09-14", tilsagn.getPeriode().getFraDato());
-        assertEquals("periode.tilDato", "2019-12-31", tilsagn.getPeriode().getTilDato());
+        assertEquals("periode.fraDato", FRA_DATO, tilsagn.getPeriode().getFraDato());
+        assertEquals("periode.tilDato", TIL_DATO, tilsagn.getPeriode().getTilDato());
 
         assertEquals("arbgiverNavn", "TREIDER KOMPETANSE AS", tilsagn.getTiltakArrangor().getArbgiverNavn());
         assertEquals("landKode", "NO", tilsagn.getTiltakArrangor().getLandKode());
