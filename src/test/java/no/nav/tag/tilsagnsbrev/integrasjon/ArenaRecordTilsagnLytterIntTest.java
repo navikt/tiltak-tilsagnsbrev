@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest
 @DirtiesContext
 @Slf4j
-public class ArenaTilsagnLytterIntTest {
+public class ArenaRecordTilsagnLytterIntTest {
 
     @ClassRule
     public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true, ArenaTilsagnLytter.topic);

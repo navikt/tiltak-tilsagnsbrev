@@ -17,11 +17,16 @@ public class Tilsagnsbehandler {
     @Autowired
     PdfService pdfService;
 
-    public void behandleTilsagn(String tilsagnJson) {
-            final Tilsagn tilsagn = tilsagnJsonMapper.jsonTilTilsagn(tilsagnJson);
-            log.info("Behandler tilsagn {}", tilsagn.getTilsagnNummer().getLoepenrTilsagn());
+    public void behandleTilsagn(String goldenGateJson) {
 
-            final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagn);
+        final Tilsagn tilsagn = tilsagnJsonMapper.goldengateJsonTilTilsagn(goldenGateJson);
+        final String tilsagnJson = tilsagnJsonMapper.tilsagnTilJson(tilsagn);
+
+        log.info("Tilsagnsbrev til pdfGen: {}", tilsagnJson);
+
+        //final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagnJson);
+
+
 
     }
 }

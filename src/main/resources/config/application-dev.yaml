@@ -9,7 +9,7 @@ spring:
 
 tilsagnsbrev:
   integrasjon:
-    pdfuri:
+    pdfurl: http://localhost:5913
 
 
 
