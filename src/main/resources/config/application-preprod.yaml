@@ -1,5 +1,7 @@
-
 spring:
+  main:
+    banner-mode: "off"
+
   kafka:
     bootstrap-servers: d26apvl00159.test.local:8443,d26apvl00160.test.local:8443,d26apvl00161.test.local:8443
     client-id: tiltak-tilsagnsbrev
@@ -14,7 +16,8 @@ spring:
     consumer:
         key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
         value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-        max-poll-records: 1
+
+        auto-offset-reset:  
 
 
 tilsagnsbrev:
