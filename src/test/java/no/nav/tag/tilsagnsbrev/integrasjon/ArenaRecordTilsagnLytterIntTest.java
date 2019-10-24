@@ -75,7 +75,7 @@ public class ArenaRecordTilsagnLytterIntTest {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         arenaTilsagnLytter.setLatch(countDownLatch);
 
-        String tilsagnJson = Testdata.hentJsonFil(Testdata.JSON_FIL_FEILER);
+        String tilsagnJson = Testdata.hentJsonFil(Testdata.JSON_FIL);
 
         kafkaTemplate.send(ArenaTilsagnLytter.topic, "TODO", tilsagnJson);
 
