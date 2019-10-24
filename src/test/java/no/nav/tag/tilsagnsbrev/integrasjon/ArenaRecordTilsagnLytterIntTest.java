@@ -1,6 +1,7 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import lombok.extern.slf4j.Slf4j;
+import no.nav.tag.tilsagnsbrev.Testdata;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.*;
@@ -74,19 +75,12 @@ public class ArenaRecordTilsagnLytterIntTest {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         arenaTilsagnLytter.setLatch(countDownLatch);
 
-        String tilsagnJson = hentJsonFil();
+        String tilsagnJson = Testdata.hentJsonFil(Testdata.JSON_FIL);
 
         kafkaTemplate.send(ArenaTilsagnLytter.topic, "TODO", tilsagnJson);
 
         countDownLatch.await(3, TimeUnit.SECONDS);
         assertEquals(0, countDownLatch.getCount());
     }
-
-    private String hentJsonFil() throws Exception {
-            Path fil = Paths.get(getClass().getClassLoader()
-                    .getResource("fullRequest.json").toURI());
-            return Files.readString(fil);
-    }
-
 
 }
