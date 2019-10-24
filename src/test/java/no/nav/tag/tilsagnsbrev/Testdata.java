@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 
 public class Testdata {
@@ -24,7 +25,7 @@ public class Testdata {
                 .medAdministrasjonKode("INST")
                 .medAntallDeltakere("17")
                 .medAntallTimeverk("2932")
-                .medBeslutter(new Person("Evy", "Strømmen"))
+                .medBeslutter(new Person("Strømmen", "Evy"))
                 .medKommentar("Ingen kommentar")
                 .medNavEnhet(new NavEnhetBuilder()
                         .medNavKontor("1187")
