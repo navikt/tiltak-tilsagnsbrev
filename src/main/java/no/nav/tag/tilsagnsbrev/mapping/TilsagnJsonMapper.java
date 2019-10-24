@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Slf4j
 @Component
@@ -24,7 +25,8 @@ public class TilsagnJsonMapper {
     private static final String OLD_PATTERN_3 = "}\"";
     private static final String NEW_PATTERN_3 = "}";
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(JSON_DATOFORMAT);
+    private static final Locale LOCALE_NO = Locale.forLanguageTag("no");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(JSON_DATOFORMAT, LOCALE_NO);
 
     public String tilsagnTilPdfJson(Tilsagn tilsagn) {
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (date, type, jsonSerializationContext) ->
