@@ -19,8 +19,8 @@ public class Tilsagnsbehandler {
 
     public void behandleTilsagn(String goldenGateJson) {
 
-        final Tilsagn tilsagn = tilsagnJsonMapper.goldengateJsonTilTilsagn(goldenGateJson);
-        final String tilsagnJson = tilsagnJsonMapper.tilsagnTilJson(tilsagn);
+        final Tilsagn tilsagn = tilsagnJsonMapper.goldengateMeldingTilTilsagn(goldenGateJson);
+        final String tilsagnJson = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
 
         log.info("Tilsagnsbrev til pdfGen: {}", tilsagnJson);
 
