@@ -1,10 +1,31 @@
-server.servlet.context-path: /tiltak-tilsagnsbrev
+server:
+  servlet.context-path: /tiltak-tilsagnsbrev
+  port: 8082
 
 spring:
   application:
     name: tiltak-tilsagnsbrev
+    main:
+      banner-mode: "off"
+
+  kafka:
+    bootstrap-servers:
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+tilsagnsbrev:
+  integrasjon:
+    pdfurl: url
 
 
 
-  jms:
-    jndi-name:
+
+ibm:
+  mq:
+    queueManager: QM1
+    channel: DEV.ADMIN.SVRCONN
+    connName: localhost(32794)
+    user: admin
+    password: passw0rd
