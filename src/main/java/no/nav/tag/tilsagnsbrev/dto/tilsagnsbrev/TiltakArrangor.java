@@ -9,23 +9,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TiltakArrangor {
 
-
+    
     private String arbgiverNavn;
-
+    
     private String kontoNummer;
-
+    
     private String landKode;
-
+    
     private String maalform;
-
+    
     private String orgNummer;
-
+    
     private String orgNummerMorselskap;
-
+    
     private String postAdresse;
-
+    
     private String postNummer;
-
+    
     private String postSted;
 
 }
