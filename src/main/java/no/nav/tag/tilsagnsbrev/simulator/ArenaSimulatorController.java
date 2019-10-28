@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
-@Profile("dev")
+@Profile({"dev", "preprod"})
 @RestController
 public class ArenaSimulatorController {
 
