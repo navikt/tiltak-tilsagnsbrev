@@ -10,8 +10,8 @@ spring:
 
 tilsagnsbrev:
   integrasjon:
-    pdfurl: http://localhost:5913
-
+    pdf-url: http://localhost:5913
+    altinn-queue: DEV.QUEUE.1
 
 ibm-mq:
   queueManager: QM1
