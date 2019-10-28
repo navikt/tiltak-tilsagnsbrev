@@ -8,9 +8,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon")
-public class PdfGenKonfig {
+@ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.mq")
+public class MqKonfig {
 
-    private String pdfurl;
-
+    private String queue;
 }

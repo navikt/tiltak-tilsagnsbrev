@@ -17,4 +17,12 @@ spring:
 
 tilsagnsbrev:
   integrasjon:
-    pdfurl: url
+    pdf-url: url
+    altinn-queue: QA.Q1_EMOTTAK.ALTUT_INN
+
+ibm-mq:
+  queueManager: MQ1LSC02
+  channel: Q1_TILTAK_TILSAGNSBR
+  connName: b27apvl176.preprod.local(1412)
+  user: ${tilsagnsbrev_srvuser}
+  password: ${tilsagnsbrev_srvpwd}
