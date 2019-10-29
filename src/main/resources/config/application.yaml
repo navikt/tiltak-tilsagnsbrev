@@ -1,6 +1,5 @@
 server:
   servlet.context-path: /tiltak-tilsagnsbrev
-  port: 8082
 
 spring:
   application:
