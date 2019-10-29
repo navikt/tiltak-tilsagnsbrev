@@ -3,8 +3,8 @@ spring:
     banner-mode: "off"
 
   kafka:
-#    bootstrap-servers: d26apvl00159.test.local:8443,d26apvl00160.test.local:8443,d26apvl00161.test.local:8443
-    bootstrap-servers: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
+    bootstrap-servers: d26apvl00159.test.local:8443,d26apvl00160.test.local:8443,d26apvl00161.test.local:8443
+#    bootstrap-servers: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
     client-id: tiltak-tilsagnsbrev
     properties:
       security.protocol: SASL_SSL
