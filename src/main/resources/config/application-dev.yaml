@@ -1,3 +1,5 @@
+server.servlet.context-path: /tiltak-tilsagnsbrev
+
 spring:
   kafka:
     consumer:
