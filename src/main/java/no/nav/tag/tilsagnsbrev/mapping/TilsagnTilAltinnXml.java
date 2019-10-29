@@ -13,9 +13,10 @@ import java.util.Base64;
 @Component
 public class TilsagnTilAltinnXml {
 
+
+
     public String tilAltinnMelding(Tilsagn tilsagn, byte[] pdf) {
 
-        StandardBusinessDocumentHeader header = opprettHeader(tilsagn);
         InsertCorrespondenceV2 insertCorrespondenceV2 = new InsertCorrespondenceV2();
         insertCorrespondenceV2.setExternalShipmentReference("35313232343335472480806A76504F3D33323130");
         insertCorrespondenceV2.setSystemUserCode("NAV-TILSAGNSBREV");
@@ -27,7 +28,6 @@ public class TilsagnTilAltinnXml {
         StandardBusinessDocumentHeader header = new StandardBusinessDocumentHeader();
 
         Scope scope = new Scope();
-        scope.setType("ConversationId"); //TODO
         scope.setInstanceIdentifier("unik"); //TODO hvordan generere
         scope.setBusinessService(new BusinessService("ALTINNRapportere", ""));  //TODO xzmlgen m/attr
 
@@ -36,8 +36,8 @@ public class TilsagnTilAltinnXml {
         header.setBusinessScopeObject(businessScope);
 
         header.setDocumentIdentificationObject(new DocumentIdentification(tilsagn.getTilsagnDato().toString(), "INstanceId"));
-        header.setReceiverObject(new Receiver(tilsagn.getTiltakArrangor().getOrgNummer()));
-        header.setSenderObject(new Sender(tilsagn.getNavEnhet().getNavKontor()));
+        header.setReceiverObject(new Partner(tilsagn.getTiltakArrangor().getOrgNummer()));
+        header.setSenderObject(new Partner(tilsagn.getNavEnhet().getNavKontor()));
         return header;
     }
 
