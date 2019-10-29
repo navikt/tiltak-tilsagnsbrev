@@ -2,17 +2,17 @@ spring:
   main:
     banner-mode: "off"
 
-#  kafka:
-#    bootstrap-servers: d26apvl00159.test.local:8443,d26apvl00160.test.local:8443,d26apvl00161.test.local:8443
-#    client-id: tiltak-tilsagnsbrev
-#    properties:
-#      security.protocol: SASL_SSL
-#      sasl:
-#        mechanism: PLAIN
-#        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tilsagnsbrev_srvuser}" password="${tilsagnsbrev_srvpwd}";
-#      ssl.truststore:
-#        location: ${javax.net.ssl.trustStore}
-#        password: ${javax.net.ssl.trustStorePassword}
+  kafka:
+    bootstrap-servers: d26apvl00159.test.local:8443,d26apvl00160.test.local:8443,d26apvl00161.test.local:8443
+    client-id: tiltak-tilsagnsbrev
+    properties:
+      security.protocol: SASL_SSL
+      sasl:
+        mechanism: PLAIN
+        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tilsagnsbrev_srvuser}" password="${tilsagnsbrev_srvpwd}";
+      ssl.truststore:
+        location: ${javax.net.ssl.trustStore}
+        password: ${javax.net.ssl.trustStorePassword}
 
 
 tilsagnsbrev:
