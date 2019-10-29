@@ -9,9 +9,6 @@ public class InsertCorrespondenceV2 {
     private String SystemUserCode; //NAV_T12
     private String ExternalShipmentReference; //Lik InstanceIdentifier
     private Correspondence CorrespondenceObject;
-
-
-
 }
 
 

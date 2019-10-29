@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class TilsagnJsonMapperTest {
 
     TilsagnJsonMapper tilsagnJsonMapper = new TilsagnJsonMapper();
-    final String requestJson = Testdata.hentJsonFil(JSON_FIL);
+    final String requestJson = Testdata.hentFilString(JSON_FIL);
 
     @Test
     public void mapperTilstagnTilJson(){

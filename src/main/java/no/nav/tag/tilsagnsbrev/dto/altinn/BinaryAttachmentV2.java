@@ -1,5 +1,8 @@
 package no.nav.tag.tilsagnsbrev.dto.altinn;
 
+import lombok.Data;
+
+@Data
 public class BinaryAttachmentV2 {
     String FunctionTyp;
     String FileName;
