@@ -1,5 +1,4 @@
-server:
-  servlet.context-path: /tiltak-tilsagnsbrev
+server.servlet.context-path: /tiltak-tilsagnsbrev
 
 spring:
   application:
@@ -17,7 +16,7 @@ spring:
 tilsagnsbrev:
   integrasjon:
     pdf-url: url
-    altinn-queue: kø
+    altinn-queue: queue
 
 ibm:
   mq:
