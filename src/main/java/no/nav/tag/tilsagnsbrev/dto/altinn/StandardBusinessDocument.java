@@ -1,13 +1,17 @@
 package no.nav.tag.tilsagnsbrev.dto.altinn;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import no.nav.tag.tilsagnsbrev.dto.altinn.header.StandardBusinessDocumentHeader;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 @Data
+@XmlRootElement
+@NoArgsConstructor
+@AllArgsConstructor
 public class StandardBusinessDocument {
-    StandardBusinessDocumentHeader StandardBusinessDocumentHeaderObject;
-        InsertCorrespondenceV2 InsertCorrespondenceV2Object;
-
-
-
+    StandardBusinessDocumentHeader standardBusinessDocumentHeader;
+    InsertCorrespondenceV2 InsertCorrespondenceV2Object;
 }

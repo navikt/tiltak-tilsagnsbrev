@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Attachments {
-    BinaryAttachments BinaryAttachments;
+    BinaryAttachments BinaryAttachments = new BinaryAttachments();
  //   XmlAttachmentList XmlAttachmentList;
 
 

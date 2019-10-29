@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Base64;
 
 public class Testdata {
 
@@ -68,15 +69,17 @@ public class Testdata {
         return new Gson().fromJson(json, Tilsagn.class);
     }
 
-    public static String hentJsonFil(String filnavn) {
-        byte[] bytes = new byte[0];
+    public static String hentFilString(String filnavn) {
+        return new String(hentFilBytes(filnavn));
+    }
+
+    public static byte[] hentFilBytes(String filnavn) {
         try {
             Path fil = Paths.get(Testdata.class.getClassLoader()
                     .getResource(filnavn).toURI());
-            bytes = Files.readAllBytes(fil);
-        } catch (Exception e) {
-            e.printStackTrace();
+            return Files.readAllBytes(fil);
+        }catch (Exception e){
+            throw new RuntimeException(e);
         }
-        return new String(bytes);
     }
 }

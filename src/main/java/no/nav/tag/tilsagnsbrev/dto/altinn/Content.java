@@ -8,6 +8,6 @@ public class Content {
     String MessageTitle;
     String MessageSummary;
     String MessageBody;
-    Attachments Attachments;
+    Attachments Attachments = new Attachments();
     String CustomMessageData;
 }
