@@ -1,4 +1,4 @@
 {
-  "ingress": "https://arbeidsgiver.nais.adeo.no/tag-tilsagnsbrev/",
+  "ingress": "https://arbeidsgiver.nais.adeo.no/tiltak-tilsagnsbrev/",
   "spring-profil": "prod"
 }

@@ -14,8 +14,10 @@ spec:
     max: 1
   liveness:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
+    initialDelay: 30
   readiness:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
+    initialDelay: 30
   vault:
     enabled: true
     paths:
@@ -31,3 +33,6 @@ spec:
   webproxy: true
   prometheus:
     enabled: false
+    path: /tiltak-tilsagnsbrev/internal/actuator/prometheus
+
+
