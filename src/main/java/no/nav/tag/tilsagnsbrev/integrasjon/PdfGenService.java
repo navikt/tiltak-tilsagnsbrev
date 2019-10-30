@@ -2,6 +2,7 @@ package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import no.nav.tag.tilsagnsbrev.konfigurasjon.PdfGenKonfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -9,18 +10,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @Service
-public class PdfService {
+public class PdfGenService {
 
     static final String PATH = "/template/tilsagnsbrev/create-pdf";
 
     private URI uri;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
 
-    public PdfService(PdfGenKonfig pdfGenKonfig){
+    public PdfGenService(PdfGenKonfig pdfGenKonfig){
         uri = UriComponentsBuilder
-                .fromUri(URI.create(pdfGenKonfig.getPdfurl()))
+                .fromUri(URI.create(pdfGenKonfig.getUri()))
                 .path(PATH)
                 .build()
                 .toUri();

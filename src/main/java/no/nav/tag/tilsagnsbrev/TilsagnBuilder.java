@@ -1,4 +1,6 @@
-package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
+package no.nav.tag.tilsagnsbrev;
+
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
 
 import java.time.LocalDate;
 import java.util.List;

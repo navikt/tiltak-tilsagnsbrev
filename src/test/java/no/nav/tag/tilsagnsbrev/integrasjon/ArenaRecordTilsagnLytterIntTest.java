@@ -18,15 +18,13 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 @RunWith(SpringRunner.class)
 @Profile("dev")
 @SpringBootTest
@@ -75,7 +73,7 @@ public class ArenaRecordTilsagnLytterIntTest {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         arenaTilsagnLytter.setLatch(countDownLatch);
 
-        String tilsagnJson = Testdata.hentJsonFil(Testdata.JSON_FIL);
+        String tilsagnJson = Testdata.hentFilString(Testdata.JSON_FIL);
 
         kafkaTemplate.send(ArenaTilsagnLytter.topic, "TODO", tilsagnJson);
 

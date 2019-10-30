@@ -17,10 +17,7 @@ import static no.nav.tag.tilsagnsbrev.dto.journalpost.DokumentVariant.*;
 
 @Slf4j
 @Component
-public class JournalpostFactory {
-
-    @Autowired
-    private TilsagnsbrevTilXml tilsagnsbrevTilXml;
+public class TilsagnTilJournalpost {
 
     public Journalpost konverterTilJournalpost(Tilsagn tilsagnsbrev, final byte[] pdfBytes) {
 
@@ -29,20 +26,11 @@ public class JournalpostFactory {
         Journalpost journalpost = new Journalpost();
         journalpost.setBruker(bruker);
 
-        final String dokumentXml = tilsagnsbrevTilXml.genererXml(tilsagnsbrev);
-
         Dokument dokument = new Dokument();
-        dokument.setDokumentVarianter(Arrays.asList(
-                new DokumentVariant(FILTYPE_XML, VARIANFORMAT_XML ,encodeToBase64(dokumentXml.getBytes())),
-                new DokumentVariant(FILTYPE_PDF, VARIANFORMAT_PDF, encodeToBase64(pdfBytes)))
+        dokument.setDokumentVarianter(Collections.singletonList(
+                new DokumentVariant(FILTYPE_PDF, VARIANFORMAT_PDF, Base64.getEncoder().encodeToString(pdfBytes)))
         );
         journalpost.setDokumenter(Collections.singletonList(dokument));
         return journalpost;
     }
-
-    private String encodeToBase64(final byte[] dokumentBytes) {
-        return Base64.getEncoder().encodeToString(dokumentBytes);
-    }
 }
-
-//TODO Utkast. Fullføres i en annen jira-oppg.
