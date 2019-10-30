@@ -1,12 +1,7 @@
-server.servlet.context-path: /tiltak-tilsagnsbrev
-
 spring:
-  main:
-    banner-mode: "off"
-
   kafka:
-    bootstrap-servers: d26apvl00159.test.local:8443,d26apvl00160.test.local:8443,d26apvl00161.test.local:8443
-#    bootstrap-servers: b27apvl00045.preprod.local:8443, b27apvl00046.preprod.local:8443, b27apvl00047.preprod.local:8443
+#    bootstrap-servers: d26apvl00159.test.local:8443,d26apvl00160.test.local:8443,d26apvl00161.test.local:8443
+    bootstrap-servers: b27apvl00045.preprod.local:8443, b27apvl00046.preprod.local:8443, b27apvl00047.preprod.local:8443
     client-id: tiltak-tilsagnsbrev
     properties:
       security.protocol: SASL_SSL
@@ -17,15 +12,23 @@ spring:
         location: ${javax.net.ssl.trustStore}
         password: ${javax.net.ssl.trustStorePassword}
 
-
 tilsagnsbrev:
   integrasjon:
-    pdf-url: url
-    altinn-queue: QA.Q1_EMOTTAK.ALTUT_INN
+    pdfgen:
+      uri: uri
+    altinn:
+      queue: QA.Q1_EMOTTAK.ALTUT_INN
+    joark:
+      uri: uri
+    sts:
+      uri: uri
+      bruker: ${tilsagnsbrev_srvuser}
+      passord: ${tilsagnsbrev_srvpwd}
 
-ibm-mq:
-  queueManager: MQ1LSC02
-  channel: Q1_TILTAK_TILSAGNSBR
-  connName: b27apvl176.preprod.local(1412)
-  user: ${tilsagnsbrev_srvuser}
-  password: ${tilsagnsbrev_srvpwd}
+ibm:
+  mq:
+    queueManager: MQ1LSC02
+    channel: Q1_TILTAK_TILSAGNSBR
+    connName: b27apvl176.preprod.local(1412)
+    user: ${tilsagnsbrev_srvuser}
+    password: ${tilsagnsbrev_srvpwd}

@@ -2,8 +2,8 @@ package no.nav.tag.tilsagnsbrev;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
-import no.nav.tag.tilsagnsbrev.integrasjon.AltInn;
-import no.nav.tag.tilsagnsbrev.integrasjon.PdfService;
+import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
+import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapping.TilsagnTilAltinnXml;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,10 @@ public class Tilsagnsbehandler {
     TilsagnTilAltinnXml tilsagnTilAltinnXml;
 
     @Autowired
-    PdfService pdfService;
+    PdfGenService pdfService;
 
     @Autowired
-    AltInn altInn;
+    AltInnService altInnService;
 
     public void behandleTilsagn(String goldenGateJson) {
 
@@ -38,7 +38,7 @@ public class Tilsagnsbehandler {
 
         log.info("Tilsagnsbrev til Altinn: {}", tilsagnXml);
 
-        altInn.sendTilsagnsbrev(tilsagnXml);
+        altInnService.sendTilsagnsbrev(tilsagnXml);
 
         //Tilsagn til joark
 

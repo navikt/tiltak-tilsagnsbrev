@@ -1,4 +1,5 @@
-server.servlet.context-path: /tiltak-tilsagnsbrev
+server:
+  port: 8082
 
 spring:
   kafka:
@@ -10,12 +11,21 @@ spring:
 
 tilsagnsbrev:
   integrasjon:
-    pdf-url: http://localhost:5913
-    altinn-queue: DEV.QUEUE.1
+    pdfgen:
+      uri: http://localhost:5913
+    altinn:
+      queue: DEV.QUEUE.1
+    joark:
+      uri: uri
+    sts:
+      uri: uri
+      bruker: bruker
+      passord: passord
 
-ibm-mq:
-  queueManager: QM1
-  channel: DEV.ADMIN.SVRCONN
-  connName: localhost(32794)
-  user: admin
-  password: passw0rd
+ibm:
+  mq:
+    queueManager: QM1
+    channel: DEV.ADMIN.SVRCONN
+    connName: localhost(32794)
+    user: admin
+    password: passw0rd
