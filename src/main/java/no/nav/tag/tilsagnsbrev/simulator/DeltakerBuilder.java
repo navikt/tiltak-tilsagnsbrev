@@ -1,4 +1,6 @@
-package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
+package no.nav.tag.tilsagnsbrev.simulator;
+
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Deltaker;
 
 public class DeltakerBuilder {
     private String etternavn;

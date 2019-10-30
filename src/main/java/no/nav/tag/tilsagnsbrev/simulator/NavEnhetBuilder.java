@@ -1,4 +1,6 @@
-package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
+package no.nav.tag.tilsagnsbrev.simulator;
+
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.NavEnhet;
 
 public class NavEnhetBuilder {
     private String faks;

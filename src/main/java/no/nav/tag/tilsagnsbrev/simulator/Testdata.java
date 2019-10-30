@@ -1,6 +1,7 @@
-package no.nav.tag.tilsagnsbrev;
+package no.nav.tag.tilsagnsbrev.simulator;
 
 import com.google.gson.Gson;
+import no.nav.tag.tilsagnsbrev.TilsagnBuilder;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
 
 import java.nio.file.Files;
@@ -8,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Base64;
 
 public class Testdata {
 

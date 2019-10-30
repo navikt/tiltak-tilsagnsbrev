@@ -1,4 +1,6 @@
-package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
+package no.nav.tag.tilsagnsbrev.simulator;
+
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TiltakArrangor;
 
 public class TiltakArrangorBuilder {
     private String arbgiverNavn;

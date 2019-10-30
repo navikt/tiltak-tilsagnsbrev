@@ -6,6 +6,7 @@ import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapping.TilsagnTilAltinnXml;
+import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,8 @@ public class Tilsagnsbehandler {
 
         log.info("Tilsagnsbrev til pdfGen: {}", tilsagnJson);
 
-        final byte[] pdf = null; // = pdfService.tilsagnTilPdfBrev(tilsagnJson);
+        //TODO Til pdf-gen er klar
+        final byte[] pdf = Testdata.hentFilBytes("dummy.pdf"); // = pdfService.tilsagnTilPdfBrev(tilsagnJson);
 
         final String tilsagnXml = tilsagnTilAltinnXml.tilAltinnMelding(tilsagn, pdf);
 

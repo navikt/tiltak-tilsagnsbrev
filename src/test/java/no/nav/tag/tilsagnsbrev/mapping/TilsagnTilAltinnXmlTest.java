@@ -1,6 +1,6 @@
 package no.nav.tag.tilsagnsbrev.mapping;
 
-import no.nav.tag.tilsagnsbrev.Testdata;
+import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import org.junit.Ignore;
 import org.junit.Test;

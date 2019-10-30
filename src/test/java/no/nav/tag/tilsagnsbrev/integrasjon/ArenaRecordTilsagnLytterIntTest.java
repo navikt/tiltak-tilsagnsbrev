@@ -1,7 +1,7 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import lombok.extern.slf4j.Slf4j;
-import no.nav.tag.tilsagnsbrev.Testdata;
+import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.*;
