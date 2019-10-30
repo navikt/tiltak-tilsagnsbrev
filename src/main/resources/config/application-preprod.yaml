@@ -1,3 +1,5 @@
+server.servlet.context-path: /tiltak-tilsagnsbrev
+
 spring:
   kafka:
 #    bootstrap-servers: d26apvl00159.test.local:8443,d26apvl00160.test.local:8443,d26apvl00161.test.local:8443
