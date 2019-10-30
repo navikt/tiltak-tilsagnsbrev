@@ -3,7 +3,7 @@ package no.nav.tag.tilsagnsbrev.simulator;
 import no.nav.tag.tilsagnsbrev.TilsagnBuilder;
 import no.nav.tag.tilsagnsbrev.Tilsagnsbehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
-import no.nav.tag.tilsagnsbrev.integrasjon.AltInn;
+import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class ArenaSimulatorController {
     private Tilsagnsbehandler tilsagnsbehandler;
 
     @Autowired
-    private AltInn altInn;
+    private AltInnService altInnService;
 
 
     @PostMapping("kafka")
@@ -33,7 +33,7 @@ public class ArenaSimulatorController {
 
     @GetMapping("mq/{tilsagnNr}")
     public String leggMeldingPaMq(@PathVariable String tilsagnNr) throws Exception {
-                altInn.sendTilsagnsbrev(enkeltTilsagn(tilsagnNr).toString());
+                altInnService.sendTilsagnsbrev(enkeltTilsagn(tilsagnNr).toString());
                 return "OK";
     }
 

@@ -8,9 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon")
+@ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.pdfgen")
 public class PdfGenKonfig {
-
-    private String pdfurl;
-
+    private String uri;
 }

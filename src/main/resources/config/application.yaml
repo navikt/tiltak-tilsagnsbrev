@@ -12,14 +12,3 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-
-tilsagnsbrev:
-  integrasjon:
-    pdf-url: url
-    altinn-queue: queue
-
-ibm:
-  mq:
-    queueManager:
-    channel:
-    connName:
