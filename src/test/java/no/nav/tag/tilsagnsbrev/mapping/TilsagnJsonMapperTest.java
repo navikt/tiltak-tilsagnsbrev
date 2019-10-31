@@ -14,7 +14,7 @@ public class TilsagnJsonMapperTest {
 
     @Test
     public void mapperTilstagnTilJson(){
-        Tilsagn tilsagn = Testdata.tilsagnsbrev();
+        Tilsagn tilsagn = Testdata.gruppeTilsagn();
         String json = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
         System.out.println(json);
         assertTrue(json.contains("\"administrasjonKode\":\"" + tilsagn.getAdministrasjonKode() +"\""));

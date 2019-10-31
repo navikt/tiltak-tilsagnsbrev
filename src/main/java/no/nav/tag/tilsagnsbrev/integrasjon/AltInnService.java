@@ -25,8 +25,7 @@ public class AltInnService {
             jmsTemplate.convertAndSend(mqKonfig.getQueue(), tilsagnAltinnXml);
         } catch (JmsException ex) {
             log.error("Feil ved sending på MQ", ex);
-            ex.printStackTrace();
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex.getMessage());
         }
 
     }

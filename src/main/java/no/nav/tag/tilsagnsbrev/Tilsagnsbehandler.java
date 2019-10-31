@@ -15,16 +15,16 @@ import org.springframework.stereotype.Service;
 public class Tilsagnsbehandler {
 
     @Autowired
-    TilsagnJsonMapper tilsagnJsonMapper;
+    private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Autowired
-    TilsagnTilAltinnXml tilsagnTilAltinnXml;
+    private TilsagnTilAltinnXml tilsagnTilAltinnXml;
 
     @Autowired
-    PdfGenService pdfService;
+    private PdfGenService pdfService;
 
     @Autowired
-    AltInnService altInnService;
+    private AltInnService altInnService;
 
     public void behandleTilsagn(String goldenGateJson) {
 
@@ -34,7 +34,7 @@ public class Tilsagnsbehandler {
         log.info("Tilsagnsbrev til pdfGen: {}", tilsagnJson);
 
         //TODO Til pdf-gen er klar
-        final byte[] pdf = Testdata.hentFilBytes("dummy.pdf"); // = pdfService.tilsagnTilPdfBrev(tilsagnJson);
+        final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagnJson);
 
         final String tilsagnXml = tilsagnTilAltinnXml.tilAltinnMelding(tilsagn, pdf);
 

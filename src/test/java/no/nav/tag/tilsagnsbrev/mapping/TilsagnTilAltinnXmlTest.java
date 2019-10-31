@@ -19,7 +19,7 @@ public class TilsagnTilAltinnXmlTest {
     @Test
     @Ignore("Ikke klar")
     public void mapperTilAltinnMelding() {
-        Tilsagn tilsagn = Testdata.tilsagnsbrev();
+        Tilsagn tilsagn = Testdata.gruppeTilsagn();
 
         byte[] pdf = "pdf".getBytes();
 
