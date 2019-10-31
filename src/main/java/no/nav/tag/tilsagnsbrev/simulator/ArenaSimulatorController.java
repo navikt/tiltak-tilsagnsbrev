@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
-@Profile({"dev", "preprod"})
+//@Profile({"dev", "preprod"}) //TODO Ta vekk!
 @RestController
 public class ArenaSimulatorController {
 
@@ -21,17 +21,17 @@ public class ArenaSimulatorController {
     private AltInnService altInnService;
 
 
-    @PostMapping("kafka")
+    @PostMapping(value = "/kafka")
     public void leggMeldingPaKafkaToppic(@RequestBody String json) throws Exception {
         tilsagnsbehandler.behandleTilsagn(json);
     }
 
-    @GetMapping("ping")
+    @GetMapping(value = "/ping")
     public String ping() throws Exception {
         return "OK";
     }
 
-    @GetMapping("mq/{tilsagnNr}")
+    @GetMapping(value = "/mq/{tilsagnNr}")
     public String leggMeldingPaMq(@PathVariable String tilsagnNr) throws Exception {
                 altInnService.sendTilsagnsbrev(enkeltTilsagn(tilsagnNr).toString());
                 return "OK";
