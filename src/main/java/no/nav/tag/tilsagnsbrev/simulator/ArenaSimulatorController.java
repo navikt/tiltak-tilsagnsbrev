@@ -13,7 +13,6 @@ import java.time.LocalDate;
 
 @Profile({"dev", "preprod"})
 @RestController
-@Unprotected
 public class ArenaSimulatorController {
 
     @Autowired

@@ -66,13 +66,6 @@
 			<artifactId>caffeine</artifactId>
 		</dependency>
 
-		<!-- OIDC Support -->
-		<dependency>
-			<groupId>no.nav.security</groupId>
-			<artifactId>oidc-spring-support</artifactId>
-			<version>0.2.18</version>
-		</dependency>
-
 		<!-- Json -->
 		<dependency>
 			<groupId>org.json</groupId>
