@@ -1,6 +1,5 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
-import no.nav.security.oidc.api.Unprotected;
 import no.nav.tag.tilsagnsbrev.TilsagnBuilder;
 import no.nav.tag.tilsagnsbrev.Tilsagnsbehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
