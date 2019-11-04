@@ -1,4 +1,4 @@
-package no.nav.tag.tiltaksgjennomforingprosess.integrasjon;
+package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +25,10 @@ public class JoarkService {
     private TilsagnTilJournalpost tilsagnTilJournalpost;
 
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private StsService stsService;
 
     static final String PATH = "/rest/journalpostapi/v1/journalpost";
     static final String QUERY_PARAM = "forsoekFerdigstill=true";
@@ -42,24 +45,23 @@ public class JoarkService {
         headers.setContentType((MediaType.APPLICATION_JSON));
     }
 
-    public String sendJournalpost(final Journalpost journalpost) {
+    public void sendJournalpost(final Journalpost journalpost) {
         debugLogJournalpost(journalpost);
-        JoarkResponse response = null;
+        String response = null; //TODO Bruke noe annet
         try {
             log.info("Forsøker å journalføre tilsagnsbrev {}", journalpost.getEksternReferanseId());
-            restTemplate.postForObject(uri, entityMedStsToken(journalpost), JoarkResponse.class);
+            restTemplate.postForObject(uri, entityMedStsToken(journalpost), String.class);
         } catch (Exception e1) {
             stsService.evict();
             log.warn("Feil ved kommunikasjon mot journalpost-API. Henter nytt sts-token og forsøker igjen");
             try {
-                response = restTemplate.postForObject(uri, entityMedStsToken(journalpost), JoarkResponse.class);
+                response = restTemplate.postForObject(uri, entityMedStsToken(journalpost), String.class);
             } catch (Exception e2) {
-                log.error("Kall til Joark feilet: {}", response != null ? response.getMelding() : "", e2);
+                log.error("Kall til Joark feilet: {}", response != null ? response : "", e2);
                 throw new RuntimeException("Kall til Joark feilet: " + e2);
             }
         }
         log.info("Journalført avtale {}", journalpost.getEksternReferanseId());
-        return response.getJournalpostId();
     }
 
     private HttpEntity<Journalpost> entityMedStsToken(final Journalpost journalpost) {

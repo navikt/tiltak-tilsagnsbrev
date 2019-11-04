@@ -5,6 +5,16 @@ spring:
   kafka:
     consumer:
       bootstrap-servers: ${spring.embedded.kafka.brokers}
+  datasource:
+    platform: postgres
+    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password: sa
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
   main:
     banner-mode: "console"
@@ -27,5 +37,5 @@ ibm:
     queueManager: QM1
     channel: DEV.ADMIN.SVRCONN
     connName: localhost(32794)
-    user: admin
-    password: passw0rd
+    user: ${tilsagnsbrev_srvuser}
+    password: ${tilsagnsbrev_srvpwd}
