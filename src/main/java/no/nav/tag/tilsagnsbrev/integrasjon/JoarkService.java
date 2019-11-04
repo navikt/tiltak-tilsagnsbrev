@@ -1,18 +1,16 @@
-package no.nav.tag.tilsagnsbrev.integrasjon;
+package no.nav.tag.tiltaksgjennomforingprosess.integrasjon;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
-import no.nav.tag.tilsagnsbrev.dto.journalpost.JournalpostResponse;
-import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.JoarkKonfig;
 import no.nav.tag.tilsagnsbrev.mapping.journalpost.TilsagnTilJournalpost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -25,6 +23,9 @@ public class JoarkService {
 
     @Autowired
     private TilsagnTilJournalpost tilsagnTilJournalpost;
+
+    @Autowired
+    RestTemplate restTemplate;
 
     static final String PATH = "/rest/journalpostapi/v1/journalpost";
     static final String QUERY_PARAM = "forsoekFerdigstill=true";
@@ -41,16 +42,39 @@ public class JoarkService {
         headers.setContentType((MediaType.APPLICATION_JSON));
     }
 
-    public String opprettOgSendJournalpost(final String token, final Tilsagn tilsagn, byte[] pdf) {
-        Journalpost journalpost = tilsagnTilJournalpost.konverterTilJournalpost(tilsagn, pdf);
-        headers.setBearerAuth(token);
-        HttpEntity<Journalpost> entity = new HttpEntity<>(journalpost, headers);
-        JournalpostResponse response;
+    public String sendJournalpost(final Journalpost journalpost) {
+        debugLogJournalpost(journalpost);
+        JoarkResponse response = null;
         try {
-            response = new RestTemplate().postForObject(uri, entity, JournalpostResponse.class);
-        } catch (Exception e) {
-            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Kall til Joark feilet: " + e.getMessage());
+            log.info("Forsøker å journalføre tilsagnsbrev {}", journalpost.getEksternReferanseId());
+            restTemplate.postForObject(uri, entityMedStsToken(journalpost), JoarkResponse.class);
+        } catch (Exception e1) {
+            stsService.evict();
+            log.warn("Feil ved kommunikasjon mot journalpost-API. Henter nytt sts-token og forsøker igjen");
+            try {
+                response = restTemplate.postForObject(uri, entityMedStsToken(journalpost), JoarkResponse.class);
+            } catch (Exception e2) {
+                log.error("Kall til Joark feilet: {}", response != null ? response.getMelding() : "", e2);
+                throw new RuntimeException("Kall til Joark feilet: " + e2);
+            }
         }
+        log.info("Journalført avtale {}", journalpost.getEksternReferanseId());
         return response.getJournalpostId();
     }
+
+    private HttpEntity<Journalpost> entityMedStsToken(final Journalpost journalpost) {
+        headers.setBearerAuth(stsService.hentToken());
+        HttpEntity<Journalpost> entity = new HttpEntity<>(journalpost, headers);
+        return entity;
+    }
+
+    private void debugLogJournalpost(Journalpost journalpost) {
+        if (log.isDebugEnabled()) {
+            try {
+                log.info("JSON REQ: {}", new ObjectMapper().writeValueAsString(journalpost));
+            } catch (JsonProcessingException e) {
+            }
+        }
+    }
+
 }

@@ -44,6 +44,10 @@ public class TilsagnJsonMapper {
         return gson.fromJson(tilsagnJsonElement, Tilsagn.class);
     }
 
+    public Tilsagn tilsagnJsonTilTilsagn(String tilsagnJson){
+        return new Gson().fromJson(tilsagnJson, Tilsagn.class);
+    }
+
     private String meldingtilJsonString(String melding) {
         String str1 = StringUtils.replace(melding, OLD_PATTERN_1, NEW_PATTERN_1);
         String str2 = StringUtils.replace(str1, OLD_PATTERN_2, NEW_PATTERN_2);
