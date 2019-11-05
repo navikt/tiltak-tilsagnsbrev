@@ -13,19 +13,17 @@ tilsagnsbrev:
   integrasjon:
     pdfgen:
       uri: http://localhost:5913
-    altinn:
-      queue: DEV.QUEUE.1
     joark:
       uri: uri
     sts:
       uri: uri
       bruker: bruker
       passord: passord
-
-ibm:
-  mq:
-    queueManager: QM1
-    channel: DEV.ADMIN.SVRCONN
-    connName: localhost(32794)
-    user: admin
-    password: passw0rd
+    altinn:
+      queue: DEV.QUEUE.1
+      queueManager: QM1
+      channel: DEV.ADMIN.SVRCONN
+      user: ${MQ_USER}
+      password: ${MQ_PWD}
+      host: localhost
+      port: 32794

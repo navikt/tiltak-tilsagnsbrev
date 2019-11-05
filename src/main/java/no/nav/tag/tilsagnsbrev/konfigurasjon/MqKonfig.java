@@ -11,4 +11,11 @@ import org.springframework.web.client.RestTemplate;
 @ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.altinn")
 public class MqKonfig {
     private String queue;
+    private String user;
+    private String password;
+    private String queueManager;
+    private String channel;
+    private String connName;
+    private String host;
+    private String port;
 }
