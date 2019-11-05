@@ -19,10 +19,10 @@ import java.util.UUID;
 @DirtiesContext
 @ActiveProfiles({"dev"})
 @RunWith(SpringRunner.class)
-public class FeiletTilsagnBehandlerIntTest {
+public class FeiletTilsagnsbrevBehandlerIntTest {
 
     @Autowired
-    private FeiletTilsagnRepository feiletTilsagnRepository;
+    private FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
 
     @Autowired
     private FeiletTilsagnsBehandler feiletTilsagnsBehandler;
@@ -31,18 +31,18 @@ public class FeiletTilsagnBehandlerIntTest {
     public void setUp(){
         Tilsagn tilsagn = Testdata.tilsagnEnDeltaker();
         String tilsagnJson = Testdata.tilsagnTilJSON(tilsagn);
-        FeiletTilsagn ikkeJournalfoert = new FeiletTilsagn(UUID.randomUUID(), LocalDateTime.now(), NesteSteg.JOURNALFORES, 0, tilsagnJson);
-        FeiletTilsagn hellerIkkeJournalfoert = new FeiletTilsagn(UUID.randomUUID(), LocalDateTime.now(), NesteSteg.JOURNALFORES, 1, tilsagnJson);
-        FeiletTilsagn ikkesendtTilAltInn = new FeiletTilsagn(UUID.randomUUID(), LocalDateTime.now(), NesteSteg.JOURNALFORES, 2, tilsagnJson);
-        FeiletTilsagn skalIkkeBehandles = new FeiletTilsagn(UUID.randomUUID(), LocalDateTime.now(), NesteSteg.TIL_ALTINN, 3, tilsagnJson);
-        feiletTilsagnRepository.saveAll(Arrays.asList(ikkeJournalfoert, hellerIkkeJournalfoert, ikkesendtTilAltInn, skalIkkeBehandles));
+        FeiletTilsagnsbrev ikkeJournalfoert = new FeiletTilsagnsbrev(UUID.randomUUID(), LocalDateTime.now(), NesteSteg.JOURNALFORES, 0, tilsagnJson);
+        FeiletTilsagnsbrev hellerIkkeJournalfoert = new FeiletTilsagnsbrev(UUID.randomUUID(), LocalDateTime.now(), NesteSteg.JOURNALFORES, 1, tilsagnJson);
+        FeiletTilsagnsbrev ikkesendtTilAltInn = new FeiletTilsagnsbrev(UUID.randomUUID(), LocalDateTime.now(), NesteSteg.JOURNALFORES, 2, tilsagnJson);
+        FeiletTilsagnsbrev skalIkkeBehandles = new FeiletTilsagnsbrev(UUID.randomUUID(), LocalDateTime.now(), NesteSteg.TIL_ALTINN, 3, tilsagnJson);
+        feiletTilsagnsbrevRepository.saveAll(Arrays.asList(ikkeJournalfoert, hellerIkkeJournalfoert, ikkesendtTilAltInn, skalIkkeBehandles));
     }
 
     @Test
     public void behandlerIkkeJournalfoert(){
         feiletTilsagnsBehandler.finnOgRekjoerFeiletTilsagn();
 
-        //List<FeiletTilsagn> feilListe = feiletTilsagnRepository.findAll().;
+        //List<FeiletTilsagnsbrev> feilListe = feiletTilsagnsbrevRepository.findAll().;
 
 
     }

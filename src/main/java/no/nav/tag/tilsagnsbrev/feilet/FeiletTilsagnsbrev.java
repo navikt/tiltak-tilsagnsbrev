@@ -14,7 +14,7 @@ import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.TIL_ALTINN;
 @Data
 @AllArgsConstructor
 @Entity
-public class FeiletTilsagn {
+public class FeiletTilsagnsbrev {
 
     private static final int MAX_RETRIES = 3;
 

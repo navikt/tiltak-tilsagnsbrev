@@ -9,7 +9,6 @@ import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapping.TilsagnTilAltinnXml;
 import no.nav.tag.tilsagnsbrev.mapping.journalpost.TilsagnTilJournalpost;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.TIL_ALTINN;
 public class FeiletTilsagnsBehandler {
 
     @Autowired
-    FeiletTilsagnRepository feiletTilsagnRepository;
+    FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
 
     @Autowired
     PdfGenService pdfGenService;
@@ -42,27 +41,27 @@ public class FeiletTilsagnsBehandler {
 
     //@Scheduled(cron = "${prosess.cron}")
     public void finnOgRekjoerFeiletTilsagn(){
-        List<FeiletTilsagn> feilListe = feiletTilsagnRepository.findAll();
+        List<FeiletTilsagnsbrev> feilListe = feiletTilsagnsbrevRepository.findAll();
 
-        feilListe.stream().filter(FeiletTilsagn::skalRekjoeres).forEach(feiletTilsagn -> rekjoerTilsagn(feiletTilsagn));
+        feilListe.stream().filter(FeiletTilsagnsbrev::skalRekjoeres).forEach(feiletTilsagnsbrev -> rekjoerTilsagn(feiletTilsagnsbrev));
 
-        //feiletTilsagnRepository.deleteById(feiletTilsagn.getId());
+        //feiletTilsagnsbrevRepository.deleteById(feiletTilsagn.getId());
     }
 
-    private void rekjoerTilsagn(FeiletTilsagn feiletTilsagn){
-        Tilsagn tilsagn = tilsagnJsonMapper.tilsagnJsonTilTilsagn(feiletTilsagn.getTilsagnJson());
-        byte[] pdf = pdfGenService.tilsagnTilPdfBrev(feiletTilsagn.getTilsagnJson());
+    private void rekjoerTilsagn(FeiletTilsagnsbrev feiletTilsagnsbrev){
+        Tilsagn tilsagn = tilsagnJsonMapper.tilsagnJsonTilTilsagn(feiletTilsagnsbrev.getTilsagnJson());
+        byte[] pdf = pdfGenService.tilsagnTilPdfBrev(feiletTilsagnsbrev.getTilsagnJson());
 
-        if(feiletTilsagn.skaljournalfoeres()){
+        if(feiletTilsagnsbrev.skaljournalfoeres()){
             Journalpost journalpost = tilsagnTilJournalpost.konverterTilJournalpost(tilsagn, pdf);
             joarkService.sendJournalpost(journalpost);
-            feiletTilsagn.setNesteSteg(TIL_ALTINN);
+            feiletTilsagnsbrev.setNesteSteg(TIL_ALTINN);
         }
 
-        if(feiletTilsagn.skalTilAltinn()){
+        if(feiletTilsagnsbrev.skalTilAltinn()){
             String altInnXml = tilsagnTilAltinnXml.tilAltinnMelding(tilsagn, pdf);
             altInnService.sendTilsagnsbrev(altInnXml);
-            feiletTilsagn.setNesteSteg(OK);
+            feiletTilsagnsbrev.setNesteSteg(OK);
         }
 
 
