@@ -26,6 +26,8 @@ public class TilsagnKonfig {
         if(mqKonfig.getUser() == null || mqKonfig.getUser().isEmpty()){
             throw new RuntimeException("Bruker er ikke satt");
         }
+        log.info("Kommer inn med {}", mqKonfig.getUser());
+
 
         MQConnectionFactory connectionFactory = new MQConnectionFactory();
         connectionFactory.setChannel(mqKonfig.getChannel());
