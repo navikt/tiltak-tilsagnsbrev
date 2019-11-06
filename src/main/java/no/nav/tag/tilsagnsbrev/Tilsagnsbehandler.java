@@ -6,7 +6,6 @@ import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapping.TilsagnTilAltinnXml;
-import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,15 +28,12 @@ public class Tilsagnsbehandler {
     public void behandleTilsagn(String goldenGateJson) {
 
         final Tilsagn tilsagn = tilsagnJsonMapper.goldengateMeldingTilTilsagn(goldenGateJson);
+        log.info("Tilsagnsbrev til pdfGen: {}", tilsagn.getTilsagnNummer());
+
         final String tilsagnJson = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
-
-        log.info("Tilsagnsbrev til pdfGen: {}", tilsagnJson);
-
-        //TODO Til pdf-gen er klar
         final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagnJson);
 
         final String tilsagnXml = tilsagnTilAltinnXml.tilAltinnMelding(tilsagn, pdf);
-
         log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());
 
         altInnService.sendTilsagnsbrev(tilsagnXml);

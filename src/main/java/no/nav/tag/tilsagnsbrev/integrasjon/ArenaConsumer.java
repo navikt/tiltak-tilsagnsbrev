@@ -26,14 +26,11 @@ public class ArenaConsumer {
     @KafkaListener(groupId = group, topics = topic)
     public void lyttPaArenaTilsagn(ConsumerRecord<String, String> tilsagnsMelding){
 
-        log.info("Henter melding {}", tilsagnsMelding.value()); //TODO ta vekk før prod
-
         try {
             tilsagnsbehandler.behandleTilsagn(tilsagnsMelding.value());
         } finally {
             this.countdownLatch();
         }
-        log.info("Tilsagn: {}", tilsagnsMelding); //TODO ta vekk før prod
     }
 
     private void countdownLatch(){
