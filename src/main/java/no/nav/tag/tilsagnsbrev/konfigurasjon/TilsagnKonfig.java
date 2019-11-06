@@ -2,6 +2,7 @@ package no.nav.tag.tilsagnsbrev.konfigurasjon;
 
 import com.ibm.mq.jms.MQConnectionFactory;
 import com.ibm.msg.client.wmq.WMQConstants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 
+@Slf4j
 @Configuration
 public class TilsagnKonfig {
 
@@ -20,6 +22,9 @@ public class TilsagnKonfig {
 
     @Bean
     public ConnectionFactory connectionFactory() throws JMSException {
+
+        log.info("Melding fra {}", mqKonfig.getUser());
+
         MQConnectionFactory connectionFactory = new MQConnectionFactory();
         connectionFactory.setChannel(mqKonfig.getChannel());
         connectionFactory.setQueueManager(mqKonfig.getQueueManager());
@@ -35,7 +40,7 @@ public class TilsagnKonfig {
     }
 
     @Bean
-    JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
          JmsTemplate jmsTemplate = new JmsTemplate();
          jmsTemplate.setConnectionFactory(connectionFactory);
          return jmsTemplate;

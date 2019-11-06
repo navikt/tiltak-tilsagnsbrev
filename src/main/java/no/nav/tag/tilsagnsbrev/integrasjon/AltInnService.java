@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 public class AltInnService {
 
     @Autowired
-    JmsTemplate jmsTemplate;
+    private JmsTemplate jmsTemplate;
 
     @Autowired
-    MqKonfig mqKonfig;
+    private MqKonfig mqKonfig;
 
 
     public void sendTilsagnsbrev(String tilsagnAltinnXml) {
