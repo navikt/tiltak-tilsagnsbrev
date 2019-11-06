@@ -38,7 +38,7 @@ public class Tilsagnsbehandler {
 
         final String tilsagnXml = tilsagnTilAltinnXml.tilAltinnMelding(tilsagn, pdf);
 
-        log.info("Tilsagnsbrev til Altinn: {}", tilsagnXml);
+        log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());
 
         altInnService.sendTilsagnsbrev(tilsagnXml);
 
