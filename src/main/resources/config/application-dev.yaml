@@ -17,13 +17,13 @@ tilsagnsbrev:
       uri: uri
     sts:
       uri: uri
-      bruker: bruker
-      passord: passord
+      bruker: ${tilsagnsbrev_srvuser}
+      passord: ${tilsagnsbrev_srvpwd}
     altinn:
       queue: DEV.QUEUE.1
       queueManager: QM1
       channel: DEV.ADMIN.SVRCONN
-      user: ${MQ_USER}
-      password: ${MQ_PWD}
+      user: ${tilsagnsbrev.mq.user}
+      password: ${tilsagnsbrev.mq.pwd}
       host: localhost
       port: 32794
