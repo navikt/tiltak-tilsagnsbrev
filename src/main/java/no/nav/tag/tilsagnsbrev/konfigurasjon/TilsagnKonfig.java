@@ -23,7 +23,9 @@ public class TilsagnKonfig {
     @Bean
     public ConnectionFactory connectionFactory() throws JMSException {
 
-        log.info("Melding fra {}", mqKonfig.getUser());
+        if(mqKonfig.getUser() == null || mqKonfig.getUser().isEmpty()){
+            throw new RuntimeException("Bruker er ikke satt");
+        }
 
         MQConnectionFactory connectionFactory = new MQConnectionFactory();
         connectionFactory.setChannel(mqKonfig.getChannel());
