@@ -18,7 +18,7 @@ public class ArenaTilsagnLytter {
     @Autowired
     private Tilsagnsbehandler tilsagnsbehandler;
 
-    public static final String group = "tiltak-tilsagnsbrev";
+    public static final String group = "tiltak-tilsagnsbrev-2";
     public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
 
     private CountDownLatch latch; //For testing
