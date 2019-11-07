@@ -3,7 +3,7 @@ package no.nav.tag.tilsagnsbrev.simulator;
 import com.google.gson.Gson;
 import no.nav.tag.tilsagnsbrev.TilsagnBuilder;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
-import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,12 +61,12 @@ public class Testdata {
                         new Tilskudd("142000", "Opplæringstilskudd"),
                         new Tilskudd("142000", "Lønnstilskudd")))
                 .medTiltakArrangor(new TiltakArrangorBuilder()
-                        .medArbgiverNavn("L.S. Solland AS")
+                        .medArbgiverNavn("LALM OG NARVIK REVISJON")
                         .medKontoNummer("32010501481")
                         .medLandKode("NO")
                         .medMaalform("Nynorsk")
-                        .medOrgNummer("973152289")
-                        .medOrgNummerMorselskap("918160922")
+                        .medOrgNummer("911003155")
+                   //     .medOrgNummerMorselskap("918160922")
                         .medPostAdresse("Pedersgata 110 ")
                         .medPostNummer("4014")
                         .medPostSted("Oslo")

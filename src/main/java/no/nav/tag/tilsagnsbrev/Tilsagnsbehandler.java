@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
-import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
-import no.nav.tag.tilsagnsbrev.mapping.TilsagnTilAltinnXml;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnXmlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class Tilsagnsbehandler {
     private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Autowired
-    private TilsagnTilAltinnXml tilsagnTilAltinnXml;
+    private TilsagnXmlMapper tilsagnXmlMapper;
 
     @Autowired
     private PdfGenService pdfService;
@@ -33,7 +33,7 @@ public class Tilsagnsbehandler {
         final String tilsagnJson = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
         final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagnJson);
 
-        final String tilsagnXml = tilsagnTilAltinnXml.tilAltinnMelding(tilsagn, pdf);
+        final String tilsagnXml = tilsagnXmlMapper.tilAltinnMelding(tilsagn, pdf);
         log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());
 
         altInnService.sendTilsagnsbrev(tilsagnXml);

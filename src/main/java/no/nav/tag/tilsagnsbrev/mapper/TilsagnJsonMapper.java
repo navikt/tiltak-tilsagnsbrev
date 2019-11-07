@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev.mapping;
+package no.nav.tag.tilsagnsbrev.mapper;
 
 import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;

@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.mapping;
 
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import org.junit.Test;

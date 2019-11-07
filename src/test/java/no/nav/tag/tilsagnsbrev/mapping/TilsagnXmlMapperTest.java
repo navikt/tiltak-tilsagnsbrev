@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.mapping;
 
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnXmlMapper;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import org.junit.Ignore;
@@ -12,19 +13,19 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
 
-public class TilsagnTilAltinnXmlTest {
+public class TilsagnXmlMapperTest {
 
-    TilsagnTilAltinnXml tilsagnTilAltinnXml = new TilsagnTilAltinnXml();
+    TilsagnXmlMapper tilsagnXmlMapper = new TilsagnXmlMapper();
 
     @Test
-    @Ignore("Ikke klar")
+ //   @Ignore("Ikke klar")
     public void mapperTilAltinnMelding() {
         Tilsagn tilsagn = Testdata.gruppeTilsagn();
 
-        byte[] pdf = "pdf".getBytes();
+        byte[] pdf = Testdata.hentFilBytes("dummy.pdf");
 
 
-        String xml = tilsagnTilAltinnXml.tilAltinnMelding(tilsagn, pdf);
+        String xml = tilsagnXmlMapper.tilAltinnMelding(tilsagn, pdf);
         System.out.println(xml);
         validateXml(xml);
     }

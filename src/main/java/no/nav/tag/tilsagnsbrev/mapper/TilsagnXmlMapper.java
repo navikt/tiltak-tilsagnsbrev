@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev.mapping;
+package no.nav.tag.tilsagnsbrev.mapper;
 
 import no.nav.tag.tilsagnsbrev.dto.altinn.*;
 import no.nav.tag.tilsagnsbrev.dto.altinn.header.DocumentIdentification;
@@ -13,7 +13,7 @@ import java.io.StringWriter;
 import java.util.Base64;
 
 @Component
-public class TilsagnTilAltinnXml {
+public class TilsagnXmlMapper {
 
     private static final String ATTACHMENT_NAME_PREFIX = "NAV - Tilsagnsbrev ";
     private static final String FIL_EXT = ".pdf";

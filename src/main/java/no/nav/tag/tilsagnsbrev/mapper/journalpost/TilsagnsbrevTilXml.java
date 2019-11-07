@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev.mapping.journalpost;
+package no.nav.tag.tilsagnsbrev.mapper.journalpost;
 
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import org.springframework.stereotype.Component;

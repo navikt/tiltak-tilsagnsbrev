@@ -3,8 +3,8 @@ package no.nav.tag.tilsagnsbrev;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
-import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
-import no.nav.tag.tilsagnsbrev.mapping.TilsagnTilAltinnXml;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnXmlMapper;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ public class TilsagnsbehandlerTest {
     private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Mock
-    private TilsagnTilAltinnXml tilsagnTilAltinnXml;
+    private TilsagnXmlMapper tilsagnXmlMapper;
 
     @Mock
     private AltInnService altInnService;
@@ -43,7 +43,7 @@ public class TilsagnsbehandlerTest {
 
         when(pdfGenService.tilsagnTilPdfBrev(tilsagnJson)).thenReturn("pdf".getBytes());
 
-        when(tilsagnTilAltinnXml.tilAltinnMelding(eq(tilsagn), any())).thenCallRealMethod();
+        when(tilsagnXmlMapper.tilAltinnMelding(eq(tilsagn), any())).thenCallRealMethod();
 
         tilsagnsbehandler.behandleTilsagn("");
 
