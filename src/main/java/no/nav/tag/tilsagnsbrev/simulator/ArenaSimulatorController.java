@@ -37,6 +37,12 @@ public class ArenaSimulatorController {
                 return "OK";
     }
 
+    @PostMapping(value = "/mq/xml")
+    public String leggXmlMeldingPaMq(@RequestBody String xml) throws Exception {
+        altInnService.sendTilsagnsbrev(xml);
+        return "OK";
+    }
+
     private Tilsagn enkeltTilsagn(String tilsagnNr){
         return new TilsagnBuilder()
                 .medTilsagnNummer(new TilsagnNummer("2019", null, tilsagnNr))
