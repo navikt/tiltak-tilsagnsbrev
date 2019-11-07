@@ -14,7 +14,7 @@ spring:
 tilsagnsbrev:
   integrasjon:
     pdfgen:
-      uri: http://tag-dokgen
+      uri: http://tag-dokgen.nais.preprod.local
     joark:
       uri: uri
     sts:
