@@ -1,6 +1,6 @@
 package no.nav.tag.tilsagnsbrev.konfigurasjon;
 
-import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsBehandler;
+import no.nav.tag.tilsagnsbrev.TilsagnRetryProsess;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -14,7 +14,7 @@ public class Konfig {
     }
 
     @Bean
-    public FeiletTilsagnsBehandler feiletTilsagnsBehandler() {
-        return new FeiletTilsagnsBehandler();
+    public TilsagnRetryProsess feiletTilsagnsBehandler() {
+        return new TilsagnRetryProsess();
     }
 }

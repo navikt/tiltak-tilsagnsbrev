@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.feilet;
 
+import no.nav.tag.tilsagnsbrev.TilsagnRetryProsess;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.Before;
@@ -25,7 +26,7 @@ public class FeiletTilsagnsbrevBehandlerIntTest {
     private FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
 
     @Autowired
-    private FeiletTilsagnsBehandler feiletTilsagnsBehandler;
+    private TilsagnRetryProsess tilsagnRetryProsess;
 
     @Before
     public void setUp(){
@@ -40,7 +41,7 @@ public class FeiletTilsagnsbrevBehandlerIntTest {
 
     @Test
     public void behandlerIkkeJournalfoert(){
-        feiletTilsagnsBehandler.finnOgRekjoerFeiletTilsagn();
+        tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
         //List<FeiletTilsagnsbrev> feilListe = feiletTilsagnsbrevRepository.findAll().;
 

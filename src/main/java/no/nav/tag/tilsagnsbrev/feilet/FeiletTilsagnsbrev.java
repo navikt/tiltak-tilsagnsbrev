@@ -16,7 +16,7 @@ import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.TIL_ALTINN;
 @Entity
 public class FeiletTilsagnsbrev {
 
-    private static final int MAX_RETRIES = 3;
+    public static final int MAX_RETRIES = 3;
 
     @Id
     private UUID id;

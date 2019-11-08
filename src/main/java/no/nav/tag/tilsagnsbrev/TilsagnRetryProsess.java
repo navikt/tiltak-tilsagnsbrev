@@ -1,7 +1,9 @@
-package no.nav.tag.tilsagnsbrev.feilet;
+package no.nav.tag.tilsagnsbrev;
 
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
+import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrev;
+import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
@@ -16,7 +18,7 @@ import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.OK;
 import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.TIL_ALTINN;
 
 
-public class FeiletTilsagnsBehandler {
+public class TilsagnRetryProsess {
 
     @Autowired
     FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;

@@ -1,16 +1,18 @@
 package no.nav.tag.tilsagnsbrev;
 
 import lombok.extern.slf4j.Slf4j;
+import no.nav.tag.tilsagnsbrev.controller.exception.DataException;
+import no.nav.tag.tilsagnsbrev.controller.exception.SystemException;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
-import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrev;
+import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
+import no.nav.tag.tilsagnsbrev.feilet.NesteSteg;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapping.TilsagnTilAltinnXml;
 import no.nav.tag.tilsagnsbrev.mapping.journalpost.TilsagnTilJournalpost;
-import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,15 +39,20 @@ public class Tilsagnsbehandler {
     private AltInnService altInnService;
 
     @Autowired
+    private FeiletTilsagnBehandler feiletTilsagnBehandler;
+
+    @Autowired
     private JoarkService joarkService;
 
     public void behandleOgVerifisere(String goldenGateJson){
         try {
             behandleTilsagn(goldenGateJson);
-        } catch (Exception e){
-            log.info("Legger tilsagnsbrev i feil-logg");
+        } catch (SystemException | DataException e){
+            feiletTilsagnBehandler.lagreFeil(e);
         }
     }
+
+
 
     public void behandleTilsagn(String goldenGateJson) {
 
@@ -70,11 +77,13 @@ public class Tilsagnsbehandler {
     }
 
         private Tilsagn hentTilsagn(String goldengateJson){
-            Tilsagn tilsagn
+            Tilsagn tilsagn;
             try {
                tilsagn  = tilsagnJsonMapper.goldengateMeldingTilTilsagn(goldengateJson);
             } catch (Exception e){
-                FeiletTilsagnsbrev feiletTilsagnsbrev = new FeiletTilsagnsbrev()
+                log.error("Feil v/mapping fra goldengate-melding til Tilsagn-dto, ", e);
+                throw new DataException(NesteSteg.FRA_ARENA_MELDING, goldengateJson);
             }
+            return tilsagn;
         }
 }
