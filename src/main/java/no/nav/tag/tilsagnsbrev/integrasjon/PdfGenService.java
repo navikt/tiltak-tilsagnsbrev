@@ -1,6 +1,7 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import lombok.extern.slf4j.Slf4j;
+import no.nav.tag.tilsagnsbrev.exception.SystemException;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.PdfGenKonfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -39,7 +40,7 @@ public class PdfGenService {
             return restTemplate.postForObject(uri, entity, byte[].class);
         } catch (Exception e) {
             log.error("Feil ved oppretting av pdf fil", e);
-            throw new RuntimeException(e.getMessage());
+            throw new SystemException(e.getMessage());
         }
     }
 }

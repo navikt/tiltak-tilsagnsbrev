@@ -1,5 +1,7 @@
-package no.nav.tag.tilsagnsbrev.mapping;
+package no.nav.tag.tilsagnsbrev.mapper;
 
+import lombok.extern.slf4j.Slf4j;
+import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.dto.altinn.*;
 import no.nav.tag.tilsagnsbrev.dto.altinn.header.DocumentIdentification;
 import no.nav.tag.tilsagnsbrev.dto.altinn.header.Partner;
@@ -12,13 +14,23 @@ import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
 import java.util.Base64;
 
+@Slf4j
 @Component
-public class TilsagnTilAltinnXml {
+public class TilsagnXmlMapper {
 
     private static final String ATTACHMENT_NAME_PREFIX = "NAV - Tilsagnsbrev ";
     private static final String FIL_EXT = ".pdf";
 
     public String tilAltinnMelding(Tilsagn tilsagn, byte[] pdf) {
+        try {
+            return opprettAltinnMelding(tilsagn, pdf);
+        } catch (Exception e){
+            log.error("Feil ved oppretting av Altinn melding", e);
+            throw new DataException(e.getMessage());
+        }
+    }
+
+    private String opprettAltinnMelding(Tilsagn tilsagn, byte[] pdf) {
         InsertCorrespondenceV2 insertCorrespondenceV2 = new InsertCorrespondenceV2();
         insertCorrespondenceV2.setExternalShipmentReference(tilsagn.getTilsagnNummer().getLoepenrSak());
         insertCorrespondenceV2.setCorrespondenceObject(opprettBody(tilsagn, pdf));

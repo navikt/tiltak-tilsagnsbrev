@@ -1,21 +1,45 @@
 package no.nav.tag.tilsagnsbrev.mapping;
 
-import no.nav.tag.tilsagnsbrev.simulator.Testdata;
+import com.google.gson.JsonElement;
+import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
+import no.nav.tag.tilsagnsbrev.feilet.NesteSteg;
+import no.nav.tag.tilsagnsbrev.mapper.json.GsonWrapper;
+import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static no.nav.tag.tilsagnsbrev.simulator.Testdata.*;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class TilsagnJsonMapperTest {
 
-    TilsagnJsonMapper tilsagnJsonMapper = new TilsagnJsonMapper();
+    @Mock
+    GsonWrapper gsonWrapperMock;
+
+    @InjectMocks
+    TilsagnJsonMapper tilsagnJsonMapper;
+
     final String requestJson = Testdata.hentFilString(JSON_FIL);
+    final Tilsagn tilsagn = Testdata.gruppeTilsagn();
 
     @Test
     public void mapperTilstagnTilJson(){
-        Tilsagn tilsagn = Testdata.gruppeTilsagn();
-        String json = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
+
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagn).build();
+
+        when(gsonWrapperMock.opprettPdfJson(tilsagn)).thenCallRealMethod();
+        tilsagnJsonMapper.tilsagnTilPdfJson(tub);
+        String json = tub.getJson();
         System.out.println(json);
         assertTrue(json.contains("\"administrasjonKode\":\"" + tilsagn.getAdministrasjonKode() +"\""));
         assertTrue(json.contains("\"antallDeltakere\":\"" + tilsagn.getAntallDeltakere() +"\""));
@@ -44,9 +68,11 @@ public class TilsagnJsonMapperTest {
 
     @Test
     public void mapperGoldengateJsonTilTilsagn() {
-        final Tilsagn faktiskilsagn = tilsagnJsonMapper.goldengateMeldingTilTilsagn(requestJson);
-
-        assertEquals("tilsagnNummer.aar", "2019", faktiskilsagn.getTilsagnNummer().getAar());
+        when(gsonWrapperMock.opprettTilsagn(any(JsonElement.class))).thenCallRealMethod();
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().json(requestJson).build();
+        tilsagnJsonMapper.arenaMeldingTilTilsagn(tub);
+        final Tilsagn faktiskilsagn = tub.getTilsagn();
+                assertEquals("tilsagnNummer.aar", "2019", faktiskilsagn.getTilsagnNummer().getAar());
         assertEquals("tilsagnNummer.loepenrSak", "366023", faktiskilsagn.getTilsagnNummer().getLoepenrSak());
         assertEquals("tilsagnNummer.loepenrTilsagn", "1", faktiskilsagn.getTilsagnNummer().getLoepenrTilsagn());
 
@@ -104,5 +130,33 @@ public class TilsagnJsonMapperTest {
         assertEquals("saksbehandler.etternavn", "Johannessen", faktiskilsagn.getSaksbehandler().getEtternavn());
 
         assertNull("kommentar", faktiskilsagn.getKommentar());
+    }
+
+    @Test
+    public void arenaMeldingTilTilsagnGirDatafeilMedInnhold(){
+        when(gsonWrapperMock.opprettPdfJson(eq(tilsagn))).thenCallRealMethod();
+        String feilJson = "Ikke en json";
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().json(feilJson).build();
+        try {
+            tilsagnJsonMapper.arenaMeldingTilTilsagn(tub);
+            fail("Kaster ikke DataException");
+        } catch (DataException de){
+            assertNotNull(de.getMessage());
+            assertEquals(NesteSteg.START, tub.getNesteSteg());
+        }
+    }
+
+
+    @Test
+    public void tilsagnTilPdfJsonGirDatafeilMedInnhold(){
+        when(gsonWrapperMock.opprettPdfJson(eq(tilsagn))).thenThrow(new RuntimeException("Feil Mapping"));
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagn).build();
+        try {
+            tilsagnJsonMapper.tilsagnTilPdfJson(tub);
+            fail("Kaster ikke DataException");
+        } catch (DataException de){
+            assertEquals("errMsg", "Feil Mapping", de.getMessage());
+            assertEquals("Neste steg", NesteSteg.START, tub.getNesteSteg());
+        }
     }
 }

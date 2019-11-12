@@ -1,20 +1,22 @@
 package no.nav.tag.tilsagnsbrev;
 
 import lombok.extern.slf4j.Slf4j;
-import no.nav.tag.tilsagnsbrev.controller.exception.DataException;
-import no.nav.tag.tilsagnsbrev.controller.exception.SystemException;
+import no.nav.tag.tilsagnsbrev.exception.SystemException;
+import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
-import no.nav.tag.tilsagnsbrev.feilet.NesteSteg;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
-import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
-import no.nav.tag.tilsagnsbrev.mapping.TilsagnTilAltinnXml;
-import no.nav.tag.tilsagnsbrev.mapping.journalpost.TilsagnTilJournalpost;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnXmlMapper;
+import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnJournalpostMapper;
+import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.TIL_ALTINN;
 
 @Slf4j
 @Service
@@ -27,10 +29,10 @@ public class Tilsagnsbehandler {
     private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Autowired
-    private TilsagnTilAltinnXml tilsagnTilAltinnXml;
+    private TilsagnXmlMapper tilsagnXmlMapper;
 
     @Autowired
-    private TilsagnTilJournalpost tilsagnTilJournalpost;
+    private TilsagnJournalpostMapper tilsagnJournalpostMapper;
 
     @Autowired
     private PdfGenService pdfService;
@@ -44,46 +46,43 @@ public class Tilsagnsbehandler {
     @Autowired
     private JoarkService joarkService;
 
-    public void behandleOgVerifisere(String goldenGateJson){
+    public void behandleOgVerifisereTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
-            behandleTilsagn(goldenGateJson);
-        } catch (SystemException | DataException e){
-            feiletTilsagnBehandler.lagreFeil(e);
-        }
-    }
-
-
-
-    public void behandleTilsagn(String goldenGateJson) {
-
-
-
-        final Tilsagn tilsagn = hentTilsagn(goldenGateJson);
-
-
-
-        final String tilsagnJson = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
-
-        log.info("Tilsagnsbrev til pdfGen: {}", tilsagn.getTilsagnNummer());
-
-        //TODO Til pdf-gen er klar
-        final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagnJson);
-
-        final String tilsagnXml = tilsagnTilAltinnXml.tilAltinnMelding(tilsagn, pdf);
-
-        altInnService.sendTilsagnsbrev(tilsagnXml);
-        joarkService.sendJournalpost(tilsagnTilJournalpost.konverterTilJournalpost(tilsagn, pdf));
-
-    }
-
-        private Tilsagn hentTilsagn(String goldengateJson){
-            Tilsagn tilsagn;
-            try {
-               tilsagn  = tilsagnJsonMapper.goldengateMeldingTilTilsagn(goldengateJson);
-            } catch (Exception e){
-                log.error("Feil v/mapping fra goldengate-melding til Tilsagn-dto, ", e);
-                throw new DataException(NesteSteg.FRA_ARENA_MELDING, goldengateJson);
+            behandleTilsagn(tilsagnUnderBehandling);
+        } catch (Exception e) {
+            if (!feiletTilsagnBehandler.lagreFeil(tilsagnUnderBehandling, e)) {
+                log.error("Feil ble ikke lagret! Melding fra Arena: {}", tilsagnUnderBehandling.getJson(), e.getMessage());
             }
-            return tilsagn;
         }
+    }
+
+    private void behandleTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
+        tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
+        tilsagnJsonMapper.tilsagnTilPdfJson(tilsagnUnderBehandling);
+
+        final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagnUnderBehandling.getJson());
+
+        Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tilsagnUnderBehandling.getTilsagn(), pdf);
+        sendJournalpost(journalpost, tilsagnUnderBehandling);
+
+        final String tilsagnXml = tilsagnXmlMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), pdf);
+       // sendTilAltinn(tilsagnXml, tilsagn);
+    }
+
+    private void sendJournalpost(Journalpost journalpost, TilsagnUnderBehandling tilsagnUnderBehandling) {
+        try {
+            joarkService.sendJournalpost(journalpost);
+            tilsagnUnderBehandling.setNesteSteg(TIL_ALTINN);
+        } catch (Exception e) {
+            throw new SystemException(e.getMessage());
+        }
+    }
+
+    private void sendTilAltinn(String tilsagnXml, Tilsagn tilsagn) {
+        try {
+            altInnService.sendTilsagnsbrev(tilsagnXml);
+        } catch (Exception e) {
+            throw new SystemException(e.getMessage());
+        }
+    }
 }

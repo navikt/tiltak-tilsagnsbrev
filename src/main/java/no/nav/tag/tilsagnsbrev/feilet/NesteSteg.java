@@ -6,10 +6,13 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum NesteSteg {
-    FRA_ARENA_MELDING("Map fra Arena json til tilsagn"),
-    JOURNALFORES("Journalføres"),
-    TIL_ALTINN("Til Altinn"),
-    OK("OK");
+    START(0, "Start"),
+ //   HENT_PDF(3, "Hent pdf"),
+ //   LAG_JOURNALPOST(4, "Opprett journalpost"),
+    JOURNALFOER(5, "Journalføres"),
+ //   LAG_ALTINN_XML(6, "Opprett Altinn xml"),
+    TIL_ALTINN(7, "Til Altinn");
 
+    private final int stegNr;
     private final String tekst;
 }

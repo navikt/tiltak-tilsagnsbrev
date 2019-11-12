@@ -22,15 +22,18 @@ spring:
 tilsagnsbrev:
   integrasjon:
     pdfgen:
-      uri: http://localhost:5913
+      uri: http://localhost:8091
+    sts:
+      uri: http://localhost:8091/
+      bruker: bruker
+      passord: password
+    joark:
+      uri: http://localhost:8091/
     altinn:
       queue: DEV.QUEUE.1
-    joark:
-      uri: uri
-    sts:
-      uri: uri
-      bruker: bruker
-      passord: passord
+
+
+
 
 ibm:
   mq:

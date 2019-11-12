@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 
 @Configuration
-@Profile("kafka")
+@Profile("dev")
 @Slf4j
 public class KafkaKonfig {
 
@@ -20,5 +20,4 @@ public class KafkaKonfig {
         embeddedKafka.afterPropertiesSet();
         return embeddedKafka;
     }
-
 }

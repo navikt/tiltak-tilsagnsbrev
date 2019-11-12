@@ -1,0 +1,19 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "POST",
+        "urlPathPattern": "/template/tilsagnsbrev/create-pdf",
+        "headers": {
+          "Content-Type": {
+            "matches": "application/json"
+          }
+        }
+      },
+        "response": {
+          "status": 200,
+          "jsonBody": "{\"pdf\" : \"[B@b78a709\"}"
+        }
+      }
+  ]
+}

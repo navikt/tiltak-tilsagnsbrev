@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.JoarkKonfig;
-import no.nav.tag.tilsagnsbrev.mapping.journalpost.TilsagnTilJournalpost;
+import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnJournalpostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +22,7 @@ import java.util.Arrays;
 public class JoarkService {
 
     @Autowired
-    private TilsagnTilJournalpost tilsagnTilJournalpost;
+    private TilsagnJournalpostMapper tilsagnJournalpostMapper;
 
     @Autowired
     private RestTemplate restTemplate;
