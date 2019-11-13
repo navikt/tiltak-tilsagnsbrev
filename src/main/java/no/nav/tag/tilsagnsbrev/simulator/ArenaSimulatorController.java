@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Base64;
 
 @Profile({"dev", "preprod"})
 @RestController
@@ -37,7 +38,7 @@ public class ArenaSimulatorController {
 
     @GetMapping("altinn/{tilsagnNr}")
     public String sendTilAltinn(@PathVariable String tilsagnNr) throws Exception {
-        byte[] pdf = Testdata.hentFilBytes("dummy.pdf");
+        byte[] pdf = Base64.getEncoder().encode(Testdata.hentFilBytes("dummy.pdf"));
         Tilsagn tilsagn = enkeltTilsagn(tilsagnNr);
         altInnService.sendTilsagnsbrev(tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, pdf));
         return "OK";

@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Base64;
 
 public class Testdata {
 
@@ -94,7 +93,7 @@ public class Testdata {
         try {
             Path fil = Paths.get(Testdata.class.getClassLoader()
                     .getResource(filnavn).toURI());
-            return Base64.getEncoder().encode(Files.readAllBytes(fil));
+            return Files.readAllBytes(fil);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
