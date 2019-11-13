@@ -36,7 +36,7 @@ public class ArenaSimulatorController {
     }
 
     @GetMapping("altinn/{tilsagnNr}")
-    public String leggMeldingPaMq(@PathVariable String tilsagnNr) throws Exception {
+    public String sendTilAltinn(@PathVariable String tilsagnNr) throws Exception {
         byte[] pdf = Testdata.hentFilBytes("dummy.pdf");
         Tilsagn tilsagn = enkeltTilsagn(tilsagnNr);
         altInnService.sendTilsagnsbrev(tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, pdf));

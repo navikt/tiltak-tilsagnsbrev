@@ -35,13 +35,9 @@ public class Tilsagnsbehandler {
         final String tilsagnJson = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
         final byte[] base64Pdf = Base64.getEncoder().encode(pdfService.tilsagnTilPdfBrev(tilsagnJson));
 
-
-//        final String tilsagnXml = tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, pdf);
-        log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());
-
-//        altInnService.sendTilsagnsbrev(tilsagnXml);
-
         //Tilsagn til joark
 
+        altInnService.sendTilsagnsbrev(tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, base64Pdf));
+        log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());
     }
 }
