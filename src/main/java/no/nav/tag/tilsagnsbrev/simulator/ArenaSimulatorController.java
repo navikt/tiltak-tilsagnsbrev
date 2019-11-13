@@ -31,17 +31,17 @@ public class ArenaSimulatorController {
         return "OK";
     }
 
-    @GetMapping(value = "/mq/{tilsagnNr}")
-    public String leggMeldingPaMq(@PathVariable String tilsagnNr) throws Exception {
-                altInnService.sendTilsagnsbrev(enkeltTilsagn(tilsagnNr).toString());
-                return "OK";
-    }
+//    @GetMapping(value = "/mq/{tilsagnNr}")
+//    public String leggMeldingPaMq(@PathVariable String tilsagnNr) throws Exception {
+//                altInnService.sendTilsagnsbrev(enkeltTilsagn(tilsagnNr).toString());
+//                return "OK";
+//    }
 
-    @PostMapping(value = "/mq/xml")
-    public String leggXmlMeldingPaMq(@RequestBody String xml) throws Exception {
-        altInnService.sendTilsagnsbrev(xml);
-        return "OK";
-    }
+//    @PostMapping(value = "/mq/xml")
+//    public String leggXmlMeldingPaMq(@RequestBody String xml) throws Exception {
+//        altInnService.sendTilsagnsbrev(xml);
+//        return "OK";
+//    }
 
     private Tilsagn enkeltTilsagn(String tilsagnNr){
         return new TilsagnBuilder()

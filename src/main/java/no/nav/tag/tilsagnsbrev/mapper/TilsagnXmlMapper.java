@@ -1,10 +1,9 @@
 package no.nav.tag.tilsagnsbrev.mapper;
 
 import no.nav.tag.tilsagnsbrev.dto.altinn.*;
-import no.nav.tag.tilsagnsbrev.dto.altinn.header.DocumentIdentification;
-import no.nav.tag.tilsagnsbrev.dto.altinn.header.Partner;
-import no.nav.tag.tilsagnsbrev.dto.altinn.header.StandardBusinessDocumentHeader;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
+import no.nav.tag.tilsagnsbrev.konfigurasjon.AltinnKonfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
@@ -15,22 +14,19 @@ import java.util.Base64;
 @Component
 public class TilsagnXmlMapper {
 
-    private static final String ATTACHMENT_NAME_PREFIX = "NAV - Tilsagnsbrev ";
+    @Autowired
+    private AltinnKonfig altinnKonfig;
+
+    private static final String ATTACHMENT_NAME_PREFIX = "NAV-Tilsagnsbrev ";
     private static final String FIL_EXT = ".pdf";
 
-    public String tilAltinnMelding(Tilsagn tilsagn, byte[] pdf) {
-        InsertCorrespondenceV2 insertCorrespondenceV2 = new InsertCorrespondenceV2();
-        insertCorrespondenceV2.setExternalShipmentReference(tilsagn.getTilsagnNummer().getLoepenrSak());
-        insertCorrespondenceV2.setCorrespondenceObject(opprettBody(tilsagn, pdf));
-        return tilsagnsbrevTilXml(new StandardBusinessDocument(opprettHeader(tilsagn), insertCorrespondenceV2));
-    }
-
-    private StandardBusinessDocumentHeader opprettHeader(Tilsagn tilsagn) {
-        StandardBusinessDocumentHeader header = new StandardBusinessDocumentHeader();
-        header.setDocumentIdentificationObject(new DocumentIdentification(tilsagn.getTilsagnDato().toString(), tilsagn.getTilsagnNummer().getLoepenrSak()));
-        header.setReceiverObject(new Partner(tilsagn.getTiltakArrangor().getOrgNummer()));
-        header.setSenderObject(new Partner(tilsagn.getNavEnhet().getNavKontor()));
-        return header;
+    public InsertCorrespondenceBasicV2 tilAltinnMelding(Tilsagn tilsagn, byte[] pdf) {
+        InsertCorrespondenceBasicV2 insertCorrespondenceBasicV2 = new InsertCorrespondenceBasicV2();
+        insertCorrespondenceBasicV2.setSystemUserName(altinnKonfig.getUser());
+        insertCorrespondenceBasicV2.setSystemPassword(altinnKonfig.getPassword());
+        insertCorrespondenceBasicV2.setExternalShipmentReference(tilsagn.getTilsagnNummer().getLoepenrSak());
+        insertCorrespondenceBasicV2.setCorrespondenceObject(opprettBody(tilsagn, pdf));
+        return insertCorrespondenceBasicV2;
     }
 
     private Correspondence opprettBody(Tilsagn tilsagn, byte[] pdf) {
@@ -50,20 +46,4 @@ public class TilsagnXmlMapper {
         content.getAttachments().getBinaryAttachments().getBinaryAttachmentV2().add(binaryAttachmentV2);
         return content;
     }
-
-    private String tilsagnsbrevTilXml(StandardBusinessDocument standardBusinessDocument) {
-        StringWriter stringWriter = new StringWriter();
-        JAXBContext context;
-        Marshaller marshaller;
-        try {
-            context = JAXBContext.newInstance(StandardBusinessDocument.class);
-            marshaller = context.createMarshaller();
-            marshaller.marshal(standardBusinessDocument, stringWriter);
-        } catch (Exception e) {
-            throw new RuntimeException("Feil ved oppretting av dokument xml: ", e);
-        }
-        return stringWriter.getBuffer().toString();
-    }
-
-
 }

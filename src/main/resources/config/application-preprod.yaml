@@ -22,10 +22,6 @@ tilsagnsbrev:
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
-      queue: QA.Q1_EMOTTAK.ALTUT_INN
-      queueManager: MQ1LSC02
-      channel: Q1_TILTAK_TILSAGNSBR
+      uri: uri
       user: ${tilsagnsbrev.mq.user}
       password: ${tilsagnsbrev.mq.pwd}
-      host: b27apvl176.preprod.local
-      port: 1413

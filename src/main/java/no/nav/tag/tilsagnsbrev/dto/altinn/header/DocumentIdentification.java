@@ -9,7 +9,7 @@ public class DocumentIdentification {
 
     private static final String ELEM_STANDARD = "http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10";
     private static final String ELEM_TYPEVERSION = "1.0";
-    private static final String ELEM_TYPE = "InsertCorrespondenceV2";
+    private static final String ELEM_TYPE = "InsertCorrespondenceBasicV2";
 
     private final String Standard = ELEM_STANDARD;
     private final String TypeVersion = ELEM_TYPEVERSION;

@@ -33,10 +33,10 @@ public class Tilsagnsbehandler {
         final String tilsagnJson = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
         final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagnJson);
 
-        final String tilsagnXml = tilsagnXmlMapper.tilAltinnMelding(tilsagn, pdf);
+//        final String tilsagnXml = tilsagnXmlMapper.tilAltinnMelding(tilsagn, pdf);
         log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());
 
-        altInnService.sendTilsagnsbrev(tilsagnXml);
+//        altInnService.sendTilsagnsbrev(tilsagnXml);
 
         //Tilsagn til joark
 

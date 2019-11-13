@@ -13,5 +13,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 @AllArgsConstructor
 public class StandardBusinessDocument {
     StandardBusinessDocumentHeader standardBusinessDocumentHeader;
-    InsertCorrespondenceV2 InsertCorrespondenceV2Object;
+    InsertCorrespondenceBasicV2 insertCorrespondenceBasicV2Object;
 }

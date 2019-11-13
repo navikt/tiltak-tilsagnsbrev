@@ -1,33 +1,27 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import lombok.extern.slf4j.Slf4j;
-import no.nav.tag.tilsagnsbrev.konfigurasjon.MqKonfig;
+import no.nav.tag.tilsagnsbrev.dto.altinn.InsertCorrespondenceBasicV2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.JmsException;
-import org.springframework.jms.annotation.EnableJms;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.soap.client.core.SoapActionCallback;
+
 
 @Slf4j
-@Component
-@EnableJms
+@Service
 public class AltInnService {
 
+    private static final String SOAPAction = "http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10/ICorrespondenceAgencyExternalBasic/InsertCorrespondenceBasicV2";
+
+
     @Autowired
-    private JmsTemplate jmsTemplate;
+    private WebServiceTemplate webServiceTemplate;
 
-    @Autowired
-    private MqKonfig mqKonfig;
+    public void sendTilsagnsbrev(InsertCorrespondenceBasicV2 soapBody) {
 
-
-    public void sendTilsagnsbrev(String tilsagnAltinnXml) {
-        try {
-            jmsTemplate.convertAndSend(mqKonfig.getQueue(), tilsagnAltinnXml);
-        } catch (JmsException ex) {
-            log.error("Feil ved sending på MQ", ex);
-            throw new RuntimeException(ex.getMessage());
-        }
+        SoapActionCallback callback = new SoapActionCallback(SOAPAction);
+        this.webServiceTemplate.marshalSendAndReceive(soapBody, callback);
 
     }
-
 }

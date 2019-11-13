@@ -20,10 +20,6 @@ tilsagnsbrev:
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
-      queue: DEV.QUEUE.1
-      queueManager: QM1
-      channel: DEV.ADMIN.SVRCONN
+      uri: http://localhost:8090
       user: ${tilsagnsbrev.mq.user}
       password: ${tilsagnsbrev.mq.pwd}
-      host: localhost
-      port: 32794
