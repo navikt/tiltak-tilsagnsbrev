@@ -1,6 +1,6 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
-import no.nav.tag.tilsagnsbrev.dto.altinn.InsertCorrespondenceBasicV2;
+import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnDto;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Base64;
 
 
 @RunWith(SpringRunner.class)
@@ -31,12 +33,13 @@ public class AltInnIntTest {
     public void senderTilsagnsbrev(){
 
         Tilsagn tilsagn = Testdata.tilsagnEnDeltaker();
-       byte[] pdf = Testdata.hentFilBytes("dummy.pdf");
-   // byte[] pdf = "pdf".getBytes();
+     //  byte[] pdf = Testdata.hentFilBytes("dummy.pdf");
+    byte[] pdf = "pdf".getBytes();
 
-        InsertCorrespondenceBasicV2 soapEnvelope  = tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, pdf);
+        final byte[] base64Pdf = Base64.getEncoder().encode(pdf);
+        InsertCorrespondenceBasicV2 insertCorrespondenceBasicV2  = tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, base64Pdf);
 
-       altInnService.sendTilsagnsbrev(soapEnvelope);
+       altInnService.sendTilsagnsbrev(insertCorrespondenceBasicV2);
 
 
 

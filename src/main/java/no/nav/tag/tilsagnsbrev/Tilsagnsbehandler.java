@@ -9,6 +9,8 @@ import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
+
 @Slf4j
 @Service
 public class Tilsagnsbehandler {
@@ -31,7 +33,8 @@ public class Tilsagnsbehandler {
         log.info("Tilsagnsbrev til pdfGen: {}", tilsagn.getTilsagnNummer());
 
         final String tilsagnJson = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
-        final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagnJson);
+        final byte[] base64Pdf = Base64.getEncoder().encode(pdfService.tilsagnTilPdfBrev(tilsagnJson));
+
 
 //        final String tilsagnXml = tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, pdf);
         log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());

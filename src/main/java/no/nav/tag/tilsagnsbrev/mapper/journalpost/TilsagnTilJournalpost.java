@@ -19,7 +19,7 @@ import static no.nav.tag.tilsagnsbrev.dto.journalpost.DokumentVariant.*;
 @Component
 public class TilsagnTilJournalpost {
 
-    public Journalpost konverterTilJournalpost(Tilsagn tilsagnsbrev, final byte[] pdfBytes) {
+    public Journalpost konverterTilJournalpost(Tilsagn tilsagnsbrev, final byte[] base64PdfBytes) {
 
         Bruker bruker = new Bruker();
         bruker.setId(tilsagnsbrev.getTiltakArrangor().getOrgNummer());
@@ -28,7 +28,7 @@ public class TilsagnTilJournalpost {
 
         Dokument dokument = new Dokument();
         dokument.setDokumentVarianter(Collections.singletonList(
-                new DokumentVariant(FILTYPE_PDF, VARIANFORMAT_PDF, Base64.getEncoder().encodeToString(pdfBytes)))
+                new DokumentVariant(FILTYPE_PDF, VARIANFORMAT_PDF, base64PdfBytes.toString()))
         );
         journalpost.setDokumenter(Collections.singletonList(dokument));
         return journalpost;
