@@ -4,6 +4,7 @@ import no.nav.tag.tilsagnsbrev.TilsagnBuilder;
 import no.nav.tag.tilsagnsbrev.Tilsagnsbehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,9 @@ public class ArenaSimulatorController {
     @Autowired
     private AltInnService altInnService;
 
+    @Autowired
+    private TilsagnTilAltinnDto tilsagnTilAltinnDto;
+
 
     @PostMapping(value = "/kafka")
     public void leggMeldingPaKafkaToppic(@RequestBody String json) throws Exception {
@@ -31,19 +35,15 @@ public class ArenaSimulatorController {
         return "OK";
     }
 
-//    @GetMapping(value = "/mq/{tilsagnNr}")
-//    public String leggMeldingPaMq(@PathVariable String tilsagnNr) throws Exception {
-//                altInnService.sendTilsagnsbrev(enkeltTilsagn(tilsagnNr).toString());
-//                return "OK";
-//    }
+    @GetMapping("altinn/{tilsagnNr}")
+    public String leggMeldingPaMq(@PathVariable String tilsagnNr) throws Exception {
+        byte[] pdf = Testdata.hentFilBytes("dummy.pdf");
+        Tilsagn tilsagn = enkeltTilsagn(tilsagnNr);
+        altInnService.sendTilsagnsbrev(tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, pdf));
+        return "OK";
+    }
 
-//    @PostMapping(value = "/mq/xml")
-//    public String leggXmlMeldingPaMq(@RequestBody String xml) throws Exception {
-//        altInnService.sendTilsagnsbrev(xml);
-//        return "OK";
-//    }
-
-    private Tilsagn enkeltTilsagn(String tilsagnNr){
+    private Tilsagn enkeltTilsagn(String tilsagnNr) {
         return new TilsagnBuilder()
                 .medTilsagnNummer(new TilsagnNummer("2019", null, tilsagnNr))
                 .medAdministrasjonKode("1").medAntallDeltakere("13").medAntallTimeverk("500").medBeslutter(new Person("Besluttesen", "Betsy"))

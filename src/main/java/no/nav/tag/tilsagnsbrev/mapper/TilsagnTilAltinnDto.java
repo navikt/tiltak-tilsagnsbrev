@@ -12,7 +12,7 @@ import java.io.StringWriter;
 import java.util.Base64;
 
 @Component
-public class TilsagnXmlMapper {
+public class TilsagnTilAltinnDto {
 
     @Autowired
     private AltinnKonfig altinnKonfig;

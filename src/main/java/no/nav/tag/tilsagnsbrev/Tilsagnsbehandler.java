@@ -5,7 +5,7 @@ import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnXmlMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class Tilsagnsbehandler {
     private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Autowired
-    private TilsagnXmlMapper tilsagnXmlMapper;
+    private TilsagnTilAltinnDto tilsagnTilAltinnDto;
 
     @Autowired
     private PdfGenService pdfService;
@@ -33,7 +33,7 @@ public class Tilsagnsbehandler {
         final String tilsagnJson = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
         final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagnJson);
 
-//        final String tilsagnXml = tilsagnXmlMapper.tilAltinnMelding(tilsagn, pdf);
+//        final String tilsagnXml = tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, pdf);
         log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());
 
 //        altInnService.sendTilsagnsbrev(tilsagnXml);

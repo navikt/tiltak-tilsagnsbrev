@@ -2,7 +2,7 @@ package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import no.nav.tag.tilsagnsbrev.dto.altinn.InsertCorrespondenceBasicV2;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnXmlMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnDto;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class AltInnIntTest {
     AltInnService altInnService;
 
     @Autowired
-    TilsagnXmlMapper tilsagnXmlMapper;
+    TilsagnTilAltinnDto tilsagnTilAltinnDto;
 
     @Test
     @Ignore
@@ -34,7 +34,7 @@ public class AltInnIntTest {
        byte[] pdf = Testdata.hentFilBytes("dummy.pdf");
    // byte[] pdf = "pdf".getBytes();
 
-        InsertCorrespondenceBasicV2 soapEnvelope  = tilsagnXmlMapper.tilAltinnMelding(tilsagn, pdf);
+        InsertCorrespondenceBasicV2 soapEnvelope  = tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, pdf);
 
        altInnService.sendTilsagnsbrev(soapEnvelope);
 

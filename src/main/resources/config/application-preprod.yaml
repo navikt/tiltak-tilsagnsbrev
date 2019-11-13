@@ -23,5 +23,5 @@ tilsagnsbrev:
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
       uri: uri
-      user: ${tilsagnsbrev.mq.user}
-      password: ${tilsagnsbrev.mq.pwd}
+      user: $${tilsagnsbrev_srvuser}
+      password: ${tilsagnsbrev_srvpwd}

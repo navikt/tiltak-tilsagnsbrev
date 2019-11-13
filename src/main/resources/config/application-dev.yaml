@@ -21,5 +21,5 @@ tilsagnsbrev:
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
       uri: http://localhost:8090
-      user: ${tilsagnsbrev.mq.user}
-      password: ${tilsagnsbrev.mq.pwd}
+      user: ${tilsagnsbrev_srvuser}
+      password: ${tilsagnsbrev_srvpwd}

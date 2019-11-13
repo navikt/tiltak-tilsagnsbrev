@@ -4,7 +4,7 @@ import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnXmlMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnDto;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class TilsagnsbehandlerTest {
     private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Mock
-    private TilsagnXmlMapper tilsagnXmlMapper;
+    private TilsagnTilAltinnDto tilsagnTilAltinnDto;
 
     @Mock
     private AltInnService altInnService;
@@ -45,7 +45,7 @@ public class TilsagnsbehandlerTest {
 
         when(pdfGenService.tilsagnTilPdfBrev(tilsagnJson)).thenReturn("pdf".getBytes());
 
-        when(tilsagnXmlMapper.tilAltinnMelding(eq(tilsagn), any())).thenCallRealMethod();
+        when(tilsagnTilAltinnDto.tilAltinnMelding(eq(tilsagn), any())).thenCallRealMethod();
 
         tilsagnsbehandler.behandleTilsagn("");
 
