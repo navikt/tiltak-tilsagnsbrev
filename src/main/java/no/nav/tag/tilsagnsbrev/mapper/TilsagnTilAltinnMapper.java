@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Component
 public class TilsagnTilAltinnMapper {
@@ -33,7 +33,7 @@ public class TilsagnTilAltinnMapper {
                 .withSystemUserCode(SYSTEM_USERCODE)
                 .withExternalShipmentReference(tilsagn.getTilsagnNummer().getLoepenrSak())
                 .withCorrespondence(new InsertCorrespondenceV2()
-                        .withVisibleDateTime(fromLocadate(LocalDate.now()))
+                        .withVisibleDateTime(fromLocalDate(LocalDateTime.now()))
                         .withReportee(tilsagn.getTiltakArrangor().getOrgNummer())
                         .withContent(new ExternalContentV2()
                                 .withAttachments(new AttachmentsV2()
@@ -54,9 +54,9 @@ public class TilsagnTilAltinnMapper {
                                                                 .toString()))))));
     }
 
-    private XMLGregorianCalendar fromLocadate(LocalDate localDate) {
+    private XMLGregorianCalendar fromLocalDate(LocalDateTime localDateTime) {
         try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(localDate.toString());
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(localDateTime.toString());
         } catch (DatatypeConfigurationException e) {
             e.printStackTrace(); //TODO
         }
