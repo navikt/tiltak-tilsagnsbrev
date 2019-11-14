@@ -24,11 +24,13 @@ public class TilsagnTilAltinnMapper {
 
     private static final String ATTACHMENT_NAME_PREFIX = "NAV-Tilsagnsbrev ";
     private static final String FIL_EXT = ".pdf";
+    private static final String SYSTEM_USERCODE = "TAG_TILSAGN";
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(Tilsagn tilsagn, byte[] pdf) {
         return new InsertCorrespondenceBasicV2()
                 .withSystemUserName(altinnProperties.getUser())
                 .withSystemPassword(altinnProperties.getPassword())
+                .withSystemUserCode(SYSTEM_USERCODE)
                 .withExternalShipmentReference(tilsagn.getTilsagnNummer().getLoepenrSak())
                 .withCorrespondence(new InsertCorrespondenceV2()
                         .withVisibleDateTime(fromLocadate(LocalDate.now()))
