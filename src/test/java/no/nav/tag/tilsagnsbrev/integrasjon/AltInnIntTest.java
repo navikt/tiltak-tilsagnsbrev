@@ -29,6 +29,7 @@ public class AltInnIntTest {
     TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
     @Test
+    @Ignore
     public void senderTilsagnsbrev(){
 
         Tilsagn tilsagn = Testdata.tilsagnEnDeltaker();
