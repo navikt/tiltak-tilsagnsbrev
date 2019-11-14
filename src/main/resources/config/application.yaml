@@ -21,6 +21,7 @@ tilsagnsbrev:
       uri: uri
     sts:
       uri: uri
+      ws-uri: ws-uri
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:

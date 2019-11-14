@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev.dto;
+package no.nav.tag.tilsagnsbrev.dto.sts;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;

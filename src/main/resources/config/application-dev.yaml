@@ -17,9 +17,10 @@ tilsagnsbrev:
       uri: uri
     sts:
       uri: uri
+      ws-uri: http://localhost:8090
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
-      uri: http://localhost:8090
+      uri: http://localhost:8088
       user: bruker
       password: passord

@@ -1,7 +1,7 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
-import no.nav.tag.tilsagnsbrev.dto.StsTokenResponse;
-import no.nav.tag.tilsagnsbrev.konfigurasjon.StsKonfig;
+import no.nav.tag.tilsagnsbrev.dto.sts.StsTokenResponse;
+import no.nav.tag.tilsagnsbrev.konfigurasjon.StsProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,17 +18,17 @@ import static no.nav.tag.tilsagnsbrev.konfigurasjon.StsCacheKonfig.STS_CACHE;
 @Service
 public class StsService {
 
-    private static final String PATH = "/rest/v1/sts/token";
+    private static final String PATH = "/rest/v1/stsws/token";
     private static final String PARAM_GRANT_TYPE = "grant_type=client_credentials";
     private static final String PARAM_SCOPE = "scope=openid";
     private final URI uri;
     private final HttpHeaders headers = new HttpHeaders();
 
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
-    public StsService(StsKonfig stsKonfig) {
-        uri = UriComponentsBuilder.fromUri(stsKonfig.getUri())
+    public StsService(StsProperties stsProperties) {
+        uri = UriComponentsBuilder.fromUri(stsProperties.getUri())
                 .path(PATH)
                 .query(PARAM_GRANT_TYPE)
                 .query(PARAM_SCOPE)
@@ -36,7 +36,7 @@ public class StsService {
                 .toUri();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType((MediaType.APPLICATION_FORM_URLENCODED));
-        headers.setBasicAuth(stsKonfig.getBruker(), stsKonfig.getPassord());
+        headers.setBasicAuth(stsProperties.getBruker(), stsProperties.getPassord());
     }
 
     @Cacheable(STS_CACHE)

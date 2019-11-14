@@ -19,6 +19,7 @@ tilsagnsbrev:
       uri: uri
     sts:
       uri: uri
+      ws-uri: https://stsws-q1.preprod.local/SecurityTokenServiceProvider/
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:

@@ -2,7 +2,7 @@ package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnDto;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class AltInnIntTest {
     AltInnService altInnService;
 
     @Autowired
-    TilsagnTilAltinnDto tilsagnTilAltinnDto;
+    TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
     @Test
     @Ignore
@@ -37,7 +37,7 @@ public class AltInnIntTest {
     byte[] pdf = "pdf".getBytes();
 
         final byte[] base64Pdf = Base64.getEncoder().encode(pdf);
-        InsertCorrespondenceBasicV2 insertCorrespondenceBasicV2  = tilsagnTilAltinnDto.tilAltinnMelding(tilsagn, base64Pdf);
+        InsertCorrespondenceBasicV2 insertCorrespondenceBasicV2  = tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, base64Pdf);
 
        altInnService.sendTilsagnsbrev(insertCorrespondenceBasicV2);
 

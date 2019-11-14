@@ -1,6 +1,6 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
-import no.nav.tag.tilsagnsbrev.konfigurasjon.StsKonfig;
+import no.nav.tag.tilsagnsbrev.konfigurasjon.StsProperties;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ public class StsServiceIntTest {
     private StsService stsService;
 
     @Autowired
-    StsKonfig stsKonfig;
+    StsProperties stsProperties;
 
     @Autowired
     public void setStsService(StsService stsService){
