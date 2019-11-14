@@ -24,5 +24,5 @@ tilsagnsbrev:
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
       uri: ${altinn.correspondence.url}
-      user: $${tilsagnsbrev_srvuser}
+      user: ${tilsagnsbrev_srvuser}
       password: ${tilsagnsbrev_srvpwd}
