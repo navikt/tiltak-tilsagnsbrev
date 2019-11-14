@@ -12,37 +12,10 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 @Data
-@Profile("dev")
 @Configuration
 @ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.altinn")
 public class AltinnProperties {
     private String uri;
     private String user;
     private String password;
-
-    @Bean(name = "altinnWebService")
-    public WebServiceTemplate webServiceTemplate(WebServiceTemplateBuilder builder) throws Exception {
-
-        UsernamePasswordCredentials credential = new UsernamePasswordCredentials(user, password);
-
-        HttpComponentsMessageSender messageSender = new HttpComponentsMessageSender();
-        messageSender.setAcceptGzipEncoding(false);
-        messageSender.setCredentials(credential);
-        messageSender.afterPropertiesSet();
-
-        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setPackagesToScan("no.altinn.services.serviceengine.correspondence._2009._10");
-        marshaller.afterPropertiesSet();
-
-        WebServiceTemplate webServiceTemplate = builder
-                .setDefaultUri(uri)
-                .messageSenders(messageSender)
-                .setMarshaller(marshaller)
-                .setUnmarshaller(marshaller)
-                .build();
-        webServiceTemplate.afterPropertiesSet();
-        return webServiceTemplate;
-    }
-
-
 }
