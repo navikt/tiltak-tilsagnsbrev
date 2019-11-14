@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile({"preprod, prod"})
+@Profile({"preprod", "prod"})
 public class AltinnSamlKonfig {
 
     @Autowired
