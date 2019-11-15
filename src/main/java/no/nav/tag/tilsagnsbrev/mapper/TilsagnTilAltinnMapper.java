@@ -26,19 +26,34 @@ public class TilsagnTilAltinnMapper {
     private static final String FIL_EXT = ".pdf";
     private static final String SYSTEM_USERCODE = "TAG_TILSAGN";
 
+
+    private static final String SERVICE_CODE = "5278"; //TODO Sjekk bruken av dette.
+    private static final String SERVICE_EDITION = "1"; //TODO Sjekk bruken av dette.
+    private static final String LANGUAGE_CODE = "1044"; //TODO Sjekk bruken av dette.
+    private static final String SENDER_REF = "test_ref"; //TODO Sjekk bruken av dette.
+    private static final String MSG_SENDER = "NAV"; //TODO Sjekk bruken av dette.
+
     public InsertCorrespondenceBasicV2 tilAltinnMelding(Tilsagn tilsagn, byte[] pdf) {
         return new InsertCorrespondenceBasicV2()
                 .withSystemUserName(altinnProperties.getSystemBruker())
                 .withSystemPassword(altinnProperties.getSystemPassord())
                 .withSystemUserCode(SYSTEM_USERCODE)
-                .withExternalShipmentReference(tilsagn.getTilsagnNummer().getLoepenrSak())
+                .withExternalShipmentReference(extShipmentRef())
                 .withCorrespondence(new InsertCorrespondenceV2()
-                        .withVisibleDateTime(fromLocalDate(LocalDateTime.now()))
+                        .withServiceCode(SERVICE_CODE)
+                        .withServiceEdition(SERVICE_EDITION)
+                        .withVisibleDateTime(fromLocalDate(LocalDateTime.now())) //TODO Sjekk
+                        .withAllowSystemDeleteDateTime(fromLocalDate(LocalDateTime.now().plusMonths(3))) //TODO Sjekk
+                        .withDueDateTime(fromLocalDate(LocalDateTime.now().plusMonths(3)))   //TODO Sjekk
+                        .withAllowForwarding(false)
+                        .withMessageSender(MSG_SENDER)
                         .withReportee(tilsagn.getTiltakArrangor().getOrgNummer())
                         .withContent(new ExternalContentV2()
+                                .withLanguageCode(LANGUAGE_CODE)
                                 .withAttachments(new AttachmentsV2()
                                         .withBinaryAttachments(new BinaryAttachmentExternalBEV2List()
                                                 .withBinaryAttachmentV2(new BinaryAttachmentV2()
+                                                        .withSendersReference(SENDER_REF)
                                                         .withData(pdf)
                                                         .withFileName(new StringBuilder()
                                                                 .append(tilsagn.getTiltakArrangor().getOrgNummer())
@@ -60,5 +75,10 @@ public class TilsagnTilAltinnMapper {
         } catch (DatatypeConfigurationException e) {
             throw new RuntimeException(e); //TODO
         }
+    }
+
+    private static final String EXT_REF = "ESR_NAV";    //TODO Sjekk bruken av dette.
+    private String extShipmentRef(){
+        return  EXT_REF + Double.valueOf(Math.random() * 1000000000);
     }
 }

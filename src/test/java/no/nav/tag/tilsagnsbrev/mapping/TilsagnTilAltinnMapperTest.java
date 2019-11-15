@@ -42,6 +42,7 @@ public class TilsagnTilAltinnMapperTest {
 
         InsertCorrespondenceBasicV2 correspondenceBasicV2 = tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, pdf);
         assertNotNull(correspondenceBasicV2.getCorrespondence().getVisibleDateTime());
+
     }
 
 
