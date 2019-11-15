@@ -45,7 +45,4 @@ public class  Tilsagn {
     private String totaltTilskuddbelop;
 
     private String valutaKode;
-
-
-
 }

@@ -1,0 +1,28 @@
+spring:
+  kafka:
+    bootstrap-servers: b27apvl00045.preprod.local:8443, b27apvl00046.preprod.local:8443, b27apvl00047.preprod.local:8443
+    client-id: tiltak-tilsagnsbrev
+    properties:
+      security.protocol: SASL_SSL
+      sasl:
+        mechanism: PLAIN
+        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tilsagnsbrev_srvuser}" password="${tilsagnsbrev_srvpwd}";
+      ssl.truststore:
+        location: ${javax.net.ssl.trustStore}
+        password: ${javax.net.ssl.trustStorePassword}
+
+tilsagnsbrev:
+  integrasjon:
+    pdfgen:
+      uri: http://tag-dokgen.nais.preprod.local
+    joark:
+      uri: uri
+    sts:
+      uri: uri
+      ws-uri: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
+      bruker: ${tilsagnsbrev_srvuser}
+      passord: ${tilsagnsbrev_srvpwd}
+    altinn:
+      uri: ${altinn.correspondence.url}
+      systemBruker: ${tilsagnsbrev_altinn_system_bruker}
+      systemPassord: ${tilsagnsbrev_altinn_system_passord}

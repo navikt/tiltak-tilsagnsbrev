@@ -1,6 +1,7 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import no.nav.tag.tilsagnsbrev.dto.journalpost.JournalpostResponse;
+import no.nav.tag.tilsagnsbrev.integrasjon.sts.StsService;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.JoarkKonfig;
 import org.junit.Ignore;
 import org.junit.Test;

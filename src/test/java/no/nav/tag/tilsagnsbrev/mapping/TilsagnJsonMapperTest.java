@@ -1,10 +1,11 @@
 package no.nav.tag.tilsagnsbrev.mapping;
 
-import no.nav.tag.tilsagnsbrev.Testdata;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import org.junit.Test;
 
-import static no.nav.tag.tilsagnsbrev.Testdata.*;
+import static no.nav.tag.tilsagnsbrev.simulator.Testdata.*;
 import static org.junit.Assert.*;
 
 public class TilsagnJsonMapperTest {
@@ -14,7 +15,7 @@ public class TilsagnJsonMapperTest {
 
     @Test
     public void mapperTilstagnTilJson(){
-        Tilsagn tilsagn = Testdata.tilsagnsbrev();
+        Tilsagn tilsagn = Testdata.gruppeTilsagn();
         String json = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
         System.out.println(json);
         assertTrue(json.contains("\"administrasjonKode\":\"" + tilsagn.getAdministrasjonKode() +"\""));

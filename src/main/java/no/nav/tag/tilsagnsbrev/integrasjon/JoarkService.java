@@ -5,7 +5,7 @@ import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.JournalpostResponse;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.JoarkKonfig;
-import no.nav.tag.tilsagnsbrev.mapping.journalpost.TilsagnTilJournalpost;
+import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnTilJournalpost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

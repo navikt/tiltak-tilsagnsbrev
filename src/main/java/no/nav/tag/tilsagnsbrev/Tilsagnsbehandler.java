@@ -4,43 +4,40 @@ import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
-import no.nav.tag.tilsagnsbrev.mapping.TilsagnJsonMapper;
-import no.nav.tag.tilsagnsbrev.mapping.TilsagnTilAltinnXml;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Base64;
 
 @Slf4j
 @Service
 public class Tilsagnsbehandler {
 
     @Autowired
-    TilsagnJsonMapper tilsagnJsonMapper;
+    private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Autowired
-    TilsagnTilAltinnXml tilsagnTilAltinnXml;
+    private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
     @Autowired
-    PdfGenService pdfService;
+    private PdfGenService pdfService;
 
     @Autowired
-    AltInnService altInnService;
+    private AltInnService altInnService;
 
     public void behandleTilsagn(String goldenGateJson) {
 
         final Tilsagn tilsagn = tilsagnJsonMapper.goldengateMeldingTilTilsagn(goldenGateJson);
+        log.info("Tilsagnsbrev til pdfGen: {}", tilsagn.getTilsagnNummer());
+
         final String tilsagnJson = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
-
-        log.info("Tilsagnsbrev til pdfGen: {}", tilsagnJson);
-
-        final byte[] pdf = null; // = pdfService.tilsagnTilPdfBrev(tilsagnJson);
-
-        final String tilsagnXml = tilsagnTilAltinnXml.tilAltinnMelding(tilsagn, pdf);
-
-        log.info("Tilsagnsbrev til Altinn: {}", tilsagnXml);
-
-        altInnService.sendTilsagnsbrev(tilsagnXml);
+        final byte[] base64Pdf = Base64.getEncoder().encode(pdfService.tilsagnTilPdfBrev(tilsagnJson));
 
         //Tilsagn til joark
 
+        int kvittering = altInnService.sendTilsagnsbrev(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, base64Pdf));
+        log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());
     }
 }

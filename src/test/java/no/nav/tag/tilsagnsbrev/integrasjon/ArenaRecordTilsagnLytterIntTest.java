@@ -1,7 +1,7 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import lombok.extern.slf4j.Slf4j;
-import no.nav.tag.tilsagnsbrev.Testdata;
+import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.*;
@@ -33,10 +33,10 @@ import static org.junit.Assert.assertEquals;
 public class ArenaRecordTilsagnLytterIntTest {
 
     @ClassRule
-    public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true, ArenaTilsagnLytter.topic);
+    public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true, ArenaConsumer.topic);
 
     @Autowired
-    private ArenaTilsagnLytter arenaTilsagnLytter;
+    private ArenaConsumer arenaConsumer;
 
     @Autowired
     private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
@@ -60,7 +60,7 @@ public class ArenaRecordTilsagnLytterIntTest {
         senderProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         DefaultKafkaProducerFactory producerFactory = new DefaultKafkaProducerFactory(senderProps);
         kafkaTemplate = new KafkaTemplate<>(producerFactory);
-        kafkaTemplate.setDefaultTopic(ArenaTilsagnLytter.topic);
+        kafkaTemplate.setDefaultTopic(ArenaConsumer.topic);
         kafkaListenerEndpointRegistry.getListenerContainers()
                 .forEach(messageListenerContainer ->
                         ContainerTestUtils.waitForAssignment(messageListenerContainer, embeddedKafkaRule.getEmbeddedKafka().getPartitionsPerTopic()));
@@ -71,11 +71,11 @@ public class ArenaRecordTilsagnLytterIntTest {
     public void lytterPaArenaTilsagn() throws Exception {
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        arenaTilsagnLytter.setLatch(countDownLatch);
+        arenaConsumer.setLatch(countDownLatch);
 
         String tilsagnJson = Testdata.hentFilString(Testdata.JSON_FIL);
 
-        kafkaTemplate.send(ArenaTilsagnLytter.topic, "TODO", tilsagnJson);
+        kafkaTemplate.send(ArenaConsumer.topic, "TODO", tilsagnJson);
 
         countDownLatch.await(3, TimeUnit.SECONDS);
         assertEquals(0, countDownLatch.getCount());
