@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.altinn")
 public class AltinnProperties {
     private String uri;
-    private String user;
-    private String password;
+    private String systemBruker;
+    private String systemPassord;
 }

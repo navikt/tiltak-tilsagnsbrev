@@ -22,5 +22,5 @@ tilsagnsbrev:
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
       uri: http://localhost:8088
-      user: bruker
-      password: passord
+      systemBruker: systemBruker
+      systemPassord: systemPassord

@@ -28,8 +28,8 @@ public class TilsagnTilAltinnMapper {
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(Tilsagn tilsagn, byte[] pdf) {
         return new InsertCorrespondenceBasicV2()
-                .withSystemUserName(altinnProperties.getUser())
-                .withSystemPassword(altinnProperties.getPassword())
+                .withSystemUserName(altinnProperties.getSystemBruker())
+                .withSystemPassword(altinnProperties.getSystemPassord())
                 .withSystemUserCode(SYSTEM_USERCODE)
                 .withExternalShipmentReference(tilsagn.getTilsagnNummer().getLoepenrSak())
                 .withCorrespondence(new InsertCorrespondenceV2()
@@ -58,8 +58,7 @@ public class TilsagnTilAltinnMapper {
         try {
             return DatatypeFactory.newInstance().newXMLGregorianCalendar(localDateTime.toString());
         } catch (DatatypeConfigurationException e) {
-            e.printStackTrace(); //TODO
+            throw new RuntimeException(e); //TODO
         }
-        return null;
     }
 }

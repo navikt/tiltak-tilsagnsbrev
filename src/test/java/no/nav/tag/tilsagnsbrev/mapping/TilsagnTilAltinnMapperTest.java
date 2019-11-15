@@ -34,8 +34,8 @@ public class TilsagnTilAltinnMapperTest {
     @Test
     //@Ignore("Ikke klar")
     public void mapperTilAltinnMelding() {
-        when(altinnProperties.getUser()).thenReturn("bruker");
-        when(altinnProperties.getPassword()).thenReturn("passord");
+        when(altinnProperties.getSystemBruker()).thenReturn("bruker");
+        when(altinnProperties.getSystemPassord()).thenReturn("passord");
 
         Tilsagn tilsagn = Testdata.gruppeTilsagn();
         byte[] pdf = "pdf".getBytes();

@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev.integrasjon.stsws;
+package no.nav.tag.tilsagnsbrev.integrasjon.sts.ws;
 
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapMessage;
@@ -22,8 +22,8 @@ import java.util.List;
 public class STSClientConfigurer {
     // Only use no transportbinding on localhost, should use the requestSamlPolicy.xml with transport binding https
     // when in production.
-    private static final String STS_REQUEST_SAML_POLICY = "classpath:stsws/policies/requestSamlPolicyNoTransportBinding.xml";
-    private static final String STS_CLIENT_AUTHENTICATION_POLICY = "classpath:stsws/policies/untPolicy.xml";
+    private static final String STS_REQUEST_SAML_POLICY = "classpath:sts/policies/requestSamlPolicyNoTransportBinding.xml";
+    private static final String STS_CLIENT_AUTHENTICATION_POLICY = "classpath:sts/policies/untPolicy.xml";
     private URI stsUri;
     private String serviceUsername;
     private String servicePassword;

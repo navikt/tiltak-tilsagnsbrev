@@ -31,7 +31,7 @@ public class AltInnService {
                     insertCorrespondenceBasicV2.getCorrespondence()
             ).getReceiptId();
         } catch (ICorrespondenceAgencyExternalBasicInsertCorrespondenceBasicV2AltinnFaultFaultFaultMessage fault) {
-            throw new RuntimeException(fault);
+            throw new RuntimeException(fault); //TODO
         }
     }
 }

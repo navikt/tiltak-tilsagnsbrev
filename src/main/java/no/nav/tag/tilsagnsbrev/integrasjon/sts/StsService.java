@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev.integrasjon;
+package no.nav.tag.tilsagnsbrev.integrasjon.sts;
 
 import no.nav.tag.tilsagnsbrev.dto.sts.StsTokenResponse;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.StsProperties;
@@ -18,7 +18,7 @@ import static no.nav.tag.tilsagnsbrev.konfigurasjon.StsCacheKonfig.STS_CACHE;
 @Service
 public class StsService {
 
-    private static final String PATH = "/rest/v1/stsws/token";
+    private static final String PATH = "/rest/v1/sts/token";
     private static final String PARAM_GRANT_TYPE = "grant_type=client_credentials";
     private static final String PARAM_SCOPE = "scope=openid";
     private final URI uri;

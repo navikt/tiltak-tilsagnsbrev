@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev.integrasjon.stsws;
+package no.nav.tag.tilsagnsbrev.integrasjon.sts.ws;
 
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.ext.logging.LoggingFeature;

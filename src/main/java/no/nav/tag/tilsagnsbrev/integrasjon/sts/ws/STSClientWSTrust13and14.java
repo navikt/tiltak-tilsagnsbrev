@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev.integrasjon.stsws;
+package no.nav.tag.tilsagnsbrev.integrasjon.sts.ws;
 
 import org.apache.cxf.Bus;
 import org.apache.cxf.ws.security.tokenstore.SecurityToken;

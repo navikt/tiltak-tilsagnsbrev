@@ -1,8 +1,8 @@
 package no.nav.tag.tilsagnsbrev.konfigurasjon.altinn;
 
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic;
-import no.nav.tag.tilsagnsbrev.integrasjon.stsws.STSClientConfigurer;
-import no.nav.tag.tilsagnsbrev.integrasjon.stsws.WsClient;
+import no.nav.tag.tilsagnsbrev.integrasjon.sts.ws.STSClientConfigurer;
+import no.nav.tag.tilsagnsbrev.integrasjon.sts.ws.WsClient;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.StsProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
