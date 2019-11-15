@@ -37,7 +37,7 @@ public class Tilsagnsbehandler {
 
         //Tilsagn til joark
 
-        altInnService.sendTilsagnsbrev(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, base64Pdf));
+        int kvittering = altInnService.sendTilsagnsbrev(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, base64Pdf));
         log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());
     }
 }

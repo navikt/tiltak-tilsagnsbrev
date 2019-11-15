@@ -21,7 +21,6 @@ public class AltInnService {
 
 
     public int sendTilsagnsbrev(InsertCorrespondenceBasicV2 insertCorrespondenceBasicV2) {
- //       ReceiptExternal receiptExternal;
         try {
             return iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
                     insertCorrespondenceBasicV2.getSystemUserName(),
