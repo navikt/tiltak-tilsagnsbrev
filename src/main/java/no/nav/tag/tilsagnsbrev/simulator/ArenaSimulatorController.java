@@ -2,6 +2,8 @@ package no.nav.tag.tilsagnsbrev.simulator;
 
 import no.nav.tag.tilsagnsbrev.Tilsagnsbehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,13 @@ public class ArenaSimulatorController {
     private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
 
-    @PostMapping(value = "/kafka")
+    @PostMapping(value = "kafka")
     public void leggMeldingPaKafkaToppic(@RequestBody String json) throws Exception {
-        tilsagnsbehandler.behandleTilsagn(json);
+        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(json).build();
+        tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
     }
 
-    @GetMapping(value = "/ping")
+    @GetMapping(value = "ping")
     public String ping() throws Exception {
         return "OK";
     }

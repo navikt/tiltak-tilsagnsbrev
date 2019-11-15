@@ -1,19 +1,30 @@
 package no.nav.tag.tilsagnsbrev;
 
 import lombok.extern.slf4j.Slf4j;
+import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
+import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
+import no.nav.tag.tilsagnsbrev.exception.SystemException;
+import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
+import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
+import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
+import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnJournalpostMapper;
+import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
+import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.TIL_ALTINN;
 
 @Slf4j
 @Service
 public class Tilsagnsbehandler {
+
+    @Autowired
+    private FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
 
     @Autowired
     private TilsagnJsonMapper tilsagnJsonMapper;
@@ -22,22 +33,57 @@ public class Tilsagnsbehandler {
     private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
     @Autowired
+    private TilsagnJournalpostMapper tilsagnJournalpostMapper;
+
+    @Autowired
     private PdfGenService pdfService;
 
     @Autowired
     private AltInnService altInnService;
 
-    public void behandleTilsagn(String goldenGateJson) {
+    @Autowired
+    private FeiletTilsagnBehandler feiletTilsagnBehandler;
 
-        final Tilsagn tilsagn = tilsagnJsonMapper.goldengateMeldingTilTilsagn(goldenGateJson);
-        log.info("Tilsagnsbrev til pdfGen: {}", tilsagn.getTilsagnNummer());
+    @Autowired
+    private JoarkService joarkService;
 
-        final String tilsagnJson = tilsagnJsonMapper.tilsagnTilPdfJson(tilsagn);
-        final byte[] base64Pdf = Base64.getEncoder().encode(pdfService.tilsagnTilPdfBrev(tilsagnJson));
+    public void behandleOgVerifisereTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
+        try {
+            behandleTilsagn(tilsagnUnderBehandling);
+        } catch (Exception e) {
+            if (!feiletTilsagnBehandler.lagreFeil(tilsagnUnderBehandling, e)) {
+                log.error("Feil ble ikke lagret! Melding fra Arena: {}", tilsagnUnderBehandling.getJson(), e.getMessage());
+            }
+        }
+    }
 
-        //Tilsagn til joark
+    private void behandleTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
+        tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
+        tilsagnJsonMapper.tilsagnTilPdfJson(tilsagnUnderBehandling);
 
-        int kvittering = altInnService.sendTilsagnsbrev(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, base64Pdf));
-        log.info("Tilsagnsbrev med tilsagnsnr. til Altinn: {}", tilsagn.getTilsagnNummer());
+        final byte[] pdf = pdfService.tilsagnTilPdfBrev(tilsagnUnderBehandling.getJson());
+
+        Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tilsagnUnderBehandling.getTilsagn(), pdf);
+        sendJournalpost(journalpost, tilsagnUnderBehandling);
+
+
+        sendTilAltinn(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), pdf));
+    }
+
+    private void sendJournalpost(Journalpost journalpost, TilsagnUnderBehandling tilsagnUnderBehandling) {
+        try {
+            joarkService.sendJournalpost(journalpost);
+            tilsagnUnderBehandling.setNesteSteg(TIL_ALTINN);
+        } catch (Exception e) {
+            throw new SystemException(e.getMessage());
+        }
+    }
+
+    private void sendTilAltinn(InsertCorrespondenceBasicV2 insertCorrespondenceBasicV2) {
+        try {
+            altInnService.sendTilsagnsbrev(insertCorrespondenceBasicV2);
+        } catch (Exception e) {
+            throw new SystemException(e.getMessage());
+        }
     }
 }

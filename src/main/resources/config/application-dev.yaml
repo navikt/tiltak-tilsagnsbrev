@@ -12,15 +12,15 @@ spring:
 tilsagnsbrev:
   integrasjon:
     pdfgen:
-      uri: http://localhost:5913
+      uri: http://localhost:8090
     joark:
-      uri: uri
+      uri: http://localhost:8090
     sts:
-      uri: uri
+      uri: http://localhost:8090
       ws-uri: http://localhost:8090
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
-      uri: http://localhost:8088
+      uri: http://localhost:8090/ekstern/altinn/BehandleAltinnMelding/v1
       systemBruker: systemBruker
       systemPassord: systemPassord

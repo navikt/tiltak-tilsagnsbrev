@@ -5,6 +5,7 @@ import no.nav.tag.tilsagnsbrev.konfigurasjon.altinn.AltinnProperties;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,7 +33,7 @@ public class TilsagnTilAltinnMapperTest {
     TilsagnTilAltinnMapper tilsagnTilAltinnMapper = new TilsagnTilAltinnMapper();
 
     @Test
-    //@Ignore("Ikke klar")
+    @Ignore("Ikke klar")
     public void mapperTilAltinnMelding() {
         when(altinnProperties.getSystemBruker()).thenReturn("bruker");
         when(altinnProperties.getSystemPassord()).thenReturn("passord");

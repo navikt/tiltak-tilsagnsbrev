@@ -20,5 +20,4 @@ public class KafkaKonfig {
         embeddedKafka.afterPropertiesSet();
         return embeddedKafka;
     }
-
 }

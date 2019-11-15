@@ -1,9 +1,7 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
 import com.google.gson.Gson;
-import no.nav.tag.tilsagnsbrev.TilsagnBuilder;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,72 +11,68 @@ import java.util.Arrays;
 
 public class Testdata {
 
-    public static String JSON_FIL = "fullRequest.json";
+    public static String JSON_FIL = "goldengate.json";
     public static String JSON_FIL_FEILER = "fullRequest_som_feiler.json";
 
-    //Hentet fra fullREquest.json
+    //Hentet fra fullREquest.tilsagn
     public static LocalDate TILSAGNSDATO = LocalDate.parse("2019-10-22");
     public static LocalDate FRA_DATO = LocalDate.parse("2019-10-01");
     public static LocalDate TIL_DATO = LocalDate.parse("2019-12-31");
 
     public static Tilsagn gruppeTilsagn() {
-        return tilsagnsBuilder().medAntallDeltakere("17")
-                .medAntallTimeverk("2932").createTilsagn();
+        return Tilsagn.builder().antallDeltakere("17")
+                .antallTimeverk("2932").build();
     }
 
     public static Tilsagn tilsagnEnDeltaker() {
-        return tilsagnsBuilder().medDeltaker(new DeltakerBuilder()
-                .medEtternavn("Nilsen")
-                .medFornavn("Nils")
-                .medFodselsnr("05055599999")
-                .medLandKode("NO")
-                .medPostAdresse("Waldemar Thranesgt 89")
-                .medPostNummer("0223")
-                .medPostSted("Oslo")
-                .createDeltaker()
-        ).createTilsagn();
+        return Tilsagn.builder().deltaker(Deltaker.builder()
+                .etternavn("Nilsen")
+                .fornavn("Nils")
+                .fodselsnr("05055599999")
+                .landKode("NO")
+                .postAdresse("Waldemar Thranesgt 89")
+                .postNummer("0223")
+                .postSted("Oslo")
+                .build()
+        ).build();
     }
 
-    private static TilsagnBuilder tilsagnsBuilder() {
-        return new TilsagnBuilder()
-                .medAdministrasjonKode("INST")
-                .medBeslutter(new Person("Strømmen", "Evy"))
-                .medKommentar("Ingen kommentar")
-                .medNavEnhet(new NavEnhetBuilder()
-                        .medNavKontor("1187")
-                        .medNavKontorNavn("NAV Tiltak Rogaland")
-                        .medPostAdresse("Postboks 420")
-                        .medPostNummer("4002")
-                        .medPostSted("Stavanger")
-                        .medTelefon("55553333")
-                        .medFaks("52048361")
-                        .createNavEnhet())
-                .medPeriode(new Periode(FRA_DATO, TIL_DATO))
-                .medSaksbehandler(new Person("Johannessen", "Odd Helge"))
-                .medTilsagnDato(TILSAGNSDATO)
-                .medTilsagnNummer(new TilsagnNummer("2019", "366023", "1"))
-                .medTilskuddListe(Arrays.asList(
+    private static Tilsagn.TilsagnBuilder tilsagnsBuilder() {
+        return Tilsagn.builder()
+                .administrasjonKode("INST")
+                .beslutter(new Person("Strømmen", "Evy"))
+                .kommentar("Ingen kommentar")
+                .navEnhet(NavEnhet.builder()
+                        .navKontor("1187")
+                        .navKontorNavn("NAV Tiltak Rogaland")
+                        .postAdresse("Postboks 420")
+                        .postNummer("4002")
+                        .postSted("Stavanger")
+                        .telefon("55553333")
+                        .faks("52048361")
+                        .build())
+                .periode(new Periode(FRA_DATO, TIL_DATO))
+                .saksbehandler(new Person("Johannessen", "Odd Helge"))
+                .tilsagnDato(TILSAGNSDATO)
+                .tilsagnNummer(new TilsagnNummer("2019", "366023", "1"))
+                .tilskuddListe(Arrays.asList(
                         new Tilskudd("142000", "Opplæringstilskudd"),
                         new Tilskudd("142000", "Lønnstilskudd")))
-                .medTiltakArrangor(new TiltakArrangorBuilder()
-                        .medArbgiverNavn("LALM OG NARVIK REVISJON")
-                        .medKontoNummer("32010501481")
-                        .medLandKode("NO")
-                        .medMaalform("Nynorsk")
-                        .medOrgNummer("911003155")
-                   //     .medOrgNummerMorselskap("918160922")
-                        .medPostAdresse("Pedersgata 110 ")
-                        .medPostNummer("4014")
-                        .medPostSted("Oslo")
-                        .createTiltakArrangor())
-                .medTiltakKode("BIO")
-                .medTiltakNavn("Bedriftsintern opplæring (BIO)")
-                .medTotaltTilskuddbelop("284000")
-                .medValutaKode("NOK");
-    }
-
-    public static String tilsagnTilJSON(Tilsagn tilsagnsbrev) {
-        return new TilsagnJsonMapper().tilsagnTilPdfJson(tilsagnsbrev);
+                .tiltakArrangor(TiltakArrangor.builder()
+                        .arbgiverNavn("L.S. Solland AS")
+                        .kontoNummer("32010501481")
+                        .landKode("NO")
+                        .maalform("Nynorsk")
+                        .orgNummer("973152289")
+                        .orgNummerMorselskap("918160922")
+                        .postAdresse("Pedersgata 110 ")
+                        .postNummer("4014")
+                        .postSted("Oslo")
+                        .build())
+                .tiltakKode("BIO")
+                .tiltakNavn("Bedriftsintern opplæring (BIO)")
+                .totaltTilskuddbelop("284000")
+                .valutaKode("NOK");
     }
 
     public static Tilsagn jsonTilTilsagn(String json) throws Exception {
