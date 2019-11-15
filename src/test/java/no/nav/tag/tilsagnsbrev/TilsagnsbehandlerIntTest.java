@@ -45,12 +45,13 @@ public class TilsagnsbehandlerIntTest {
 
     @Before
     public void setUp(){
-        feiletTilsagnsbrevRepository.deleteAll();
+        mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
+                .willReturn(okJson("{\"pdf\" : \"[B@b78a709\"}")));
     }
 
     @After
     public void tearDown(){
-        mockServer.getServer().stop();
+        mockServer.getServer().resetAll();
         feiletTilsagnsbrevRepository.deleteAll();
     }
 
@@ -59,7 +60,6 @@ public class TilsagnsbehandlerIntTest {
 
         mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
                 .willReturn(okJson("{\"journalpostId\" : \"001\", \"journalstatus\" : \"MIDLERTIDIG\", \"melding\" : \"Gikk bra\"}")));
-        mockServer.start();
 
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(UUID.randomUUID()).build();
         tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
@@ -88,8 +88,8 @@ public class TilsagnsbehandlerIntTest {
 
     @Test
     public void pdfGenFeil(){
+
         mockServer.getServer().stubFor(post("/template/tilsagnsbrev/create-pdf").willReturn(serverError()));
-        mockServer.start();
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
@@ -110,7 +110,6 @@ public class TilsagnsbehandlerIntTest {
     public void feilFraJoark(){
 
         mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true").willReturn(unauthorized()));
-        mockServer.start();
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
@@ -134,7 +133,6 @@ public class TilsagnsbehandlerIntTest {
     public void feilFraAltinn(){
 
         mockServer.getServer().stubFor(post("/rest/altinn").willReturn(unauthorized()));
-        mockServer.start();
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
