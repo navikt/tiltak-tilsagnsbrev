@@ -18,12 +18,17 @@ spec:
   readiness:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
     initialDelay: 30
+  ingresses:
+    - {{ingress}}
   vault:
     enabled: true
     paths:
       - kvPath: "serviceuser/data/dev/srvtiltak-tilsagns"
         mountPath: "/secrets/serviceuser/srvtiltak-tilsagns/"
-# production:
+      - kvPath: "kv/preprod/fss/tiltak-tilsagnsbrev/default"
+        mountPath: "/var/run/secrets/nais.io/vault/"
+
+  # production:
 #      - kvPath: "serviceuser/data/prod/srvtiltak-tilsagns"
 #        mountPath: "/secrets/serviceuser/srvtiltak-tilsagns/"
 
@@ -34,5 +39,4 @@ spec:
   prometheus:
     enabled: false
     path: /tiltak-tilsagnsbrev/internal/actuator/prometheus
-
 
