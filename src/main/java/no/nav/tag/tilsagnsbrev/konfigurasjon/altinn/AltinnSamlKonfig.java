@@ -22,7 +22,7 @@ public class AltinnSamlKonfig {
     @Bean
     public ICorrespondenceAgencyExternalBasic iCorrespondenceAgencyExternalBasic() {
         ICorrespondenceAgencyExternalBasic port = WsClient.createPort(altinnProperties.getUri(), ICorrespondenceAgencyExternalBasic.class);
-        STSClientConfigurer configurer = new STSClientConfigurer(stsProperties.getWsUri(), stsProperties.getBruker(), stsProperties.getPassord());
+        STSClientConfigurer configurer = new STSClientConfigurer(stsProperties.getWsUri(), altinnProperties.getSystemBruker(), altinnProperties.getSystemPassord());
         configurer.configureRequestSamlToken(port);
         return port;
     }
