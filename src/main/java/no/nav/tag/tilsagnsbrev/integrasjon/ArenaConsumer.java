@@ -15,10 +15,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
-@Component
 @Data
 @Slf4j
-@Profile("dev")
+@Component
+@Profile("kafka")
 public class ArenaConsumer {
 
     public static final String CID = "CID";
@@ -26,15 +26,14 @@ public class ArenaConsumer {
     @Autowired
     private Tilsagnsbehandler tilsagnsbehandler;
 
-    public static final String group = "tiltak-tilsagnsbrev-1";
+    public static final String group = "tiltak-tilsagnsbrev";
     public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
 
     private CountDownLatch latch; //For testing
 
     @KafkaListener(groupId = group, topics = topic)
-    public void lyttPaArenaTilsagn(ConsumerRecord<String, String> tilsagnsMelding) {
+    public void lyttPaArenaTilsagn(ConsumerRecord<String, String> tilsagnsMelding){
 
-        log.debug("Henter melding {}", tilsagnsMelding.value()); //TODO ta vekk før prod
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().opprettet(LocalDateTime.now()).cid(opprettCorrelationId(tilsagnsMelding.key())).json(tilsagnsMelding.value()).build();
 
         try {

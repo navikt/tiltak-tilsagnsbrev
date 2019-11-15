@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 
-@Configuration
-@Profile("dev")
 @Slf4j
+@Configuration
+@Profile("kafka")
 public class KafkaKonfig {
 
     @Autowired

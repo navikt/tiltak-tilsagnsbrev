@@ -34,7 +34,7 @@ public class ArenaConsumerIntTest {
     public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true, ArenaConsumer.topic);
 
     @Autowired
-    private ArenaConsumer arenaTilsagnLytter;
+    private ArenaConsumer arenaConsumer;
 
     @Autowired
     private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
@@ -69,7 +69,7 @@ public class ArenaConsumerIntTest {
     public void lytterPaArenaTilsagn() throws Exception {
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        arenaTilsagnLytter.setLatch(countDownLatch);
+        arenaConsumer.setLatch(countDownLatch);
 
         String tilsagnJson = Testdata.hentFilString(Testdata.JSON_FIL);
 

@@ -5,30 +5,22 @@ spring:
   kafka:
     consumer:
       bootstrap-servers: ${spring.embedded.kafka.brokers}
-  datasource:
-    platform: postgres
-    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-    username: sa
-    password: sa
-    driverClassName: org.h2.Driver
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+
   main:
     banner-mode: "console"
 
 tilsagnsbrev:
   integrasjon:
     pdfgen:
-      uri: http://localhost:8091
-    altinn:
-      queue: TAVEKK
+      uri: http://localhost:8090
     joark:
-      uri: http://localhost:8091
+      uri: http://localhost:8090
     sts:
-      uri: http://localhost:8091
-      bruker: bruker
-      passord: passord
-
-
+      uri: http://localhost:8090
+      ws-uri: http://localhost:8090
+      bruker: ${tilsagnsbrev_srvuser}
+      passord: ${tilsagnsbrev_srvpwd}
+    altinn:
+      uri: http://localhost:8090/ekstern/altinn/BehandleAltinnMelding/v1
+      systemBruker: systemBruker
+      systemPassord: systemPassord

@@ -43,6 +43,8 @@ public class TilsagnsbehandlerIntTest {
 
     final String goldengateJson = Testdata.hentFilString("goldengate.json");
 
+    final String altinnOkResponse = Testdata.hentFilString("altinn200Resp.xml");
+
     @Before
     public void setUp(){
         mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
@@ -60,6 +62,7 @@ public class TilsagnsbehandlerIntTest {
 
         mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
                 .willReturn(okJson("{\"journalpostId\" : \"001\", \"journalstatus\" : \"MIDLERTIDIG\", \"melding\" : \"Gikk bra\"}")));
+        mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(ok(altinnOkResponse)));
 
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(UUID.randomUUID()).build();
         tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);

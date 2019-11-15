@@ -12,3 +12,19 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+tilsagnsbrev:
+  integrasjon:
+    pdfgen:
+      uri: uri
+    joark:
+      uri: uri
+    sts:
+      uri: uri
+      ws-uri: ws-uri
+      bruker: ${tilsagnsbrev_srvuser}
+      passord: ${tilsagnsbrev_srvpwd}
+    altinn:
+      uri: uri
+      user: ${tilsagnsbrev_srvuser}
+      password: ${tilsagnsbrev_srvpwd}

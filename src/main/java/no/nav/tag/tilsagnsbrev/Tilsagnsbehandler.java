@@ -1,6 +1,7 @@
 package no.nav.tag.tilsagnsbrev;
 
 import lombok.extern.slf4j.Slf4j;
+import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
@@ -10,7 +11,7 @@ import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnXmlMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnJournalpostMapper;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class Tilsagnsbehandler {
     private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Autowired
-    private TilsagnXmlMapper tilsagnXmlMapper;
+    private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
     @Autowired
     private TilsagnJournalpostMapper tilsagnJournalpostMapper;
@@ -65,8 +66,8 @@ public class Tilsagnsbehandler {
         Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tilsagnUnderBehandling.getTilsagn(), pdf);
         sendJournalpost(journalpost, tilsagnUnderBehandling);
 
-        final String tilsagnXml = tilsagnXmlMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), pdf);
-       // sendTilAltinn(tilsagnXml, tilsagn);
+
+        sendTilAltinn(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), pdf));
     }
 
     private void sendJournalpost(Journalpost journalpost, TilsagnUnderBehandling tilsagnUnderBehandling) {
@@ -78,9 +79,9 @@ public class Tilsagnsbehandler {
         }
     }
 
-    private void sendTilAltinn(String tilsagnXml, Tilsagn tilsagn) {
+    private void sendTilAltinn(InsertCorrespondenceBasicV2 insertCorrespondenceBasicV2) {
         try {
-            altInnService.sendTilsagnsbrev(tilsagnXml);
+            altInnService.sendTilsagnsbrev(insertCorrespondenceBasicV2);
         } catch (Exception e) {
             throw new SystemException(e.getMessage());
         }

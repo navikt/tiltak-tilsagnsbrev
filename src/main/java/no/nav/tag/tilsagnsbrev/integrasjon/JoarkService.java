@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
+import no.nav.tag.tilsagnsbrev.integrasjon.sts.StsService;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.JoarkKonfig;
 import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnJournalpostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class JoarkService {
                 throw new RuntimeException("Kall til Joark feilet: " + e2);
             }
         }
-        log.info("Journalført avtale {}", journalpost.getEksternReferanseId());
+        log.info("Journalført tilsagnsbrev {}", journalpost.getEksternReferanseId());
     }
 
     private HttpEntity<Journalpost> entityMedStsToken(final Journalpost journalpost) {

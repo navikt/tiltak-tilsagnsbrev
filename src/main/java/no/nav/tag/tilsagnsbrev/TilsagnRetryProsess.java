@@ -6,9 +6,9 @@ import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
-import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnXmlMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnJournalpostMapper;
+import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class TilsagnRetryProsess {
     private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Autowired
-    TilsagnXmlMapper tilsagnXmlMapper;
+    TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
     @Autowired
     private TilsagnJournalpostMapper tilsagnJournalpostMapper;
@@ -63,11 +63,11 @@ public class TilsagnRetryProsess {
             tilsagnUnderBehandling.setNesteSteg(TIL_ALTINN);
         }
 
-        if(tilsagnUnderBehandling.skalTilAltinn()){
-            String altInnXml = tilsagnXmlMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), pdf);
-            altInnService.sendTilsagnsbrev(altInnXml);
-            tilsagnUnderBehandling.setNesteSteg(START);
-        }
+//        if(tilsagnUnderBehandling.skalTilAltinn()){
+//            String altInnXml = tilsagnTilAltinnMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), pdf);
+//            altInnService.sendTilsagnsbrev(altInnXml);
+//            tilsagnUnderBehandling.setNesteSteg(START);
+//        }
 
 
     }
