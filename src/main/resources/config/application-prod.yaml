@@ -16,7 +16,7 @@ spring:
 
 tilsagnsbrev:
   database:
-    database-navn: tiltak-tilsagnssbrev-feilet
+    database-navn: tiltak-tilsagnsbrev-feilet-prod
     database-url: ${spring.datasource.url}
     vault-sti: postgresql/prod-fss
     minimum-idle: 1
