@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
@@ -7,7 +8,6 @@ import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("dev")
 @DirtiesContext
-public class TilsagnsbehandlerIntTest {
+public class TilsagnsbrevbehandlerIntTest {
 
     @Autowired
     IntegrasjonerMockServer mockServer;
@@ -36,19 +35,18 @@ public class TilsagnsbehandlerIntTest {
     TilsagnJsonMapper tilsagnJsonMapper;
 
     @Autowired
-    private Tilsagnsbehandler tilsagnsbehandler;
+    private Tilsagnsbrevbehandler tilsagnsbrevbehandler;
 
     @Autowired
     FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
 
     final String goldengateJson = Testdata.hentFilString("goldengate.json");
-
-    final String altinnOkResponse = Testdata.hentFilString("altinn200Resp.xml");
+    final String altinnOkRespons = Testdata.hentFilString("altinn200Resp.xml");
+    final String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
 
     @Before
-    public void setUp(){
-        mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
-                .willReturn(okJson("{\"pdf\" : \"[B@b78a709\"}")));
+    public void setUp() {
+        stubForAltOk(mockServer.getServer());
     }
 
     @After
@@ -59,30 +57,24 @@ public class TilsagnsbehandlerIntTest {
 
     @Test
     public void behandlerTilsagn(){
-
-        mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
-                .willReturn(okJson("{\"journalpostId\" : \"001\", \"journalstatus\" : \"MIDLERTIDIG\", \"melding\" : \"Gikk bra\"}")));
-        mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(ok(altinnOkResponse)));
-
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(UUID.randomUUID()).build();
-        tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         assertTrue(feiletTilsagnsbrevRepository.findAll().isEmpty());
     }
 
     @Test
     public void parserIkkeArenaMelding(){
-
         final UUID CID = UUID.randomUUID();
         final String feilbarGoldengateJson = Testdata.hentFilString("arena_melding_som_feiler.json");
 
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(feilbarGoldengateJson).cid(CID).build();
-        tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
         Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
                assertFalse(tub.skalRekjoeres());
-               assertEquals(START, tub.getNesteSteg());
+               assertFalse(tub.isMappetFraArena());
                assertEquals(feilbarGoldengateJson, tub.getJson());
                assertNotNull(tub.getOpprettet());
             return tub;
@@ -91,18 +83,17 @@ public class TilsagnsbehandlerIntTest {
 
     @Test
     public void pdfGenFeil(){
-
         mockServer.getServer().stubFor(post("/template/tilsagnsbrev/create-pdf").willReturn(serverError()));
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
 
-        tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
-            assertEquals(JOURNALFOER, tub.getNesteSteg());
+            assertFalse(tub.erJournalfoert());
             assertNotNull(tub.getJson());
             assertTrue(tub.getFeilmelding().contains("500"));
             return tub;
@@ -118,13 +109,13 @@ public class TilsagnsbehandlerIntTest {
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
         tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
 
-        tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
         Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
-            assertEquals(JOURNALFOER, tub.getNesteSteg());
+            assertFalse(tub.erJournalfoert());
             assertNotNull(tub.getJson());
             assertNotNull(tub.getFeilmelding());
             return tub;
@@ -132,25 +123,30 @@ public class TilsagnsbehandlerIntTest {
     }
 
     @Test
-    @Ignore("Ikke klar")
     public void feilFraAltinn(){
 
-        mockServer.getServer().stubFor(post("/rest/altinn").willReturn(unauthorized()));
+        mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
         tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
 
-        tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
         Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
-            assertEquals(TIL_ALTINN, tub.getNesteSteg());
             assertNotNull(tub.getJson());
-            assertTrue(tub.getFeilmelding().contains("401"));
+            assertTrue(tub.getFeilmelding().contains("500"));
             return tub;
         });
+    }
+
+    private void stubForAltOk(WireMockServer server) {
+        server.stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
+                .willReturn(okJson("{\"journalpostId\" : \"001\", \"journalstatus\" : \"MIDLERTIDIG\", \"melding\" : \"Gikk bra\"}")));
+        server.stubFor(post("/template/tilsagnsbrev/create-pdf").willReturn(okJson("{\"pdf\" : \"[B@b78a709\"}")));
+        server.stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(ok().withBody(altinnOkRespons)));
     }
 }

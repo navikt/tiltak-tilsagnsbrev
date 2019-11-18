@@ -1,76 +1,55 @@
 package no.nav.tag.tilsagnsbrev;
 
-import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
+import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
-import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
-import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
-import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
+import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
-import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnJournalpostMapper;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.START;
-import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.TIL_ALTINN;
-
-
+@Slf4j
+@Component
 public class TilsagnRetryProsess {
 
     @Autowired
-    FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
+    Oppgaver oppgaver;
 
     @Autowired
-    PdfGenService pdfGenService;
+    private PdfGenService pdfService;
 
     @Autowired
-    private AltInnService altInnService;
+    FeiletTilsagnBehandler feiletTilsagnBehandler;
 
     @Autowired
-    private JoarkService joarkService;
+    TilsagnJsonMapper tilsagnJsonMapper;
 
-    @Autowired
-    private TilsagnJsonMapper tilsagnJsonMapper;
-
-    @Autowired
-    TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
-
-    @Autowired
-    private TilsagnJournalpostMapper tilsagnJournalpostMapper;
 
     //@Scheduled(cron = "${prosess.cron}")
     public void finnOgRekjoerFeiletTilsagn(){
-        List<TilsagnUnderBehandling> feilListe = feiletTilsagnsbrevRepository.findAll();
-
-        feilListe.stream().filter(TilsagnUnderBehandling::skalRekjoeres).forEach(feiletTilsagnsbrev -> rekjoerTilsagn(feiletTilsagnsbrev));
-
-        //feiletTilsagnsbrevRepository.deleteById(feiletTilsagn.getId());
+        feiletTilsagnBehandler.hentAlleTilRekjoring()
+                .forEach(feiletTilsagnsbrev -> {
+                    rekjoerTilsagn(feiletTilsagnsbrev);
+                });
     }
 
-    private void rekjoerTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling){
+    private void rekjoerTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
 
-        if(tilsagnUnderBehandling.erDefualt()){
-            tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
+        if (tilsagnUnderBehandling.skalMappesFraArenaMelding()) {
+            oppgaver.arenaMeldingTilTilsagnData(tilsagnUnderBehandling);
         }
 
-        byte[] pdf = pdfGenService.tilsagnTilPdfBrev(tilsagnUnderBehandling.getJson());
+        tilsagnUnderBehandling.opprettTilsagn();
+        final byte[] pdf = pdfService.tilsagnsbrevTilBase64EncodedPdfBytes(tilsagnUnderBehandling.getJson());
 
-        if(tilsagnUnderBehandling.skaljournalfoeres()){
-            Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tilsagnUnderBehandling.getTilsagn(), pdf);
-            joarkService.sendJournalpost(journalpost);
-            tilsagnUnderBehandling.setNesteSteg(TIL_ALTINN);
+        if (tilsagnUnderBehandling.skaljournalfoeres()) {
+            oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);
         }
 
-//        if(tilsagnUnderBehandling.skalTilAltinn()){
-//            String altInnXml = tilsagnTilAltinnMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), pdf);
-//            altInnService.sendTilsagnsbrev(altInnXml);
-//            tilsagnUnderBehandling.setNesteSteg(START);
-//        }
-
-
+        if (tilsagnUnderBehandling.skalTilAltinn()) {
+            oppgaver.sendTilAltinn(tilsagnUnderBehandling, pdf);
+        }
+        tilsagnUnderBehandling.setBehandlet(true);
+        feiletTilsagnBehandler.oppdater(tilsagnUnderBehandling);
     }
-
-
 }

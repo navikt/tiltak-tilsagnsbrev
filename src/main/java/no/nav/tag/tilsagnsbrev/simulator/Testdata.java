@@ -25,7 +25,7 @@ public class Testdata {
     }
 
     public static Tilsagn tilsagnEnDeltaker() {
-        return Tilsagn.builder().deltaker(Deltaker.builder()
+        return tilsagnsBuilder().deltaker(Deltaker.builder()
                 .etternavn("Nilsen")
                 .fornavn("Nils")
                 .fodselsnr("05055599999")
@@ -75,8 +75,8 @@ public class Testdata {
                 .valutaKode("NOK");
     }
 
-    public static Tilsagn jsonTilTilsagn(String json) throws Exception {
-        return new Gson().fromJson(json, Tilsagn.class);
+    public static String tilsagnTilJson(Tilsagn tilsagn) {
+        return new Gson().toJson(tilsagn);
     }
 
     public static String hentFilString(String filnavn) {

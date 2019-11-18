@@ -48,13 +48,13 @@ public class JoarkServiceTest {
     @Test(expected = RuntimeException.class)
     public void oppretterJournalpost_status_500() {
         when(restTemplate.postForObject(eq(expUri), any(HttpEntity.class), any())).thenThrow(RuntimeException.class);
-        //joarkService.opprettOgSendJournalpost() sendJournalpost(new Journalpost());
+        //joarkService.opprettOgSendJournalpost() journalfoerTilsagnsbrev(new Journalpost());
     }
 
     @Test
     public void feil_mot_tjeneste_skal_hente_nytt_sts_token_og_forsøke_på_nytt() {
 //        when(restTemplate.postForObject(eq(expUri), any(HttpEntity.class), any())).thenThrow(RuntimeException.class).thenReturn(new JoarkResponse());
-    //    joarkService.sendJournalpost(new Journalpost());
+    //    joarkService.journalfoerTilsagnsbrev(new Journalpost());
         verify(stsService).evict();
         verify(stsService, times(2)).hentToken();
         verify(restTemplate, times(2)).postForObject(eq(expUri), any(HttpEntity.class), any());

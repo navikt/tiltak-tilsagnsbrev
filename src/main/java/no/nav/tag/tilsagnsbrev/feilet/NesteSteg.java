@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum NesteSteg {
     START(0, "Start"),
- //   HENT_PDF(3, "Hent pdf"),
+    HENT_PDF(3, "Hent pdf"),
  //   LAG_JOURNALPOST(4, "Opprett journalpost"),
     JOURNALFOER(5, "Journalføres"),
  //   LAG_ALTINN_XML(6, "Opprett Altinn xml"),
@@ -16,3 +16,5 @@ public enum NesteSteg {
     private final int stegNr;
     private final String tekst;
 }
+
+//TODO Fjern denne hvis skal sjekke BÅDE sendt til Altinn og journalføre ved rekjøring.

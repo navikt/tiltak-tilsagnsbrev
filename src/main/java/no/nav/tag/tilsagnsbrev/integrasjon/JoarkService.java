@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
+import no.nav.tag.tilsagnsbrev.dto.journalpost.JournalpostResponse;
 import no.nav.tag.tilsagnsbrev.integrasjon.sts.StsService;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.JoarkKonfig;
 import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnJournalpostMapper;
@@ -46,23 +47,24 @@ public class JoarkService {
         headers.setContentType((MediaType.APPLICATION_JSON));
     }
 
-    public void sendJournalpost(final Journalpost journalpost) {
+    public String sendJournalpost(final Journalpost journalpost) {
         debugLogJournalpost(journalpost);
-        String response = null; //TODO Bruke noe annet
+        JournalpostResponse response = null;
         try {
             log.info("Forsøker å journalføre tilsagnsbrev {}", journalpost.getEksternReferanseId());
-            restTemplate.postForObject(uri, entityMedStsToken(journalpost), String.class);
+            response = restTemplate.postForObject(uri, entityMedStsToken(journalpost), JournalpostResponse.class);
         } catch (Exception e1) {
             stsService.evict();
             log.warn("Feil ved kommunikasjon mot journalpost-API. Henter nytt sts-token og forsøker igjen");
             try {
-                response = restTemplate.postForObject(uri, entityMedStsToken(journalpost), String.class);
+                response = restTemplate.postForObject(uri, entityMedStsToken(journalpost), JournalpostResponse.class);
             } catch (Exception e2) {
                 log.error("Kall til Joark feilet: {}", response != null ? response : "", e2);
                 throw new RuntimeException("Kall til Joark feilet: " + e2);
             }
         }
-        log.info("Journalført tilsagnsbrev {}", journalpost.getEksternReferanseId());
+        log.info("Journalført tilsagnsbrev {}, journalpostId: {}", journalpost.getEksternReferanseId(), response.getJournalpostId());
+        return response.getJournalpostId();
     }
 
     private HttpEntity<Journalpost> entityMedStsToken(final Journalpost journalpost) {

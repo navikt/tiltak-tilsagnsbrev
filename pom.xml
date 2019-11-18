@@ -50,6 +50,13 @@
 			<optional>true</optional>
 		</dependency>
 
+
+		<dependency>
+			<groupId>com.github.tomakehurst</groupId>
+			<artifactId>wiremock</artifactId>
+			<version>2.22.0</version>
+		</dependency>
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>net.logstash.logback</groupId>
@@ -156,12 +163,6 @@
 			<groupId>com.sun.xml.messaging.saaj</groupId>
 			<artifactId>saaj-impl</artifactId>
 			<version>1.5.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.github.tomakehurst</groupId>
-			<artifactId>wiremock</artifactId>
-			<version>2.22.0</version>
 		</dependency>
 
 		<dependency>

@@ -2,7 +2,7 @@ package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import no.nav.tag.tilsagnsbrev.Tilsagnsbehandler;
+import no.nav.tag.tilsagnsbrev.Tilsagnsbrevbehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.MDC;
@@ -24,12 +24,12 @@ public class ArenaConsumer {
     public static final String CID = "CID";
 
     @Autowired
-    private Tilsagnsbehandler tilsagnsbehandler;
+    private Tilsagnsbrevbehandler tilsagnsbrevbehandler;
 
     public static final String group = "tiltak-tilsagnsbrev";
     public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
 
-    private CountDownLatch latch; //For testing
+    private CountDownLatch latch;
 
     @KafkaListener(groupId = group, topics = topic)
     public void lyttPaArenaTilsagn(ConsumerRecord<String, String> tilsagnsMelding){
@@ -37,8 +37,9 @@ public class ArenaConsumer {
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().opprettet(LocalDateTime.now()).cid(opprettCorrelationId(tilsagnsMelding.key())).json(tilsagnsMelding.value()).build();
 
         try {
-            tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+            tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         } finally {
+            MDC.remove(CID);
             this.countdownLatch();
         }
     }

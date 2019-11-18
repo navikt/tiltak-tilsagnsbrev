@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Base64;
 
 @Slf4j
 @Service
@@ -34,10 +35,11 @@ public class PdfGenService {
         headers.setContentType((MediaType.APPLICATION_JSON));
     }
 
-    public byte[] tilsagnTilPdfBrev(String tilsagnJson) {
+    public byte[] tilsagnsbrevTilBase64EncodedPdfBytes(String tilsagnJson) {
         HttpEntity<String> entity = new HttpEntity<>(tilsagnJson, headers);
         try {
-            return restTemplate.postForObject(uri, entity, byte[].class);
+            byte[] pdf = restTemplate.postForObject(uri, entity, byte[].class);
+            return Base64.getEncoder().encode(pdf);
         } catch (Exception e) {
             log.error("Feil ved oppretting av pdf fil", e);
             throw new SystemException(e.getMessage());

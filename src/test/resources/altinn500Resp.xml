@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body>
+        <s:Fault>
+            <detail>
+                <AltinnFault>
+                    <AltinnExtendedErrorMessage>No information available</AltinnExtendedErrorMessage>
+                    <AltinnLocalizedErrorMessage>Incorrect username/password/pin given for user</AltinnLocalizedErrorMessage>
+                    <ErrorGuid>ed4c23c0-7de6-4343-a442-89bd3a6f38d8</ErrorGuid>
+                    <ErrorID>989</ErrorID>
+                    <UserGuid>-no value-</UserGuid>
+                    <UserId/>
+                </AltinnFault>
+            </detail>
+        </s:Fault>
+    </s:Body>
+</s:Envelope>

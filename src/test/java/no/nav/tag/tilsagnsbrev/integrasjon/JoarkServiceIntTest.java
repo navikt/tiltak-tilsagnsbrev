@@ -40,7 +40,7 @@ public class JoarkServiceIntTest {
         dokument.setDokumentVarianter(Arrays.asList(new DokumentVariant(FILTYPE_XML, VARIANFORMAT_XML, "xmlxmlxml"), new DokumentVariant(FILTYPE_PDF, VARIANFORMAT_PDF, "pdfpdfpdf")));
         journalpost.setDokumenter(Arrays.asList(dokument));
 
-    //    String jounalpostId = joarkService.sendJournalpost(journalpost);
+    //    String jounalpostId = joarkService.journalfoerTilsagnsbrev(journalpost);
     //    assertEquals("001", jounalpostId);
     }
 

@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
-import no.nav.tag.tilsagnsbrev.feilet.NesteSteg;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.Ignore;
@@ -43,7 +42,7 @@ public class TilsagnJsonMapperTest {
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagn).build();
 
         when(tilsagnTilPdfRequestGson.toJson(tilsagn)).thenCallRealMethod();
-        tilsagnJsonMapper.tilsagnTilPdfJson(tub);
+        tilsagnJsonMapper.tilsagnTilJson(tub);
         String json = tub.getJson();
         System.out.println(json);
         assertTrue(json.contains("\"administrasjonKode\":\"" + tilsagn.getAdministrasjonKode() +"\""));
@@ -147,7 +146,7 @@ public class TilsagnJsonMapperTest {
             fail("Kaster ikke DataException");
         } catch (DataException de){
             assertNotNull(de.getMessage());
-            assertEquals(NesteSteg.START, tub.getNesteSteg());
+            assertFalse(tub.isMappetFraArena());
         }
     }
 
@@ -157,11 +156,11 @@ public class TilsagnJsonMapperTest {
         when(tilsagnTilPdfRequestGson.toJson(eq(tilsagn))).thenThrow(new RuntimeException("Feil Mapping"));
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagn).build();
         try {
-            tilsagnJsonMapper.tilsagnTilPdfJson(tub);
+            tilsagnJsonMapper.tilsagnTilJson(tub);
             fail("Kaster ikke DataException");
         } catch (DataException de){
             assertEquals("errMsg", "Feil Mapping", de.getMessage());
-            assertEquals("Neste steg", NesteSteg.START, tub.getNesteSteg());
+            assertTrue(tub.isMappetFraArena());
         }
     }
 }

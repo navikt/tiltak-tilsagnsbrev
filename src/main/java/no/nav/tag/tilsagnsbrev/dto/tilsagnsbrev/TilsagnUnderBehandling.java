@@ -1,21 +1,19 @@
 package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
 
 
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
-import no.nav.tag.tilsagnsbrev.feilet.NesteSteg;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.*;
 
 @Data
 @Builder
@@ -29,30 +27,50 @@ public class TilsagnUnderBehandling {
 
     @Id
     private UUID cid;
-    private String feilmelding;
     @Builder.Default
     private LocalDateTime opprettet = LocalDateTime.now();
     @Builder.Default
-    private NesteSteg nesteSteg = START;
-    private int retry;
+    private boolean mappetFraArena = false;
+    @Builder.Default
+    private int retry = 0;
+    @Builder.Default
+    boolean datafeil = false;
+    @Builder.Default
+    private boolean behandlet = false; //Logisk sletting inntil videre
+
+    private String journalpostId;
+    private Integer altinnKittering;
+
+    private String feilmelding;
     private String json;
+
     @Transient
     private Tilsagn tilsagn;
+    @Transient
+    private Gson gson = new Gson();
 
-    public boolean erDefualt(){
-        return nesteSteg.equals(START);
+    public boolean fraStart(){
+        return this.mappetFraArena == false;
     }
 
     public boolean skaljournalfoeres(){
-        return this.getNesteSteg().equals(JOURNALFOER);
+        return this.journalpostId == null;
+    }
+
+    public boolean erJournalfoert(){
+        return this.journalpostId != null;
     }
 
     public boolean skalTilAltinn(){
-        return this.getNesteSteg().equals(TIL_ALTINN);
+        return altinnKittering == null;
     }
 
     public boolean skalRekjoeres(){
         return retry < MAX_RETRIES;
+    }
+
+    public boolean skalMappesFraArenaMelding(){
+        return !isMappetFraArena();
     }
 
     public void setFeilmelding(String feilmelding){
@@ -69,5 +87,27 @@ public class TilsagnUnderBehandling {
             return;
         }
         retry += 1;
+    }
+
+    public void opprettTilsagn(){
+        if(this.tilsagn != null){
+            return;
+        }
+        if(!this.isMappetFraArena()){
+            throw new RuntimeException("Kan ikke opprette tilsagn fra en ubehandlet Arenamelding");
+        }
+        this.tilsagn = gson.fromJson(this.json, Tilsagn.class);
+    }
+
+    public TilsagnUnderBehandling oppdater(TilsagnUnderBehandling ny){
+        this.mappetFraArena = ny.mappetFraArena;
+        this.retry = ny.retry;
+        this.datafeil = ny.datafeil;
+        this.journalpostId = ny.journalpostId;
+        this.altinnKittering = ny.altinnKittering;
+        this.feilmelding = ny.feilmelding;
+        this.behandlet = ny.behandlet;
+        this.json = ny.json;
+        return this;
     }
 }

@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TilsagnsbehandlerTest {
+public class TilsagnsbrevbehandlerTest {
 
 
 
@@ -25,7 +25,7 @@ public class TilsagnsbehandlerTest {
     private PdfGenService pdfGenService;
 
     @InjectMocks
-    private Tilsagnsbehandler tilsagnsbehandler;
+    private Tilsagnsbrevbehandler tilsagnsbrevbehandler;
 
     @Test
     @Ignore
@@ -34,13 +34,13 @@ public class TilsagnsbehandlerTest {
 //        String tilsagnJson = Testdata.tilsagnTilJSON(tilsagn);
 //
 //        when(tilsagnJsonMapper.goldengateMeldingTilTilsagn(anyString())).thenReturn(tilsagn);
-//        when(tilsagnJsonMapper.tilsagnTilPdfJson(eq(tilsagn))).thenReturn(tilsagnJson);
+//        when(tilsagnJsonMapper.tilsagnTilJson(eq(tilsagn))).thenReturn(tilsagnJson);
 //
-//        when(pdfGenService.tilsagnTilPdfBrev(tilsagnJson)).thenReturn("pdf".getBytes());
+//        when(pdfGenService.tilsagnsbrevTilBase64EncodedPdfBytes(tilsagnJson)).thenReturn("pdf".getBytes());
 //
 //        when(tilsagnTilAltinnMapper.tilAltinnMelding(eq(tilsagn), any())).thenCallRealMethod();
 //
-//        tilsagnsbehandler.behandleTilsagn("");
+//        tilsagnsbrevbehandler.behandleTilsagn("");
 
 //       verify(altInnService, atLeastOnce()).sendTilsagnsbrev(anyString());
 

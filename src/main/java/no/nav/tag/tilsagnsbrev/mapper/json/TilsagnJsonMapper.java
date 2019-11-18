@@ -38,11 +38,11 @@ public class TilsagnJsonMapper {
         }
     }
 
-    public void tilsagnTilPdfJson(TilsagnUnderBehandling tilsagnUnderBehandling){
+    public void tilsagnTilJson(TilsagnUnderBehandling tilsagnUnderBehandling){
         try {
             String json = gsonWrapper.opprettPdfJson(tilsagnUnderBehandling.getTilsagn());
             tilsagnUnderBehandling.setJson(json);
-            tilsagnUnderBehandling.setNesteSteg(JOURNALFOER);
+            tilsagnUnderBehandling.setMappetFraArena(true);
         } catch (Exception e){
             log.error("Feil v/mapping fra Tilsagn-dto til pdf-tilsagn ", e);
             throw new DataException(e.getMessage());
