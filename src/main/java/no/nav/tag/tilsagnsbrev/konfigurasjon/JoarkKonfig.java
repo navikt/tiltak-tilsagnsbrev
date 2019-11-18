@@ -14,5 +14,5 @@ import java.net.URI;
 @Component
 @ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.joark")
 public class JoarkKonfig {
-    private URI uri;
+    private URI uri = URI.create("http://localhost:4444");
 }

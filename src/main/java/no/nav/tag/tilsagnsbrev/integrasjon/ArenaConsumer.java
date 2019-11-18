@@ -12,6 +12,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
@@ -39,7 +40,7 @@ public class ArenaConsumer {
         try {
             tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         } finally {
-            MDC.remove(CID);
+            fjernCorrelationId();
             this.countdownLatch();
         }
     }
@@ -51,14 +52,12 @@ public class ArenaConsumer {
     }
 
     private UUID opprettCorrelationId(String key) { //TODO Hør med Arena om de kan sende cid
-        final UUID cid;
-        if (key.contains(CID)) {
-            cid = UUID.fromString(key.substring(CID.length()));
-        } else {
-            cid = UUID.randomUUID();
-        }
+        final UUID cid = UUID.randomUUID();
         MDC.put(CID, cid.toString());
         return cid;
     }
 
+    private void fjernCorrelationId(){
+        Optional.ofNullable(MDC.get(CID)).ifPresent(cid -> MDC.remove(cid));
+    }
 }
