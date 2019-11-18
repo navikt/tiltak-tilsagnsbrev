@@ -1,7 +1,4 @@
 spring:
-  datasource:
-    platform: postgres
-    driverClassName: org.postgresql.Driver
   kafka:
     bootstrap-servers: b27apvl00045.preprod.local:8443, b27apvl00046.preprod.local:8443, b27apvl00047.preprod.local:8443
     client-id: tiltak-tilsagnsbrev
@@ -15,21 +12,14 @@ spring:
         password: ${javax.net.ssl.trustStorePassword}
 
 tilsagnsbrev:
-  database:
-    database-navn: tiltak-tilsagnsbrev-feilet-preprod
-    database-url: ${spring.datasource.url}
-    vault-sti: postgresql/preprod-fss
-    minimum-idle: 1
-    maximum-pool-size: 2
-    max-lifetime: 300000
   integrasjon:
     pdfgen:
-      uri: http://tag-dokgen.nais.preprod.local
+      uri: ${tilsagnsbrev.pdfgen.url}
     joark:
-      uri: https://dokarkiv-q1.nais.preprod.local
+      uri: ${tilsagnsbrev.joark.url}
     sts:
-      uri: https://security-token-service.nais.preprod.local
-      ws-uri: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
+      uri: ${tilsagnsbrev.sts.url}
+      ws-uri: ${tilsagnsbrev.sts.ws.url}
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
