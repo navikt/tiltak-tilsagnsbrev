@@ -14,12 +14,12 @@ spring:
 tilsagnsbrev:
   integrasjon:
     pdfgen:
-      uri: http://tag-dokgen.nais.preprod.local
+      uri: ${tilsagnsbrev.pdfgen.url}
     joark:
-      uri: uri
+      uri: ${tilsagnsbrev.joark.url}
     sts:
-      uri: uri
-      ws-uri: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
+      uri: ${tilsagnsbrev.sts.url}
+      ws-uri: ${tilsagnsbrev.sts.ws.url}
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
