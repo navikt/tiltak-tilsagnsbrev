@@ -4,6 +4,7 @@ import no.nav.tag.tilsagnsbrev.TilsagnRetryProsess;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.JOURNALFOER;
+
+@Ignore
 
 @SpringBootTest
 @DirtiesContext
