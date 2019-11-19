@@ -3,6 +3,7 @@ package no.nav.tag.tilsagnsbrev.mapper.journalpost;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.*;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnNummer;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +23,15 @@ public class TilsagnJournalpostMapper {
     }
 
     private Journalpost opprettJournalpost(Tilsagn tilsagnsbrev, final byte[] pdfBytes) { //TODO Utlede tittel fra tilsagnsbrevet
-
+        Sak sak = new Sak(opprettArkivsaknr(tilsagnsbrev.getTilsagnNummer()));
         Bruker bruker = new Bruker(tilsagnsbrev.getTiltakArrangor().getOrgNummer());
         Mottaker mottaker = new Mottaker(tilsagnsbrev.getTiltakArrangor().getOrgNummer(), tilsagnsbrev.getTiltakArrangor().getArbgiverNavn());
         Dokument dokument = new Dokument(Journalpost.TITTEL, Collections.singletonList(new DokumentVariant(new String(pdfBytes))));
-        Journalpost journalpost = new Journalpost(Journalpost.TITTEL, bruker, mottaker, Collections.singletonList(dokument));
+        Journalpost journalpost = new Journalpost(Journalpost.TITTEL, bruker, mottaker, sak, Collections.singletonList(dokument));
         return journalpost;
+    }
+
+    private String opprettArkivsaknr(TilsagnNummer tilsagnNr){
+        return new StringBuilder(tilsagnNr.getAar()).append(tilsagnNr.getLoepenrSak()).append(tilsagnNr.getLoepenrTilsagn()).toString();
     }
 }

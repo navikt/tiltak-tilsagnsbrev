@@ -20,10 +20,11 @@ public class Journalpost {
     private final String journalposttype = JOURNALPOST_TYPE;
     private final String kanal = KANAL;
     private final String tema = TEMA;
-    private final String jornalfoerendeEnhet = JOURNALFOERENDE_ENHET;
+    private final String journalfoerendeEnhet = JOURNALFOERENDE_ENHET;
 
     private final String tittel;
     private final Bruker bruker;
     private final Mottaker avsenderMottaker;
+    private final Sak sak;
     private final List<Dokument> dokumenter;
 }
