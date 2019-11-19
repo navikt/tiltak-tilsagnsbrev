@@ -28,20 +28,4 @@ public class JoarkServiceIntTest {
     @Autowired
     private JoarkService joarkService;
 
-    @Test
-    public void oppretterJournalpost() {
-        Journalpost journalpost = new Journalpost();
-
-        Bruker bruker  = new Bruker();
-        bruker.setId("88888899999");
-        journalpost.setBruker(bruker);
-
-        Dokument dokument = new Dokument();
-        dokument.setDokumentVarianter(Arrays.asList(new DokumentVariant(FILTYPE_XML, VARIANFORMAT_XML, "xmlxmlxml"), new DokumentVariant(FILTYPE_PDF, VARIANFORMAT_PDF, "pdfpdfpdf")));
-        journalpost.setDokumenter(Arrays.asList(dokument));
-
-    //    String jounalpostId = joarkService.journalfoerTilsagnsbrev(journalpost);
-    //    assertEquals("001", jounalpostId);
-    }
-
 }

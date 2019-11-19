@@ -1,18 +1,12 @@
 package no.nav.tag.tilsagnsbrev.mapper.journalpost;
 
 import lombok.extern.slf4j.Slf4j;
-import no.nav.tag.tilsagnsbrev.dto.journalpost.Bruker;
-import no.nav.tag.tilsagnsbrev.dto.journalpost.Dokument;
-import no.nav.tag.tilsagnsbrev.dto.journalpost.DokumentVariant;
-import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
+import no.nav.tag.tilsagnsbrev.dto.journalpost.*;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-
-import static no.nav.tag.tilsagnsbrev.dto.journalpost.DokumentVariant.FILTYPE_PDF;
-import static no.nav.tag.tilsagnsbrev.dto.journalpost.DokumentVariant.VARIANFORMAT_PDF;
 
 @Slf4j
 @Component
@@ -27,17 +21,12 @@ public class TilsagnJournalpostMapper {
         }
     }
 
-    private Journalpost opprettJournalpost(Tilsagn tilsagnsbrev, final byte[] pdfBytes) {
-        Bruker bruker = new Bruker();
-        bruker.setId(tilsagnsbrev.getTiltakArrangor().getOrgNummer());
-        Journalpost journalpost = new Journalpost();
-        journalpost.setBruker(bruker);
+    private Journalpost opprettJournalpost(Tilsagn tilsagnsbrev, final byte[] pdfBytes) { //TODO Utlede tittel fra tilsagnsbrevet
 
-        Dokument dokument = new Dokument();
-        dokument.setDokumentVarianter(Collections.singletonList(
-                new DokumentVariant(FILTYPE_PDF, VARIANFORMAT_PDF, new String(pdfBytes)))
-        );
-        journalpost.setDokumenter(Collections.singletonList(dokument));
+        Bruker bruker = new Bruker(tilsagnsbrev.getTiltakArrangor().getOrgNummer());
+        Mottaker mottaker = new Mottaker(tilsagnsbrev.getTiltakArrangor().getOrgNummer(), tilsagnsbrev.getTiltakArrangor().getArbgiverNavn());
+        Dokument dokument = new Dokument(Journalpost.TITTEL, Collections.singletonList(new DokumentVariant(new String(pdfBytes))));
+        Journalpost journalpost = new Journalpost(Journalpost.TITTEL, bruker, mottaker, Collections.singletonList(dokument));
         return journalpost;
     }
 }

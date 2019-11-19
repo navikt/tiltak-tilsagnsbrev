@@ -7,7 +7,9 @@ import static no.nav.tag.tilsagnsbrev.dto.journalpost.JournalpostResponse.ID_TYP
 
 @Data
 @RequiredArgsConstructor
-public class Bruker {
+public class Mottaker {
+
     private final String idType = ID_TYPE_ORGNR;
     private final String id;
+    private final String navn;
 }

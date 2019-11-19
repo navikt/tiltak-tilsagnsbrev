@@ -24,12 +24,12 @@ tilsagnsbrev:
     max-lifetime: 300000
   integrasjon:
     pdfgen:
-      uri: uri
+      uri: ${tilsagnsbrev.pdfgen.url}
     joark:
-      uri: uri
+      uri: ${tilsagnsbrev.joark.url}
     sts:
-      uri: uri
-      ws-uri: uri
+      uri: ${tilsagnsbrev.sts.url}
+      ws-uri: ${tilsagnsbrev.sts.ws.url}
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
