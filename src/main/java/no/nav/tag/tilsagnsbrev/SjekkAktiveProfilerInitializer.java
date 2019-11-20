@@ -23,7 +23,7 @@ public class SjekkAktiveProfilerInitializer implements ApplicationContextInitial
                 antall++;
             }
         }
-        return antall != 1;
+        return antall == 0;
     }
 }
 
