@@ -27,7 +27,7 @@ public class ArenaConsumer {
     @Autowired
     private Tilsagnsbrevbehandler tilsagnsbrevbehandler;
 
-    public static final String group = "tiltak-tilsagnsbrev-1";
+    public static final String group = "tiltak-tilsagnsbrev-2";
     public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
 
     private CountDownLatch latch;
