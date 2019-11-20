@@ -15,7 +15,7 @@ tilsagnsbrev:
   database:
     database-navn: tiltak-tilsagnsbrev-feilet-preprod
     database-url: ${spring.datasource.url}
-    vault-sti: postgresql/preprod-fss/creds
+    vault-sti: postgresql/preprod-fss
     minimum-idle: 1
     maximum-pool-size: 2
     max-lifetime: 300000
