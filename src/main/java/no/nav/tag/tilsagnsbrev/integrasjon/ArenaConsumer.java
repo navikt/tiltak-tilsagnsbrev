@@ -27,7 +27,7 @@ public class ArenaConsumer {
     @Autowired
     private Tilsagnsbrevbehandler tilsagnsbrevbehandler;
 
-    public static final String group = "tiltak-tilsagnsbrev";
+    public static final String group = "tiltak-tilsagnsbrev-1";
     public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
 
     private CountDownLatch latch;
@@ -35,8 +35,8 @@ public class ArenaConsumer {
     @KafkaListener(groupId = group, topics = topic)
     public void lyttPaArenaTilsagn(ConsumerRecord<String, String> tilsagnsMelding){
 
+        log.info("Ny melding hentet fra topic");
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().opprettet(LocalDateTime.now()).cid(opprettCorrelationId(tilsagnsMelding.key())).json(tilsagnsMelding.value()).build();
-
         try {
             tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         } finally {

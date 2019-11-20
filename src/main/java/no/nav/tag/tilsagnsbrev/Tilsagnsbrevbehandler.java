@@ -30,6 +30,8 @@ public class Tilsagnsbrevbehandler {
 
     private void behandleTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
         oppgaver.arenaMeldingTilTilsagnData(tilsagnUnderBehandling);
+
+        log.info("Oppretter pdf av tilsagnsbrev med tilsagn løpenr {}", tilsagnUnderBehandling.getTilsagn().getTilsagnNummer());
         final byte[] pdf = pdfService.tilsagnsbrevTilBase64EncodedPdfBytes(tilsagnUnderBehandling.getJson());
         oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);
         oppgaver.sendTilAltinn(tilsagnUnderBehandling, pdf);
