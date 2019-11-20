@@ -55,7 +55,7 @@ public class VaultDatabaseKonfig {
             hikariConfig.setMaxLifetime(config.getMaxLifetime());
         }
         try {
-            log.info("Vault konfig sti", config.getVaultSti());
+            log.info("Vault konfig sti {}", config.getVaultSti());
             return HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(hikariConfig, config.getVaultSti(), dbRole(user));
         } catch (VaultError vaultError) {
             throw new BeanCreationException("Feil ved henting av credentials fra Vault: " + user, vaultError);
