@@ -2,8 +2,10 @@ package no.nav.tag.tilsagnsbrev.konfigurasjon.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil;
 import no.nav.vault.jdbc.hikaricp.VaultError;
+import org.checkerframework.checker.index.qual.SameLen;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
-
+@Slf4j
 @Configuration
 @Profile({"preprod", "prod"})
 public class VaultDatabaseKonfig {
@@ -53,6 +55,7 @@ public class VaultDatabaseKonfig {
             hikariConfig.setMaxLifetime(config.getMaxLifetime());
         }
         try {
+            log.info("Vault konfig sti", config.getVaultSti());
             return HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(hikariConfig, config.getVaultSti(), dbRole(user));
         } catch (VaultError vaultError) {
             throw new BeanCreationException("Feil ved henting av credentials fra Vault: " + user, vaultError);
