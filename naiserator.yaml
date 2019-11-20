@@ -26,7 +26,7 @@ spec:
         #test
       - kvPath: "serviceuser/data/test/srvtiltak-tilsagns"
       #preprod
-      - kvPath: "serviceuser/data/dev/srvtiltak-tilsagns"
+      #- kvPath: "serviceuser/data/dev/srvtiltak-tilsagns"
         mountPath: "/secrets/serviceuser/srvtiltak-tilsagns/"
 
         #test
