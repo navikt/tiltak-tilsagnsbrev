@@ -8,7 +8,7 @@ import no.nav.tag.tilsagnsbrev.exception.SystemException;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
-import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnJournalpostMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

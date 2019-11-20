@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SjekkAktiveProfilerInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-    public static final List<String> MILJOER = Arrays.asList("debug", "dev", "preprod", "prod");
+    public static final List<String> MILJOER = Arrays.asList("debug", "dev", "preprod", "kafka", "prod");
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
