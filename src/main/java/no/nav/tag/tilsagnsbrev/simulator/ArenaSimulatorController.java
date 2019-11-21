@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
+import no.nav.tag.tilsagnsbrev.CidManager;
 import no.nav.tag.tilsagnsbrev.Tilsagnsbrevbehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
@@ -24,11 +25,19 @@ public class ArenaSimulatorController {
     @Autowired
     private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
+    @Autowired
+    private CidManager cidManager;
+
 
     @PostMapping(value = "kafka")
     public void leggMeldingPaKafkaToppic(@RequestBody String json) throws Exception {
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().cid(UUID.randomUUID()).json(json).build();
-        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+        try {
+            UUID cid = cidManager.opprettCorrelationId();
+            TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().cid(cid).json(json).build();
+            tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+        }finally {
+            cidManager.fjernCorrelationId();
+        }
     }
 
     @GetMapping(value = "ping")
