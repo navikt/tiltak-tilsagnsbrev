@@ -11,7 +11,7 @@ import java.util.UUID;
 @Component
 public class CidManager {
 
-    private static final String CID = "CID-";
+    private static final String CID = "correlation-id";
 
     public UUID opprettCorrelationId() { //TODO Ev. hente en id fra Goldengate meldingen
         final UUID cid = UUID.randomUUID();
