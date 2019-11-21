@@ -15,7 +15,7 @@ public class CidManager {
 
     public UUID opprettCorrelationId() { //TODO Ev. hente en id fra Goldengate meldingen
         final UUID cid = UUID.randomUUID();
-        MDC.put(CID,  CID + cid.toString());
+        MDC.put(CID,  cid.toString());
         return cid;
     }
 

@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev;
 
+import lombok.extern.slf4j.Slf4j;
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
@@ -13,6 +14,7 @@ import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class Oppgaver {
 
@@ -40,8 +42,8 @@ public class Oppgaver {
     public void journalfoerTilsagnsbrev(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
         try {
             Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tilsagnUnderBehandling.getTilsagn(), pdf);
-            joarkService.sendJournalpost(journalpost);
             tilsagnUnderBehandling.setJournalpostId(joarkService.sendJournalpost(journalpost));
+            log.info("Journalført tilsagnsbrev, journalpostId: {}", journalpost);
         }catch (DataException de){
             throw de;
         } catch (Exception e) {
@@ -50,9 +52,11 @@ public class Oppgaver {
     }
 
     public void sendTilAltinn(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
+        log.info("Sender tilsagnsbrev til Altinn");
         InsertCorrespondenceBasicV2 wsRequest;
         wsRequest = mapTilWebserviceRequest(tilsagnUnderBehandling, pdf);
         sentWsRequest(tilsagnUnderBehandling, wsRequest);
+        log.info("Tilsagnsbrev er sendt til Altinn. kvittering {}", tilsagnUnderBehandling.getAltinnKittering());
     }
 
 

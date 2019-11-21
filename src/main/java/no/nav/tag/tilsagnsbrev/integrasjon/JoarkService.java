@@ -52,19 +52,17 @@ public class JoarkService {
         JournalpostResponse response = null;
         try {
             log.info("Forsøker å journalføre tilsagnsbrev");
-            response = restTemplate.postForObject(uri, entityMedStsToken(journalpost), JournalpostResponse.class);
+            return restTemplate.postForObject(uri, entityMedStsToken(journalpost), JournalpostResponse.class).getJournalpostId();
         } catch (Exception e1) {
             stsService.evict();
             log.warn("Feil ved kommunikasjon mot journalpost-API. Henter nytt sts-token og forsøker igjen");
             try {
-                response = restTemplate.postForObject(uri, entityMedStsToken(journalpost), JournalpostResponse.class);
+                return restTemplate.postForObject(uri, entityMedStsToken(journalpost), JournalpostResponse.class).getJournalpostId();
             } catch (Exception e2) {
                 log.error("Kall til Joark feilet: {}", response != null ? response : "", e2);
                 throw new RuntimeException("Kall til Joark feilet: " + e2);
             }
         }
-        log.info("Journalført tilsagnsbrev, journalpostId: {}", response.getJournalpostId());
-        return response.getJournalpostId();
     }
 
     private HttpEntity<Journalpost> entityMedStsToken(final Journalpost journalpost) {
