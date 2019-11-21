@@ -30,8 +30,8 @@ tilsagnsbrev:
       ws-uri: ${tilsagnsbrev.sts.ws.url}
       bruker: ${tilsagnsbrev_srvuser}
       #ad-hoc
-      passord: ${tilsagnsbrev_pp_srvpwd}
-    #  passord: ${tilsagnsbrev_srvpwd}
+    #  passord: ${tilsagnsbrev_pp_srvpwd}
+      passord: ${tilsagnsbrev_srvpwd}
     altinn:
       uri: ${altinn.correspondence.url}
       systemBruker: ${tilsagnsbrev_altinn_system_bruker}
