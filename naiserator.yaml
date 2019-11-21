@@ -15,9 +15,11 @@ spec:
   liveness:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
     initialDelay: 30
+    timeout: 1
   readiness:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
     initialDelay: 30
+    timeout: 1
   ingresses:
     - {{ingress}}
   vault:
