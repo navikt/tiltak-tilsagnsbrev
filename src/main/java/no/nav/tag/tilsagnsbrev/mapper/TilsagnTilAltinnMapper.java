@@ -73,7 +73,7 @@ public class TilsagnTilAltinnMapper {
         try {
             return DatatypeFactory.newInstance().newXMLGregorianCalendar(localDateTime.toString());
         } catch (DatatypeConfigurationException e) {
-            throw new RuntimeException(e); //TODO
+            throw new RuntimeException(e);
         }
     }
 

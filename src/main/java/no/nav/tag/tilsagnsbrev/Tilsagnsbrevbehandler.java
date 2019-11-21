@@ -39,7 +39,7 @@ public class Tilsagnsbrevbehandler {
 
     private void lagreFeiletTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
         if (!feiletTilsagnBehandler.lagreFeil(tilsagnUnderBehandling, e)) {
-            log.error("Feil ble ikke lagret! Melding fra Arena: {}", tilsagnUnderBehandling.getJson(), e.getMessage());
+            log.error("Feil ble ikke lagret! Melding: {}", tilsagnUnderBehandling.getJson(), e.getMessage());
         }
     }
 }
