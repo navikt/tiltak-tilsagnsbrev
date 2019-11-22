@@ -23,6 +23,7 @@ public class TilsagnTilAltinnMapper {
     private AltinnProperties altinnProperties;
 
     private static final String ATTACHMENT_NAME_PREFIX = "NAV-Tilsagnsbrev ";
+    private static final String FILE_NAME_PREFIX = "Tilsagnsbrev-";
     private static final String FIL_EXT = ".pdf";
     private static final String SYSTEM_USERCODE = "TAG_TILSAGN";
 
@@ -33,7 +34,7 @@ public class TilsagnTilAltinnMapper {
     private static final String SENDER_REF = "test_ref"; //TODO Sjekk bruken av dette.
     private static final String MSG_SENDER = "NAV"; //TODO Sjekk bruken av dette.
 
-    public InsertCorrespondenceBasicV2 tilAltinnMelding(Tilsagn tilsagn, byte[] pdf) {
+    public InsertCorrespondenceBasicV2 tilAltinnMelding(final Tilsagn tilsagn, final byte[] pdf) {
         return new InsertCorrespondenceBasicV2()
                 .withSystemUserName(altinnProperties.getSystemBruker())
                 .withSystemPassword(altinnProperties.getSystemPassord())
@@ -56,13 +57,13 @@ public class TilsagnTilAltinnMapper {
                                                         .withSendersReference(SENDER_REF)
                                                         .withData(pdf)
                                                         .withFileName(new StringBuilder()
+                                                                .append(FILE_NAME_PREFIX)
                                                                 .append(tilsagn.getTiltakArrangor().getOrgNummer())
-                                                                .append(" ")
-                                                                .append(tilsagn.getTilsagnDato())
                                                                 .append(FIL_EXT)
                                                                 .toString())
                                                         .withName(new StringBuilder()
                                                                 .append(ATTACHMENT_NAME_PREFIX)
+                                                                .append(" for ")
                                                                 .append(tilsagn.getTiltakArrangor().getOrgNummer())
                                                                 .append(" ")
                                                                 .append(tilsagn.getTilsagnDato())

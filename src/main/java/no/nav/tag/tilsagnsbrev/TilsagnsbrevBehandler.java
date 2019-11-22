@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class Tilsagnsbrevbehandler {
+public class TilsagnsbrevBehandler {
 
     @Autowired
     private Oppgaver oppgaver;

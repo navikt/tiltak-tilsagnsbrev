@@ -3,7 +3,7 @@ package no.nav.tag.tilsagnsbrev.integrasjon;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.CidManager;
-import no.nav.tag.tilsagnsbrev.Tilsagnsbrevbehandler;
+import no.nav.tag.tilsagnsbrev.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class ArenaConsumer {
     private CidManager cidManager;
 
     @Autowired
-    private Tilsagnsbrevbehandler tilsagnsbrevbehandler;
+    private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
 

@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 @SpringBootTest
 @ActiveProfiles("dev")
 @DirtiesContext
-public class TilsagnsbrevbehandlerIntTest {
+public class TilsagnsbrevBehandlerIntTest {
 
     @Autowired
     IntegrasjonerMockServer mockServer;
@@ -35,7 +35,7 @@ public class TilsagnsbrevbehandlerIntTest {
     TilsagnJsonMapper tilsagnJsonMapper;
 
     @Autowired
-    private Tilsagnsbrevbehandler tilsagnsbrevbehandler;
+    private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     @Autowired
     FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;

@@ -17,7 +17,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TilsagnsbrevbehandlerTest {
+public class TilsagnsbrevBehandlerTest {
 
     @Mock
     private Oppgaver oppgaver;
@@ -29,7 +29,7 @@ public class TilsagnsbrevbehandlerTest {
     private PdfGenService pdfGenService;
 
     @InjectMocks
-    private Tilsagnsbrevbehandler tilsagnsbrevbehandler;
+    private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     @Test
     public void senderTilAltinnSelvOmJournalforingFeiler() {

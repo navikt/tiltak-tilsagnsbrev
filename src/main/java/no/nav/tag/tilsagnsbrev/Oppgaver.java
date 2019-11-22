@@ -53,8 +53,7 @@ public class Oppgaver {
 
     public void sendTilAltinn(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
         log.info("Sender tilsagnsbrev til Altinn");
-        InsertCorrespondenceBasicV2 wsRequest;
-        wsRequest = mapTilWebserviceRequest(tilsagnUnderBehandling, pdf);
+        InsertCorrespondenceBasicV2 wsRequest = mapTilWebserviceRequest(tilsagnUnderBehandling, pdf);
         sentWsRequest(tilsagnUnderBehandling, wsRequest);
         log.info("Tilsagnsbrev er sendt til Altinn. kvittering {}", tilsagnUnderBehandling.getAltinnKittering());
     }

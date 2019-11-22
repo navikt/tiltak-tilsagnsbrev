@@ -1,7 +1,7 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
 import no.nav.tag.tilsagnsbrev.CidManager;
-import no.nav.tag.tilsagnsbrev.Tilsagnsbrevbehandler;
+import no.nav.tag.tilsagnsbrev.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
@@ -17,7 +17,7 @@ import java.util.UUID;
 public class ArenaSimulatorController {
 
     @Autowired
-    private Tilsagnsbrevbehandler tilsagnsbrevbehandler;
+    private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     @Autowired
     private AltInnService altInnService;
