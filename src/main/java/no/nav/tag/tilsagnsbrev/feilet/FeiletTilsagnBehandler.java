@@ -21,12 +21,11 @@ public class FeiletTilsagnBehandler {
         return feiletTilsagnsbrevRepository.findAll().stream().filter(TilsagnUnderBehandling::skalRekjoeres).collect(Collectors.toList());
     }
 
-    public boolean lagreFeil(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
+    public boolean lagreEllerOppdaterFeil(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
         if (e instanceof TilsagnException) {
             TilsagnException te = (TilsagnException) e;
-            tilsagnUnderBehandling.setFeilmelding(e.getMessage());
             tilsagnUnderBehandling.setRetry(te);
-            return lagre(tilsagnUnderBehandling);
+            return lagreEllerOppdater(tilsagnUnderBehandling);
         }
         return false;
     }
@@ -40,29 +39,25 @@ public class FeiletTilsagnBehandler {
     }
 
     private boolean oppdaterFeilet(TilsagnUnderBehandling oppdatertTilsagn, Optional<Exception> optEx) {
-        if (optEx.isPresent()) {
-            String feilmelding =
-                    optEx.filter(e -> e instanceof TilsagnException)
-                            .map(e -> e.getMessage())
-                            .orElseThrow(() -> new RuntimeException(optEx.get()));
-            oppdatertTilsagn.setFeilmelding(feilmelding);
-        }
         return feiletTilsagnsbrevRepository.findById(oppdatertTilsagn.getCid())
                 .map(hentet -> hentet.oppdater(oppdatertTilsagn))
-                .map(oppdatert -> lagre(oppdatert))
+                .map(oppdatert -> lagreEllerOppdater(oppdatert))
                 .orElseThrow(() -> new RuntimeException("Fant ikke feilet tilsagnsbrev i database: " + oppdatertTilsagn.getCid())); //TODO Enten kaste denne eller returnere false
     }
 
-    private boolean lagre(TilsagnUnderBehandling tilsagnUnderBehandling) {
+    private boolean lagreEllerOppdater(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
-            feiletTilsagnsbrevRepository.save(tilsagnUnderBehandling);
+            TilsagnUnderBehandling oppdatert = feiletTilsagnsbrevRepository
+                    .findById(tilsagnUnderBehandling.getCid())
+                    .map(tub -> tub.oppdater(tilsagnUnderBehandling))
+                    .orElse(tilsagnUnderBehandling);
+            feiletTilsagnsbrevRepository.save(oppdatert);
             return true;
         } catch (Exception e) {
             log.error("Feil ved lagring av tilsagnsfeil! Tilsagn: {}", tilsagnUnderBehandling.getJson(), e);
             throw new RuntimeException(e);
         }
     }
-
 
     public void slettTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
         log.info("Fjerner tilsagn fra database: {}", tilsagnUnderBehandling.getTilsagn());

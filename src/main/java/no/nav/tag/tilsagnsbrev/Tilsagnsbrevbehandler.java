@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class Tilsagnsbrevbehandler {
 
     @Autowired
-    Oppgaver oppgaver;
+    private Oppgaver oppgaver;
 
     @Autowired
     private PdfGenService pdfService;
@@ -24,21 +24,25 @@ public class Tilsagnsbrevbehandler {
         try {
             behandleTilsagn(tilsagnUnderBehandling);
         } catch (Exception e) {
-            lagreFeiletTilsagn(tilsagnUnderBehandling, e);
+            oppdaterFeiletTilsagn(tilsagnUnderBehandling, e);
         }
     }
 
     private void behandleTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
         oppgaver.arenaMeldingTilTilsagnData(tilsagnUnderBehandling);
-
         log.info("Oppretter pdf av tilsagnsbrev for bedrift {}", tilsagnUnderBehandling.getTilsagn().getTiltakArrangor().getOrgNummer());
         final byte[] pdf = pdfService.tilsagnsbrevTilBase64EncodedPdfBytes(tilsagnUnderBehandling.getJson());
-        oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);
+
+        try {
+            oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);
+        } catch (Exception e) {
+            oppdaterFeiletTilsagn(tilsagnUnderBehandling, e);
+        }
         oppgaver.sendTilAltinn(tilsagnUnderBehandling, pdf);
     }
 
-    private void lagreFeiletTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
-        if (!feiletTilsagnBehandler.lagreFeil(tilsagnUnderBehandling, e)) {
+    private void oppdaterFeiletTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
+        if (!feiletTilsagnBehandler.lagreEllerOppdaterFeil(tilsagnUnderBehandling, e)) {
             log.error("Feil ble ikke lagret! Melding: {}", tilsagnUnderBehandling.getJson(), e.getMessage());
         }
     }

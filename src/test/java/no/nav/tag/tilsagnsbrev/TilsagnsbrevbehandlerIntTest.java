@@ -40,7 +40,7 @@ public class TilsagnsbrevbehandlerIntTest {
     @Autowired
     FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
 
-    final String goldengateJson = Testdata.hentFilString("goldengate.json");
+    final String goldengateJson = Testdata.hentFilString("arenaMelding.json");
     final String altinnOkRespons = Testdata.hentFilString("altinn200Resp.xml");
     final String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
 
@@ -65,7 +65,7 @@ public class TilsagnsbrevbehandlerIntTest {
     @Test
     public void parserIkkeArenaMelding(){
         final UUID CID = UUID.randomUUID();
-        final String feilbarGoldengateJson = Testdata.hentFilString("arena_melding_som_feiler.json");
+        final String feilbarGoldengateJson = Testdata.hentFilString("arenaMelding_som_feiler.json");
 
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(feilbarGoldengateJson).cid(CID).build();
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
@@ -95,7 +95,6 @@ public class TilsagnsbrevbehandlerIntTest {
             assertTrue(tub.skalRekjoeres());
             assertFalse(tub.erJournalfoert());
             assertNotNull(tub.getJson());
-            assertTrue(tub.getFeilmelding().contains("500"));
             return tub;
         });
     }
@@ -117,7 +116,6 @@ public class TilsagnsbrevbehandlerIntTest {
             assertTrue(tub.skalRekjoeres());
             assertFalse(tub.erJournalfoert());
             assertNotNull(tub.getJson());
-            assertNotNull(tub.getFeilmelding());
             return tub;
         });
     }
@@ -138,7 +136,27 @@ public class TilsagnsbrevbehandlerIntTest {
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
             assertNotNull(tub.getJson());
-            assertTrue(tub.getFeilmelding().contains("500"));
+            return tub;
+        });
+    }
+
+    @Test
+    public void feilFraAltinnOgJoark(){
+
+        mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true").willReturn(unauthorized()));
+        mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
+
+        final UUID CID = UUID.randomUUID();
+        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
+        tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
+
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+
+        Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
+        assertTrue(feilet.isPresent());
+        feilet.map(tub -> {
+            assertTrue(tub.skalRekjoeres());
+            assertNotNull(tub.getJson());
             return tub;
         });
     }

@@ -41,7 +41,6 @@ public class TilsagnUnderBehandling {
     private String journalpostId;
     private Integer altinnKittering;
 
-    private String feilmelding;
     private String json;
 
     @Transient
@@ -73,14 +72,6 @@ public class TilsagnUnderBehandling {
         return !isMappetFraArena();
     }
 
-    public void setFeilmelding(String feilmelding){
-        if(feilmelding != null && feilmelding.length() > FEILMELDING_MAXLENGTH){
-            this.feilmelding = feilmelding.substring(0, FEILMELDING_MAXLENGTH);
-            return;
-        }
-        this.feilmelding = feilmelding;
-    }
-
     public void setRetry(TilsagnException te){
         if(te instanceof DataException){
             retry = MAX_RETRIES;
@@ -105,7 +96,6 @@ public class TilsagnUnderBehandling {
         this.datafeil = ny.datafeil;
         this.journalpostId = ny.journalpostId;
         this.altinnKittering = ny.altinnKittering;
-        this.feilmelding = ny.feilmelding;
         this.behandlet = ny.behandlet;
         this.json = ny.json;
         return this;

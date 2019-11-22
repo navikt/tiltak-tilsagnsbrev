@@ -1,7 +1,6 @@
 package no.nav.tag.tilsagnsbrev;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
@@ -9,6 +8,7 @@ import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -43,7 +42,8 @@ public class TilsagnRetryProsessIntTest {
     private TilsagnJsonMapper tilsagnJsonMapper;
 
     final String altinnOkRespons = Testdata.hentFilString("altinn200Resp.xml");
-    final String goldengateJson = Testdata.hentFilString("goldengate.json");
+    final String goldengateJson = Testdata.hentFilString("arenaMelding.json");
+    final String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
 
     @Before
     public void setUp() {
@@ -109,6 +109,28 @@ public class TilsagnRetryProsessIntTest {
         assertTrue("MappetFraArena", tub.isMappetFraArena());
         assertFalse("Til Altinn", tub.skalTilAltinn());
         assertTrue("Journalført", tub.erJournalfoert());
+    }
+
+    @Test
+    @Ignore
+    public void feilerIgjenEtterFeiletAltinnSending() {
+        mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
+
+        final UUID CID = UUID.randomUUID();
+        TilsagnUnderBehandling feilet = TilsagnUnderBehandling.builder().retry(1).cid(CID).json(Testdata.tilsagnTilJson(Testdata.tilsagnEnDeltaker())).mappetFraArena(true).journalpostId("1234").build();
+        feiletTilsagnsbrevRepository.save(feilet);
+
+        tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
+
+        Optional<TilsagnUnderBehandling> opt = feiletTilsagnsbrevRepository.findById(CID);
+        assertTrue("Tilsagn ikke i database", opt.isPresent());
+
+        TilsagnUnderBehandling tub = opt.get();
+        assertFalse("Ikke behandlet", tub.isBehandlet());
+        assertTrue("MappetFraArena", tub.isMappetFraArena());
+        assertFalse("Til Altinn", tub.skalTilAltinn());
+        assertTrue("Journalført", tub.erJournalfoert());
+        assertEquals("Feil retry", 2, tub.getRetry());
     }
 
     private void stubForAltOk(WireMockServer server) {
