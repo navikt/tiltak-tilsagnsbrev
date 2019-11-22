@@ -5,6 +5,9 @@ spring:
   kafka:
     consumer:
       bootstrap-servers: ${spring.embedded.kafka.brokers}
+  h2:
+    console:
+      enabled: true
 
   main:
     banner-mode: "console"

@@ -11,6 +11,8 @@ spring:
       ssl.truststore:
         location: ${javax.net.ssl.trustStore}
         password: ${javax.net.ssl.trustStorePassword}
+    consumer:
+      group-id: ${tilsagnsbrev.consumer.group.id}
 
 tilsagnsbrev:
   database:
