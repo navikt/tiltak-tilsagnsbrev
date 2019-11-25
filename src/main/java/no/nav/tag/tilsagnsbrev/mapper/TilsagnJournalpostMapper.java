@@ -7,6 +7,7 @@ import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnNummer;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
 import java.util.Collections;
 
 @Slf4j
@@ -26,7 +27,8 @@ public class TilsagnJournalpostMapper {
         Sak sak = new Sak(opprettArkivsaknr(tilsagnsbrev.getTilsagnNummer()));
         Bruker bruker = new Bruker(tilsagnsbrev.getTiltakArrangor().getOrgNummer());
         Mottaker mottaker = new Mottaker(tilsagnsbrev.getTiltakArrangor().getOrgNummer(), tilsagnsbrev.getTiltakArrangor().getArbgiverNavn());
-        Dokument dokument = new Dokument(Journalpost.TITTEL, Collections.singletonList(new DokumentVariant(new String(pdfBytes))));
+        final String base64EncodetPdf = Base64.getEncoder().encodeToString(pdfBytes);
+        Dokument dokument = new Dokument(Journalpost.TITTEL, Collections.singletonList(new DokumentVariant(base64EncodetPdf)));
         Journalpost journalpost = new Journalpost(Journalpost.TITTEL, bruker, mottaker, sak, Collections.singletonList(dokument));
         return journalpost;
     }

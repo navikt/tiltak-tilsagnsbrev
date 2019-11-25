@@ -16,10 +16,6 @@ public class AltInnService {
     @Autowired
     private ICorrespondenceAgencyExternalBasic iCorrespondenceAgencyExternalBasic;
 
-    @Autowired
-    private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
-
-
     public int sendTilsagnsbrev(InsertCorrespondenceBasicV2 insertCorrespondenceBasicV2) {
         try {
             return iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(

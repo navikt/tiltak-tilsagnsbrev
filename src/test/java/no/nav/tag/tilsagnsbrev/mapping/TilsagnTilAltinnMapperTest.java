@@ -1,8 +1,10 @@
 package no.nav.tag.tilsagnsbrev.mapping;
 
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
+import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.altinn.AltinnProperties;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
+import no.nav.tag.tilsagnsbrev.simulator.EncodedString;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import org.junit.Ignore;
@@ -20,6 +22,7 @@ import javax.xml.validation.Validator;
 import java.io.File;
 import java.util.Base64;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
@@ -33,17 +36,19 @@ public class TilsagnTilAltinnMapperTest {
     TilsagnTilAltinnMapper tilsagnTilAltinnMapper = new TilsagnTilAltinnMapper();
 
     @Test
-    @Ignore("Ikke klar")
     public void mapperTilAltinnMelding() {
         when(altinnProperties.getSystemBruker()).thenReturn("bruker");
         when(altinnProperties.getSystemPassord()).thenReturn("passord");
 
         Tilsagn tilsagn = Testdata.gruppeTilsagn();
-        byte[] pdf = "pdf".getBytes();
+        final byte[] base64encPdf = Base64.getEncoder().encode(Testdata.hentFilBytes("dummy.pdf"));
 
-        InsertCorrespondenceBasicV2 correspondenceBasicV2 = tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, pdf);
+        InsertCorrespondenceBasicV2 correspondenceBasicV2 = tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, base64encPdf);
         assertNotNull(correspondenceBasicV2.getCorrespondence().getVisibleDateTime());
 
+        BinaryAttachmentV2 binaryAttachmentV2 = correspondenceBasicV2.getCorrespondence().getContent().getAttachments().getBinaryAttachments().getBinaryAttachmentV2().get(0);
+        binaryAttachmentV2.getData();
+        assertEquals(EncodedString.ENC_STR, new String(base64encPdf));
     }
 
 

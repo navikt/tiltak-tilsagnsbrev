@@ -38,8 +38,7 @@ public class PdfGenService {
     public byte[] tilsagnsbrevTilBase64EncodedPdfBytes(String tilsagnJson) {
         HttpEntity<String> entity = new HttpEntity<>(tilsagnJson, headers);
         try {
-            byte[] pdf = restTemplate.postForObject(uri, entity, byte[].class);
-            return Base64.getEncoder().encode(pdf);
+            return restTemplate.postForObject(uri, entity, byte[].class);
         } catch (Exception e) {
             log.error("Feil ved oppretting av pdf fil", e);
             throw new SystemException(e.getMessage());
