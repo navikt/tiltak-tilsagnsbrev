@@ -20,7 +20,7 @@ public class Testdata {
     public static LocalDate TIL_DATO = LocalDate.parse("2019-12-31");
 
     public static Tilsagn gruppeTilsagn() {
-        return Tilsagn.builder().antallDeltakere("17")
+        return tilsagnsBuilder().antallDeltakere("17")
                 .antallTimeverk("2932").build();
     }
 
@@ -59,12 +59,12 @@ public class Testdata {
                         new Tilskudd("142000", "Opplæringstilskudd"),
                         new Tilskudd("142000", "Lønnstilskudd")))
                 .tiltakArrangor(TiltakArrangor.builder()
-                        .arbgiverNavn("L.S. Solland AS")
+                        .arbgiverNavn("BIRTAVARRE OG VÆRLANDET REGNSKAP")
                         .kontoNummer("32010501481")
                         .landKode("NO")
                         .maalform("Nynorsk")
-                        .orgNummer("973152289")
-                        .orgNummerMorselskap("918160922")
+                        .orgNummer("910825607")
+                        .orgNummerMorselskap("943506698")
                         .postAdresse("Pedersgata 110 ")
                         .postNummer("4014")
                         .postSted("Oslo")
