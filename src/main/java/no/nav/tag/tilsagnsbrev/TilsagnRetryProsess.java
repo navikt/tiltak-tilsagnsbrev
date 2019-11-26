@@ -40,7 +40,7 @@ public class TilsagnRetryProsess {
         }
 
         tilsagnUnderBehandling.opprettTilsagn();
-        final byte[] pdf = pdfService.tilsagnsbrevTilBase64EncodedPdfBytes(tilsagnUnderBehandling.getJson());
+        final byte[] pdf = pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling);
 
         if (tilsagnUnderBehandling.skaljournalfoeres()) {
             oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);

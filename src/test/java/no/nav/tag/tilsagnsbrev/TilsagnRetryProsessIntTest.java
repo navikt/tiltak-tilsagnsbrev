@@ -1,6 +1,5 @@
 package no.nav.tag.tilsagnsbrev;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
@@ -20,7 +19,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -47,7 +47,7 @@ public class TilsagnRetryProsessIntTest {
 
     @Before
     public void setUp() {
-        stubForAltOk(mockServer.getServer());
+        mockServer.stubForAltOk();
     }
 
     @After
@@ -112,7 +112,7 @@ public class TilsagnRetryProsessIntTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Ikke klar")
     public void feilerIgjenEtterFeiletAltinnSending() {
         mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
 
@@ -133,11 +133,5 @@ public class TilsagnRetryProsessIntTest {
         assertEquals("Feil retry", 2, tub.getRetry());
     }
 
-    private void stubForAltOk(WireMockServer server) {
-        server.stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
-                .willReturn(okJson("{\"journalpostId\" : \"001\", \"journalstatus\" : \"MIDLERTIDIG\", \"melding\" : \"Gikk bra\"}")));
-        server.stubFor(post("/template/tilsagnsbrev/create-pdf").willReturn(okJson("{\"pdf\" : \"[B@b78a709\"}")));
-        server.stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(ok().withBody(altinnOkRespons)));
-    }
 
 }
