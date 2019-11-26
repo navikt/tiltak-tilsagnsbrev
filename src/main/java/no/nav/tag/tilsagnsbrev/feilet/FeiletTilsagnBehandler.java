@@ -42,7 +42,7 @@ public class FeiletTilsagnBehandler {
         return feiletTilsagnsbrevRepository.findById(oppdatertTilsagn.getCid())
                 .map(hentet -> hentet.oppdater(oppdatertTilsagn))
                 .map(oppdatert -> lagreEllerOppdater(oppdatert))
-                .orElseThrow(() -> new RuntimeException("Fant ikke feilet tilsagnsbrev i database: " + oppdatertTilsagn.getCid())); //TODO Enten kaste denne eller returnere false
+                .orElseThrow(() -> new RuntimeException("Fant ikke feilet tilsagnsbrev i database: " + oppdatertTilsagn.getCid()));
     }
 
     private boolean lagreEllerOppdater(TilsagnUnderBehandling tilsagnUnderBehandling) {
