@@ -38,6 +38,7 @@ public class TilsagnUnderBehandling {
     @Builder.Default
     private boolean behandlet = false; //Logisk sletting inntil videre
 
+    private Integer tilsagnsbrevId;
     private String journalpostId;
     private Integer altinnKittering;
 

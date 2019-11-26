@@ -5,8 +5,10 @@ import com.google.gson.JsonElement;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
+import no.nav.tag.tilsagnsbrev.mapper.json.GsonWrapper;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,34 +16,32 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.PrimitiveIterator;
+
 import static no.nav.tag.tilsagnsbrev.simulator.Testdata.*;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@Ignore("Gson er final class - kan ikke mockes")
+//@Ignore("Gson er final class - kan ikke mockes")
 @RunWith(MockitoJUnitRunner.class)
 public class TilsagnJsonMapperTest {
 
     @Mock
-    private Gson tilsagnTilPdfRequestGson;
+    private GsonWrapper gsonWrapper;
 
-    @Mock
-    private Gson arenaTilTilsagnGson;
-
-    @InjectMocks
-    TilsagnJsonMapper tilsagnJsonMapper;
+    TilsagnJsonMapper tilsagnJsonMapper = new TilsagnJsonMapper(gsonWrapper);
 
     final String requestJson = Testdata.hentFilString(JSON_FIL);
     final Tilsagn tilsagn = Testdata.gruppeTilsagn();
 
+
     @Test
     public void mapperTilstagnTilJson(){
-
+        tilsagnJsonMapper = new TilsagnJsonMapper(new GsonWrapper());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagn).build();
 
-        when(tilsagnTilPdfRequestGson.toJson(tilsagn)).thenCallRealMethod();
         tilsagnJsonMapper.tilsagnTilJson(tub);
         String json = tub.getJson();
         System.out.println(json);
@@ -72,9 +72,12 @@ public class TilsagnJsonMapperTest {
 
     @Test
     public void mapperGoldengateJsonTilTilsagn() {
-        when(arenaTilTilsagnGson.fromJson(any(JsonElement.class), Tilsagn.class)).thenCallRealMethod();
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().json(requestJson).build();
+        final String arenaMelding = Testdata.hentFilString("arenaMelding.json");
+        tilsagnJsonMapper = new TilsagnJsonMapper(gsonWrapper);
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().json(arenaMelding).build();
         tilsagnJsonMapper.arenaMeldingTilTilsagn(tub);
+        assertEquals("Tilsagnsbrev_id", 111, tub.getTilsagnsbrevId().intValue());
+
         final Tilsagn faktiskilsagn = tub.getTilsagn();
                 assertEquals("tilsagnNummer.aar", "2019", faktiskilsagn.getTilsagnNummer().getAar());
         assertEquals("tilsagnNummer.loepenrSak", "366023", faktiskilsagn.getTilsagnNummer().getLoepenrSak());
@@ -138,7 +141,7 @@ public class TilsagnJsonMapperTest {
 
     @Test
     public void arenaMeldingTilTilsagnGirDatafeilMedInnhold(){
-        when(tilsagnTilPdfRequestGson.toJson(eq(tilsagn))).thenCallRealMethod();
+        when(gsonWrapper.opprettPdfJson(eq(tilsagn))).thenCallRealMethod();
         String feilJson = "Ikke en json";
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().json(feilJson).build();
         try {
@@ -153,14 +156,13 @@ public class TilsagnJsonMapperTest {
 
     @Test
     public void tilsagnTilPdfJsonGirDatafeilMedInnhold(){
-        when(tilsagnTilPdfRequestGson.toJson(eq(tilsagn))).thenThrow(new RuntimeException("Feil Mapping"));
+        when(gsonWrapper.opprettPdfJson(eq(tilsagn))).thenThrow(new RuntimeException("Feil Mapping"));
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagn).build();
         try {
             tilsagnJsonMapper.tilsagnTilJson(tub);
             fail("Kaster ikke DataException");
         } catch (DataException de){
             assertEquals("errMsg", "Feil Mapping", de.getMessage());
-            assertTrue(tub.isMappetFraArena());
         }
     }
 }

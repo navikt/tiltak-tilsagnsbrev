@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 public class Testdata {
 
-    public static String JSON_FIL = "goldengate.json";
-    public static String JSON_FIL_FEILER = "fullRequest_som_feiler.json";
+    public static String JSON_FIL = "arenaMelding.json";
+    public static String JSON_FIL_FEILER = "arenaMelding_som_feiler.json";
 
     //Hentet fra fullREquest.tilsagn
     public static LocalDate TILSAGNSDATO = LocalDate.parse("2019-10-22");

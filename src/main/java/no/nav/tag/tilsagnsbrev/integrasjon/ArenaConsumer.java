@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.CidManager;
@@ -17,18 +18,14 @@ import java.util.concurrent.CountDownLatch;
 @Data
 @Slf4j
 @Component
-@Profile("kafka")
+@Profile("dev")
+@AllArgsConstructor
 public class ArenaConsumer {
-
-    @Autowired
-    private CidManager cidManager;
-
-    @Autowired
-    private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
 
-    private CountDownLatch latch;
+    private CidManager cidManager;
+    private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     @KafkaListener(topics = topic)
     public void lyttPaArenaTilsagn(ConsumerRecord<String, String> tilsagnsMelding){
@@ -42,13 +39,6 @@ public class ArenaConsumer {
             tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         } finally {
             cidManager.fjernCorrelationId();
-            this.countdownLatch();
-        }
-    }
-
-    private void countdownLatch() {
-        if (latch != null) {
-            latch.countDown();
         }
     }
 }
