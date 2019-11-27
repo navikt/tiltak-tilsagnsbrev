@@ -30,10 +30,12 @@ tilsagnsbrev:
     sts:
       uri: ${tilsagnsbrev.sts.url}
       ws-uri: ${tilsagnsbrev.sts.ws.url}
-     # bruker: ${tilsagnsbrev_srvuser}
-      bruker: ${tilsagnsbrev.pp.srvuser}
-     # passord: ${tilsagnsbrev_srvpwd}
-      passord: ${tilsagnsbrev.pp.srvpwd}
+      #test
+     # bruker: ${tilsagnsbrev.pp.srvuser}
+     # passord: ${tilsagnsbrev.pp.srvpwd}
+      #preprod
+      bruker: ${tilsagnsbrev_srvuser}
+      passord: ${tilsagnsbrev_srvpwd}
     altinn:
       uri: ${altinn.correspondence.url}
       systemBruker: ${tilsagnsbrev_altinn_system_bruker}
