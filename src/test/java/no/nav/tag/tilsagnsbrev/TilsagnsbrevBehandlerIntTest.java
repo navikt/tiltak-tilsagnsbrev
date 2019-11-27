@@ -46,7 +46,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
     @Before
     public void setUp() {
-        stubForAltOk(mockServer.getServer());
+        mockServer.stubForAltOk();
     }
 
     @After
@@ -83,7 +83,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
     @Test
     public void pdfGenFeil(){
-        mockServer.getServer().stubFor(post("/template/tilsagnsbrev/create-pdf").willReturn(serverError()));
+        mockServer.getServer().stubFor(post("/template/tilsagnsbrev-gruppe/create-pdf").willReturn(serverError()));
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
@@ -159,12 +159,5 @@ public class TilsagnsbrevBehandlerIntTest {
             assertNotNull(tub.getJson());
             return tub;
         });
-    }
-
-    private void stubForAltOk(WireMockServer server) {
-        server.stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
-                .willReturn(okJson("{\"journalpostId\" : \"001\", \"journalstatus\" : \"MIDLERTIDIG\", \"melding\" : \"Gikk bra\"}")));
-        server.stubFor(post("/template/tilsagnsbrev/create-pdf").willReturn(okJson("{\"pdf\" : \"[B@b78a709\"}")));
-        server.stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(ok().withBody(altinnOkRespons)));
     }
 }

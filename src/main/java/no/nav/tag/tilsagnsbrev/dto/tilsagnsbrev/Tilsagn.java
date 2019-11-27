@@ -47,4 +47,8 @@ public class  Tilsagn {
     private String totaltTilskuddbelop;
 
     private String valutaKode;
+
+    public boolean erGruppeTilsagn(){
+        return this.deltaker == null;
+    }
 }

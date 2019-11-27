@@ -13,7 +13,7 @@ public class CidManager {
 
     private static final String CID = "correlation-id";
 
-    public UUID opprettCorrelationId() { //TODO Ev. hente en id fra Goldengate meldingen
+    public UUID opprettCorrelationId() {
         final UUID cid = UUID.randomUUID();
         MDC.put(CID,  cid.toString());
         return cid;

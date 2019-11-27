@@ -49,10 +49,6 @@ public class TilsagnUnderBehandling {
     @Transient
     private Gson gson = new Gson();
 
-    public boolean fraStart(){
-        return this.mappetFraArena == false;
-    }
-
     public boolean skaljournalfoeres(){
         return this.journalpostId == null;
     }
@@ -70,7 +66,7 @@ public class TilsagnUnderBehandling {
     }
 
     public boolean skalMappesFraArenaMelding(){
-        return !isMappetFraArena();
+        return !this.mappetFraArena;
     }
 
     public void setRetry(TilsagnException te){

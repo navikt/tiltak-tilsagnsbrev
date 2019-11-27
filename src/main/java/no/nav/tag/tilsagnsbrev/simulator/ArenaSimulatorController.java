@@ -1,6 +1,7 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
 import no.nav.tag.tilsagnsbrev.CidManager;
+import no.nav.tag.tilsagnsbrev.TilsagnRetryProsess;
 import no.nav.tag.tilsagnsbrev.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
@@ -20,6 +21,9 @@ public class ArenaSimulatorController {
     private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     @Autowired
+    private TilsagnRetryProsess tilsagnRetryProsess;
+
+    @Autowired
     private AltInnService altInnService;
 
     @Autowired
@@ -35,9 +39,14 @@ public class ArenaSimulatorController {
             UUID cid = cidManager.opprettCorrelationId();
             TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().cid(cid).json(json).build();
             tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
-        }finally {
+        } finally {
             cidManager.fjernCorrelationId();
         }
+    }
+
+    @GetMapping(value = "retry")
+    public void kjoerRetry(@RequestBody String json) throws Exception {
+        tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
     }
 
     @GetMapping(value = "ping")

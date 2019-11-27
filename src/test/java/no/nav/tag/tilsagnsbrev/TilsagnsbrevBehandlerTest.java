@@ -40,7 +40,7 @@ public class TilsagnsbrevBehandlerTest {
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().cid(UUID.randomUUID()).tilsagn(tilsagn).json(arenaMelding).build();
 
         doNothing().when(oppgaver).arenaMeldingTilTilsagnData(tilsagnUnderBehandling);
-        when(pdfGenService.tilsagnsbrevTilBase64EncodedPdfBytes(tilsagnUnderBehandling.getJson())).thenReturn(pdf);
+        when(pdfGenService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling)).thenReturn(pdf);
         doThrow(SystemException.class).when(oppgaver).journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);
         when(feiletTilsagnBehandler.lagreEllerOppdaterFeil(eq(tilsagnUnderBehandling), any(SystemException.class))).thenReturn(true);
 
