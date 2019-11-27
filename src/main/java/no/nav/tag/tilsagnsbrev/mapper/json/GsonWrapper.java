@@ -13,7 +13,7 @@ public class GsonWrapper {
 
     private static final String JSON_DATOFORMAT = "dd MMMM yyyy";
     private static final Locale LOCALE_NO = Locale.forLanguageTag("no");
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(JSON_DATOFORMAT, LOCALE_NO);
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(JSON_DATOFORMAT, LOCALE_NO);
 
     private final Gson pdfGson;
     private final Gson tilsagnGson;

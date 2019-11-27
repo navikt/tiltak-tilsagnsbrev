@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+
 import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.*;
+import static no.nav.tag.tilsagnsbrev.mapper.json.GsonWrapper.DATE_TIME_FORMATTER;
 
 @Slf4j
 @Component
@@ -61,16 +64,14 @@ public class TilsagnJsonMapper {
         Integer tilsagnsbrevId = Integer.valueOf(tilsagnJsonObj.get(JSON_ELEM_TILSAGNSBREV_ID).getAsInt()); //TODO Bruke denne til sjekk av duplikater
         tilsagnUnderBehandling.setTilsagnsbrevId(tilsagnsbrevId);
         JsonObject tilsagnJsonElement = tilsagnJsonObj.getAsJsonObject(JSON_ELEM_TILSAGN);
+        tilsagnUnderBehandling.setJson(tilsagnJsonElement.getAsString());
         Tilsagn tilsagn = gsonWrapper.opprettTilsagn(tilsagnJsonElement);
         tilsagnUnderBehandling.setTilsagn(tilsagn);
     }
 
     private String meldingtilJsonString(String melding) {
-   //     String str1 = StringUtils.replace(melding, OLD_PATTERN_1, NEW_PATTERN_1);
-        String str2 = StringUtils.replace(melding, OLD_PATTERN_2, NEW_PATTERN_2);
+        String str1 = StringUtils.replace(melding, OLD_PATTERN_1, NEW_PATTERN_1);
+        String str2 = StringUtils.replace(str1, OLD_PATTERN_2, NEW_PATTERN_2);
         return StringUtils.replace(str2, OLD_PATTERN_3, NEW_PATTERN_3);
     }
-
-
-
 }

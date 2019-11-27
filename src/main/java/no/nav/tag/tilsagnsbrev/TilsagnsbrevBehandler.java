@@ -20,16 +20,29 @@ public class TilsagnsbrevBehandler {
     @Autowired
     private FeiletTilsagnBehandler feiletTilsagnBehandler;
 
+    @Autowired
+    private TilsagnLoggReository tilsagnLoggReository;
+
     public void behandleOgVerifisereTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
             behandleTilsagn(tilsagnUnderBehandling);
         } catch (Exception e) {
             oppdaterFeiletTilsagn(tilsagnUnderBehandling, e);
+        } finally {
+            //Lagre id
         }
     }
 
     private void behandleTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
         oppgaver.arenaMeldingTilTilsagnData(tilsagnUnderBehandling);
+
+        if(erHentetTidligere(tilsagnUnderBehandling)){
+            log.info("Melding med tilsagnsbrev-id {} er blitt prosessert tidligere. Avbryter prosesseing av melding.");
+            return;
+        }
+
+
+
         log.info("Oppretter pdf av tilsagnsbrev for bedrift {}", tilsagnUnderBehandling.getTilsagn().getTiltakArrangor().getOrgNummer());
         final byte[] pdf = pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling);
 
@@ -39,6 +52,10 @@ public class TilsagnsbrevBehandler {
             oppdaterFeiletTilsagn(tilsagnUnderBehandling, e);
         }
         oppgaver.sendTilAltinn(tilsagnUnderBehandling, pdf);
+    }
+
+    private boolean erHentetTidligere(TilsagnUnderBehandling tilsagnUnderBehandling) {
+        tilsagnLoggReository.existsById(tilsagnUnderBehandling.)
     }
 
     private void oppdaterFeiletTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
