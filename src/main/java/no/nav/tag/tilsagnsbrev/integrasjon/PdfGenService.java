@@ -36,8 +36,10 @@ public class PdfGenService {
 
     public byte[] tilsagnsbrevTilPdfBytes(TilsagnUnderBehandling tilsagnUnderBehandling) {
         if (tilsagnUnderBehandling.getTilsagn().erGruppeTilsagn()) {
+            log.info("Oppretter pdf av tilsagnsbrev for gruppe for bedrift {}", tilsagnUnderBehandling.getTilsagn().getTiltakArrangor().getOrgNummer());
             return hentPdf(tilsagnUnderBehandling.getJson(), uriTilsagnGruppe);
         }
+        log.info("Oppretter pdf av tilsagnsbrev for enkel deltaker for bedrift {}", tilsagnUnderBehandling.getTilsagn().getTiltakArrangor().getOrgNummer());
         return hentPdf(tilsagnUnderBehandling.getJson(), uriTilsagnDeltaker);
     }
 

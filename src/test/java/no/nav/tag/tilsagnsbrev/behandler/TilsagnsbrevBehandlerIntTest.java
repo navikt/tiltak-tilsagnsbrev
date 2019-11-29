@@ -1,7 +1,5 @@
-package no.nav.tag.tilsagnsbrev;
+package no.nav.tag.tilsagnsbrev.behandler;
 
-import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
-import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
@@ -55,7 +53,6 @@ public class TilsagnsbrevBehandlerIntTest {
     @Before
     public void setUp() {
         mockServer.stubForAltOk();
-        arenaMelding.getAfter().put("TILSAGNSBREV_ID", ++tilsagsnbrev_id);
     }
 
     @After
@@ -71,6 +68,20 @@ public class TilsagnsbrevBehandlerIntTest {
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         assertTrue(loggCrudRepository.existsById(tilsagnUnderBehandling.getCid()));
         assertFalse(feiletTilsagnsbrevRepository.existsById(tilsagnUnderBehandling.getCid()));
+    }
+
+    @Test
+    public void abryterHvisAlleredeLest(){
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).tilsagnsbrevId(111).build();
+
+        assertTrue("Må logges før kjøring!", tilsagnLoggRepository.lagretIdHvisNyMelding(tub));
+        tub.setCid(UUID.randomUUID());
+
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
+        //Skal ikke gjennomføre disse kallene
+        assertFalse(tub.erJournalfoert());
+        assertTrue(tub.skalTilAltinn());
+        assertFalse(tub.isBehandlet());
     }
 
     @Test

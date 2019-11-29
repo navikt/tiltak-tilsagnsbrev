@@ -1,6 +1,5 @@
-package no.nav.tag.tilsagnsbrev;
+package no.nav.tag.tilsagnsbrev.behandler;
 
-import no.nav.tag.tilsagnsbrev.behandler.TilsagnLogg;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.ActiveProfiles;
 

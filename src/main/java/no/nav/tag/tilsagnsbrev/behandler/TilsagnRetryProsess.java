@@ -26,20 +26,20 @@ public class TilsagnRetryProsess {
 
 
     //@Scheduled(cron = "${prosess.cron}")
-    public void finnOgRekjoerFeiletTilsagn(){
+    public void finnOgRekjoerFeiletTilsagn() {
         feiletTilsagnBehandler.hentAlleTilRekjoring()
                 .forEach(feiletTilsagnsbrev -> {
-                    rekjoerTilsagn(feiletTilsagnsbrev);
+                    try {
+                        rekjoerTilsagn(feiletTilsagnsbrev);
+                    } catch (Exception e) {
+                        oppgaver.oppdaterFeiletTilsagn(feiletTilsagnsbrev, e);
+                    }
                 });
     }
 
     private void rekjoerTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
 
-        if (tilsagnUnderBehandling.skalMappesFraArenaMelding()) {
-            oppgaver.arenaMeldingTilTilsagnData(tilsagnUnderBehandling);
-        }
-
-        tilsagnUnderBehandling.opprettTilsagn();
+        tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
         final byte[] pdf = pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling);
 
         if (tilsagnUnderBehandling.skaljournalfoeres()) {

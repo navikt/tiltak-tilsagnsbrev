@@ -6,6 +6,7 @@ import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.SystemException;
+import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
@@ -33,9 +34,8 @@ public class Oppgaver {
     @Autowired
     private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
-    public void arenaMeldingTilTilsagnData(TilsagnUnderBehandling tilsagnUnderBehandling){
-        tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
-    }
+    @Autowired
+    private FeiletTilsagnBehandler feiletTilsagnBehandler;
 
 
     public void journalfoerTilsagnsbrev(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
@@ -73,6 +73,12 @@ public class Oppgaver {
         } catch (Exception e) {
             log.error("Feil ved sending av tilsagnsbrev {} til Altinn", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
             throw new SystemException(e.getMessage());
+        }
+    }
+
+    public void oppdaterFeiletTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
+        if (!feiletTilsagnBehandler.lagreEllerOppdaterFeil(tilsagnUnderBehandling, e)) {
+            log.error("Feil ble ikke lagret! Melding: {}", tilsagnUnderBehandling.getJson(), e.getMessage());
         }
     }
 }

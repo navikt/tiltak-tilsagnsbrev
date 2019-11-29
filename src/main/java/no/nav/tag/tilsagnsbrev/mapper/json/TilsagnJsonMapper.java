@@ -37,15 +37,6 @@ public class TilsagnJsonMapper {
 
     private final GsonWrapper gsonWrapper;
 
-    public void arenaMeldingTilTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
-        try {
-            hentTilsagnFraMelding(tilsagnUnderBehandling);
-        } catch (Exception e) {
-            log.error("Feil v/mapping fra goldengate-melding til Tilsagn-dto, ", e);
-            throw new DataException(e.getMessage());
-        }
-    }
-
     public void tilsagnTilJson(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
             String json = gsonWrapper.opprettPdfJson(tilsagnUnderBehandling.getTilsagn());
@@ -61,29 +52,30 @@ public class TilsagnJsonMapper {
         return new Gson().fromJson(tilsagnJson, Tilsagn.class);
     }
 
-    private void hentTilsagnFraMelding(TilsagnUnderBehandling tilsagnUnderBehandling) throws JsonProcessingException {
+    public void pakkUtArenaMelding(TilsagnUnderBehandling tilsagnUnderBehandling)  {
         ObjectNode after = tilsagnUnderBehandling.getArenaMelding().getAfter();
         tilsagnUnderBehandling.setTilsagnsbrevId(after.get(JSON_ELEM_TILSAGNSBREV_ID).intValue());
         log.info("Behandler melding med tilsagnsbrev-id {}", tilsagnUnderBehandling.getTilsagnsbrevId());
-
-        lagreTilsagnsbrevId(tilsagnUnderBehandling);
-        if(tilsagnUnderBehandling.isDuplikat()){
-            return;
-        }
-
         String jsonStr = meldingtilJsonString(after.get(JSON_ELEM_TILSAGN).asText());
         tilsagnUnderBehandling.setJson(jsonStr);
-        JsonNode tilsagnElem = mapper.readTree(jsonStr);
-        Tilsagn tilsagn = mapper.treeToValue(tilsagnElem, Tilsagn.class);
+    }
+
+     public void opprettTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling)  {
+         JsonNode tilsagnElem;
+         Tilsagn tilsagn;
+         try {
+             tilsagnElem = mapper.readTree(tilsagnUnderBehandling.getJson());
+             tilsagn = mapper.treeToValue(tilsagnElem, Tilsagn.class);
+         } catch (JsonProcessingException e) {
+             log.error("Feil ved oppretting av Tilsagnsbrev fra Arenameldind Json", e);
+             throw  new DataException(e.getMessage());
+         }
+
         tilsagnUnderBehandling.setTilsagn(tilsagn);
         tilsagnUnderBehandling.setMappetFraArena(true);
     }
 
-    private void lagreTilsagnsbrevId(TilsagnUnderBehandling tilsagnUnderBehandling){
-        if (!tilsagnLoggRepository.lagretIdHvisNyMelding(tilsagnUnderBehandling)) {
-            tilsagnUnderBehandling.setDuplikat(true);
-        }
-    }
+
 
     private String meldingtilJsonString(String melding) { //TODO Sjekk ut Spring-boot Cusomize mapper
         return StringUtils.replace(melding, OLD_PATTERN_3, NEW_PATTERN_3);

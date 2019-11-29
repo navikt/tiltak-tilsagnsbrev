@@ -30,10 +30,6 @@ public class IntegrasjonerMockServer implements DisposableBean {
         server.stop();
     }
 
-    public void start() {
-        server.start();
-    }
-
     public void stubForAltOk() {
         server.stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
                 .willReturn(okJson("{\"journalpostId\" : \"001\", \"journalstatus\" : \"MIDLERTIDIG\", \"melding\" : \"Gikk bra\"}")));

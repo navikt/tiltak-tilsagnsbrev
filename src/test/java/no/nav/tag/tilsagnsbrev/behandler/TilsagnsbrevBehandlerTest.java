@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev;
+package no.nav.tag.tilsagnsbrev.behandler;
 
 import no.nav.tag.tilsagnsbrev.behandler.Oppgaver;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
@@ -8,12 +8,14 @@ import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.SystemException;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
+import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
 
@@ -26,13 +28,13 @@ public class TilsagnsbrevBehandlerTest {
     private Oppgaver oppgaver;
 
     @Mock
-    private FeiletTilsagnBehandler feiletTilsagnBehandler;
-
-    @Mock
     private PdfGenService pdfGenService;
 
     @Mock
     private TilsagnLoggRepository tilsagnLoggRepository;
+
+    @Mock
+    private TilsagnJsonMapper tilsagnJsonMapper;
 
     @InjectMocks
     private TilsagnsbrevBehandler tilsagnsbrevbehandler;
@@ -45,15 +47,18 @@ public class TilsagnsbrevBehandlerTest {
         Tilsagn tilsagn = Testdata.tilsagnEnDeltaker();
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().cid(UUID.randomUUID()).tilsagn(tilsagn).json(arenaMelding).build();
 
-        doNothing().when(oppgaver).arenaMeldingTilTilsagnData(tilsagnUnderBehandling);
+        doNothing().when(tilsagnJsonMapper).pakkUtArenaMelding(tilsagnUnderBehandling);
+        doNothing().when(tilsagnJsonMapper).opprettTilsagn(tilsagnUnderBehandling);
         when(pdfGenService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling)).thenReturn(pdf);
         doThrow(SystemException.class).when(oppgaver).journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);
-        when(feiletTilsagnBehandler.lagreEllerOppdaterFeil(eq(tilsagnUnderBehandling), any(SystemException.class))).thenReturn(true);
 
         doNothing().when(oppgaver).sendTilAltinn(tilsagnUnderBehandling, pdf);
         when(tilsagnLoggRepository.lagretIdHvisNyMelding(any(TilsagnUnderBehandling.class))).thenReturn(true);
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         verify(oppgaver, times(1)).sendTilAltinn(tilsagnUnderBehandling, pdf);
+        verify(oppgaver, times(1)).oppdaterFeiletTilsagn(eq(tilsagnUnderBehandling), any(SystemException.class));
     }
+
+
 }

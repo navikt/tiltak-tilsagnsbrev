@@ -39,10 +39,6 @@ public class TilsagnUnderBehandling {
     @Builder.Default
     private boolean behandlet = false; //Logisk sletting inntil videre
 
-    @Transient
-    @Builder.Default
-    private boolean duplikat = false;
-
     private Integer tilsagnsbrevId;
     private String journalpostId;
     private Integer altinnKittering;
@@ -54,7 +50,7 @@ public class TilsagnUnderBehandling {
     @Transient
     private Tilsagn tilsagn;
     @Transient
-    private Gson gson = new Gson();
+    private Gson gson = new Gson(); //TODO Bli kvitt denne
 
     public boolean skaljournalfoeres(){
         return this.journalpostId == null;

@@ -23,12 +23,8 @@ public class TilsagnLoggRepository {
         return erNyMelding;
     }
 
-    public void deleteAll(){
-        jdbcTemplate.execute("delete from tilsagn_logg");
-    }
-
-    private boolean tilsagnsbevIdFinnes(int tilsagnsbrevI) {
-        return jdbcTemplate.queryForObject("select exists (select 1 from tilsagn_logg where tilsagnsbrev_id = ?)", Boolean.class, tilsagnsbrevI);
+    public boolean tilsagnsbevIdFinnes(int tilsagnsbrevId) {
+        return jdbcTemplate.queryForObject("select exists (select 1 from tilsagn_logg where tilsagnsbrev_id = ?)", Boolean.class, tilsagnsbrevId);
     }
 
     private void lagre(TilsagnLogg tilsagnLogg) {

@@ -1,9 +1,6 @@
 package no.nav.tag.tilsagnsbrev.mapping;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
@@ -15,19 +12,13 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static no.nav.tag.tilsagnsbrev.simulator.Testdata.*;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TilsagnJsonMapperTest {
-
-    @Mock
-    private TilsagnLoggRepository tilsagnLoggRepository;
 
     @InjectMocks
     TilsagnJsonMapper tilsagnJsonMapper = new TilsagnJsonMapper(new GsonWrapper());
@@ -69,8 +60,8 @@ public class TilsagnJsonMapperTest {
         ArenaMelding arenaMelding = Testdata.arenaMelding();
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).build();
 
-        when(tilsagnLoggRepository.lagretIdHvisNyMelding(any(TilsagnUnderBehandling.class))).thenReturn(true);
-        tilsagnJsonMapper.arenaMeldingTilTilsagn(tub);
+        tilsagnJsonMapper.pakkUtArenaMelding(tub);
+        tilsagnJsonMapper.opprettTilsagn(tub);
 
         System.out.println(tub.getJson());
 
@@ -140,10 +131,11 @@ public class TilsagnJsonMapperTest {
 
     @Test
     public void arenaMeldingTilTilsagnGirDatafeilMedInnhold() {
-        ArenaMelding arenaMelding = ArenaMelding.builder().after(null).build();
+        ArenaMelding arenaMelding = Testdata.arenaMeldingMedFeil();
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).build();
         try {
-            tilsagnJsonMapper.arenaMeldingTilTilsagn(tub);
+            tilsagnJsonMapper.pakkUtArenaMelding(tub);
+            tilsagnJsonMapper.opprettTilsagn(tub);
             fail("Kaster ikke DataException");
         } catch (DataException de) {
             assertFalse(tub.isMappetFraArena());

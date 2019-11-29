@@ -24,6 +24,7 @@ public class Testdata {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
     private static String tilsagnDataStr = Testdata.hentFilString("TILSAGN_DATA.json");
+    private static String tilsagnDataFeilStr = Testdata.hentFilString("TILSAGN_DATA_feil.json");
 
     public static Tilsagn gruppeTilsagn() {
         return tilsagnsBuilder().antallDeltakere("17")
@@ -103,6 +104,13 @@ public class Testdata {
         ObjectNode after = objectMapper.createObjectNode();
         after.put("TILSAGNSBREV_ID", 111);
         after.put("TILSAGN_DATA", tilsagnDataStr);
+        return ArenaMelding.builder().after(after).build();
+    }
+
+    public static ArenaMelding arenaMeldingMedFeil() {
+        ObjectNode after = objectMapper.createObjectNode();
+        after.put("TILSAGNSBREV_ID", 111);
+        after.put("TILSAGN_DATA", tilsagnDataFeilStr);
         return ArenaMelding.builder().after(after).build();
     }
 }
