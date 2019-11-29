@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NavEnhet {
-
     private String faks;
     private String navKontor;
     private String navKontorNavn;

@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev;
+package no.nav.tag.tilsagnsbrev.behandler;
 
 import lombok.Data;
 import org.slf4j.MDC;

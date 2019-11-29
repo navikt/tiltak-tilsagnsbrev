@@ -1,7 +1,7 @@
 package no.nav.tag.tilsagnsbrev.integrasjon.sts;
 
 import no.nav.tag.tilsagnsbrev.dto.sts.StsTokenResponse;
-import no.nav.tag.tilsagnsbrev.konfigurasjon.StsProperties;
+import no.nav.tag.tilsagnsbrev.konfigurasjon.StsKonfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,8 +27,8 @@ public class StsService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public StsService(StsProperties stsProperties) {
-        uri = UriComponentsBuilder.fromUri(stsProperties.getUri())
+    public StsService(StsKonfig stsKonfig) {
+        uri = UriComponentsBuilder.fromUri(stsKonfig.getUri())
                 .path(PATH)
                 .query(PARAM_GRANT_TYPE)
                 .query(PARAM_SCOPE)
@@ -36,7 +36,7 @@ public class StsService {
                 .toUri();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType((MediaType.APPLICATION_FORM_URLENCODED));
-        headers.setBasicAuth(stsProperties.getBruker(), stsProperties.getPassord());
+        headers.setBasicAuth(stsKonfig.getBruker(), stsKonfig.getPassord());
     }
 
     @Cacheable(STS_CACHE)

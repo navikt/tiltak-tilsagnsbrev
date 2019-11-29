@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Deltaker {
-
     private String etternavn;
     private String fornavn;
     private String fodselsnr;
@@ -18,5 +17,4 @@ public class Deltaker {
     private String postAdresse;
     private String postNummer;
     private String postSted;
-
 }

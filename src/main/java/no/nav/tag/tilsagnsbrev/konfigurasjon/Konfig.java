@@ -1,6 +1,6 @@
 package no.nav.tag.tilsagnsbrev.konfigurasjon;
 
-import no.nav.tag.tilsagnsbrev.TilsagnRetryProsess;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnRetryProsess;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;

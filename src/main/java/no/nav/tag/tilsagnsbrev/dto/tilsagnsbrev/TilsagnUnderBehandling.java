@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
 
@@ -38,12 +39,18 @@ public class TilsagnUnderBehandling {
     @Builder.Default
     private boolean behandlet = false; //Logisk sletting inntil videre
 
+    @Transient
+    @Builder.Default
+    private boolean duplikat = false;
+
     private Integer tilsagnsbrevId;
     private String journalpostId;
     private Integer altinnKittering;
 
     private String json;
 
+    @Transient
+    private ArenaMelding arenaMelding;
     @Transient
     private Tilsagn tilsagn;
     @Transient

@@ -18,8 +18,8 @@ import java.net.URI;
 @Service
 public class PdfGenService {
 
-    static final String PATH_DELTAKER = "/template/tilsagnsbrev-deltaker/create-pdf";
-    static final String PATH_GRUPPE = "/template/tilsagnsbrev-gruppe/create-pdf";
+    private static final String PATH_DELTAKER = "/template/tilsagnsbrev-deltaker/create-pdf";
+    private static final String PATH_GRUPPE = "/template/tilsagnsbrev-gruppe/create-pdf";
 
     private final URI uriTilsagnGruppe;
     private final URI uriTilsagnDeltaker;

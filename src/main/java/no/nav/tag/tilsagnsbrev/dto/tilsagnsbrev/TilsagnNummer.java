@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TilsagnNummer {
-
     private String aar;
     private String loepenrSak;
     private String loepenrTilsagn;
-
 }
