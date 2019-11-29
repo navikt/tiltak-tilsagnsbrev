@@ -1,8 +1,8 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
-import no.nav.tag.tilsagnsbrev.CidManager;
-import no.nav.tag.tilsagnsbrev.TilsagnRetryProsess;
-import no.nav.tag.tilsagnsbrev.TilsagnsbrevBehandler;
+import no.nav.tag.tilsagnsbrev.behandler.CidManager;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnRetryProsess;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;

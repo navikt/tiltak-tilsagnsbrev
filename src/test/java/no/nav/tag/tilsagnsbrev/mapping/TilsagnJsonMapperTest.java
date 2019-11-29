@@ -1,10 +1,14 @@
 package no.nav.tag.tilsagnsbrev.mapping;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
+import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
+import no.nav.tag.tilsagnsbrev.mapper.json.GsonWrapper;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.Ignore;
@@ -17,66 +21,64 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static no.nav.tag.tilsagnsbrev.simulator.Testdata.*;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@Ignore("Gson er final class - kan ikke mockes")
 @RunWith(MockitoJUnitRunner.class)
 public class TilsagnJsonMapperTest {
 
     @Mock
-    private Gson tilsagnTilPdfRequestGson;
-
-    @Mock
-    private Gson arenaTilTilsagnGson;
+    private TilsagnLoggRepository tilsagnLoggRepository;
 
     @InjectMocks
-    TilsagnJsonMapper tilsagnJsonMapper;
-
-    final String requestJson = Testdata.hentFilString(JSON_FIL);
+    TilsagnJsonMapper tilsagnJsonMapper = new TilsagnJsonMapper(new GsonWrapper());
     final Tilsagn tilsagn = Testdata.gruppeTilsagn();
 
     @Test
-    public void mapperTilstagnTilJson(){
-
+    @Ignore
+    public void mapperTilsagnTilJson() {
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagn).build();
 
-        when(tilsagnTilPdfRequestGson.toJson(tilsagn)).thenCallRealMethod();
-        tilsagnJsonMapper.tilsagnTilJson(tub);
+        //tilsagnJsonMapper.tilsagnTilJson(tub);
         String json = tub.getJson();
         System.out.println(json);
-        assertTrue(json.contains("\"administrasjonKode\":\"" + tilsagn.getAdministrasjonKode() +"\""));
-        assertTrue(json.contains("\"antallDeltakere\":\"" + tilsagn.getAntallDeltakere() +"\""));
-        assertTrue(json.contains("\"antallTimeverk\":\"" + tilsagn.getAntallTimeverk() +"\""));
-        assertTrue(json.contains("\"beslutter\":{\"etternavn\":\"" + tilsagn.getBeslutter().getEtternavn() +"\",\"fornavn\":\""+ tilsagn.getBeslutter().getFornavn() + "\""));
-        assertTrue(json.contains("\"kommentar\":\"" + tilsagn.getKommentar() +"\""));
-        assertTrue(json.contains("\"faks\":\"" + tilsagn.getNavEnhet().getFaks() +"\""));
-        assertTrue(json.contains("\"navKontor\":\"" + tilsagn.getNavEnhet().getNavKontor() +"\""));
+        assertTrue(json.contains("\"administrasjonKode\":\"" + tilsagn.getAdministrasjonKode() + "\""));
+        assertTrue(json.contains("\"antallDeltakere\":\"" + tilsagn.getAntallDeltakere() + "\""));
+        assertTrue(json.contains("\"antallTimeverk\":\"" + tilsagn.getAntallTimeverk() + "\""));
+        assertTrue(json.contains("\"beslutter\":{\"etternavn\":\"" + tilsagn.getBeslutter().getEtternavn() + "\",\"fornavn\":\"" + tilsagn.getBeslutter().getFornavn() + "\""));
+        assertTrue(json.contains("\"kommentar\":\"" + tilsagn.getKommentar() + "\""));
+        assertTrue(json.contains("\"faks\":\"" + tilsagn.getNavEnhet().getFaks() + "\""));
+        assertTrue(json.contains("\"navKontor\":\"" + tilsagn.getNavEnhet().getNavKontor() + "\""));
 
-        assertTrue(json.contains("\"navKontorNavn\":\"" + tilsagn.getNavEnhet().getNavKontorNavn() +"\""));
-        assertTrue(json.contains("\"postAdresse\":\"" + tilsagn.getNavEnhet().getPostAdresse() +"\""));
-        assertTrue(json.contains("\"postNummer\":\"" + tilsagn.getNavEnhet().getPostNummer() +"\""));
-        assertTrue(json.contains("\"postSted\":\"" + tilsagn.getNavEnhet().getPostSted() +"\""));
-        assertTrue(json.contains("\"telefon\":\"" + tilsagn.getNavEnhet().getTelefon() +"\""));
-        assertTrue(json.contains("\"postSted\":\"" + tilsagn.getNavEnhet().getPostSted() +"\""));
+        assertTrue(json.contains("\"navKontorNavn\":\"" + tilsagn.getNavEnhet().getNavKontorNavn() + "\""));
+        assertTrue(json.contains("\"postAdresse\":\"" + tilsagn.getNavEnhet().getPostAdresse() + "\""));
+        assertTrue(json.contains("\"postNummer\":\"" + tilsagn.getNavEnhet().getPostNummer() + "\""));
+        assertTrue(json.contains("\"postSted\":\"" + tilsagn.getNavEnhet().getPostSted() + "\""));
+        assertTrue(json.contains("\"telefon\":\"" + tilsagn.getNavEnhet().getTelefon() + "\""));
+        assertTrue(json.contains("\"postSted\":\"" + tilsagn.getNavEnhet().getPostSted() + "\""));
         assertTrue(json.contains("periode\":{\"fraDato\":\"01 oktober 2019\",\"tilDato\":\"31 desember 2019\"}"));
-        assertTrue(json.contains("\"saksbehandler\":{\"etternavn\":\"" + tilsagn.getSaksbehandler().getEtternavn() +"\",\"fornavn\":\""+ tilsagn.getSaksbehandler().getFornavn() + "\""));
+        assertTrue(json.contains("\"saksbehandler\":{\"etternavn\":\"" + tilsagn.getSaksbehandler().getEtternavn() + "\",\"fornavn\":\"" + tilsagn.getSaksbehandler().getFornavn() + "\""));
         assertTrue(json.contains("\"tilsagnDato\":\"22 oktober 2019\""));
 
-        assertTrue(json.contains("\"aar\":\"" + tilsagn.getTilsagnNummer().getAar() +"\""));
-        assertTrue(json.contains("\"loepenrSak\":\"" + tilsagn.getTilsagnNummer().getLoepenrSak() +"\""));
-        assertTrue(json.contains("\"loepenrTilsagn\":\"" + tilsagn.getTilsagnNummer().getLoepenrTilsagn() +"\""));
-
-        //TODO verifisere mer eller gjøre det vha. pdf mock
+        assertTrue(json.contains("\"aar\":\"" + tilsagn.getTilsagnNummer().getAar() + "\""));
+        assertTrue(json.contains("\"loepenrSak\":\"" + tilsagn.getTilsagnNummer().getLoepenrSak() + "\""));
+        assertTrue(json.contains("\"loepenrTilsagn\":\"" + tilsagn.getTilsagnNummer().getLoepenrTilsagn() + "\""));
     }
 
     @Test
-    public void mapperGoldengateJsonTilTilsagn() {
-        when(arenaTilTilsagnGson.fromJson(any(JsonElement.class), Tilsagn.class)).thenCallRealMethod();
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().json(requestJson).build();
+    public void mapperArenaMeldingTilTilsagn() throws JsonProcessingException {
+        ArenaMelding arenaMelding = Testdata.arenaMelding();
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).build();
+
+        when(tilsagnLoggRepository.lagretIdHvisNyMelding(any(TilsagnUnderBehandling.class))).thenReturn(true);
         tilsagnJsonMapper.arenaMeldingTilTilsagn(tub);
+
+        System.out.println(tub.getJson());
+
+        assertEquals("Tilsagnsbrev_id", 111, tub.getTilsagnsbrevId().intValue());
+        assertNotNull("Tilsagn er null", tub.getTilsagn());
+
         final Tilsagn faktiskilsagn = tub.getTilsagn();
-                assertEquals("tilsagnNummer.aar", "2019", faktiskilsagn.getTilsagnNummer().getAar());
+        assertEquals("tilsagnNummer.aar", "2019", faktiskilsagn.getTilsagnNummer().getAar());
         assertEquals("tilsagnNummer.loepenrSak", "366023", faktiskilsagn.getTilsagnNummer().getLoepenrSak());
         assertEquals("tilsagnNummer.loepenrTilsagn", "1", faktiskilsagn.getTilsagnNummer().getLoepenrTilsagn());
 
@@ -137,30 +139,21 @@ public class TilsagnJsonMapperTest {
     }
 
     @Test
-    public void arenaMeldingTilTilsagnGirDatafeilMedInnhold(){
-        when(tilsagnTilPdfRequestGson.toJson(eq(tilsagn))).thenCallRealMethod();
-        String feilJson = "Ikke en json";
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().json(feilJson).build();
+    public void arenaMeldingTilTilsagnGirDatafeilMedInnhold() {
+        ArenaMelding arenaMelding = ArenaMelding.builder().after(null).build();
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).build();
         try {
             tilsagnJsonMapper.arenaMeldingTilTilsagn(tub);
             fail("Kaster ikke DataException");
-        } catch (DataException de){
-            assertNotNull(de.getMessage());
+        } catch (DataException de) {
             assertFalse(tub.isMappetFraArena());
         }
     }
 
-
-    @Test
-    public void tilsagnTilPdfJsonGirDatafeilMedInnhold(){
-        when(tilsagnTilPdfRequestGson.toJson(eq(tilsagn))).thenThrow(new RuntimeException("Feil Mapping"));
+    @Test(expected = DataException.class)
+    public void tilsagnTilPdfJsonGirDatafeilMedInnhold() {
+        tilsagnJsonMapper = new TilsagnJsonMapper(null);
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagn).build();
-        try {
-            tilsagnJsonMapper.tilsagnTilJson(tub);
-            fail("Kaster ikke DataException");
-        } catch (DataException de){
-            assertEquals("errMsg", "Feil Mapping", de.getMessage());
-            assertTrue(tub.isMappetFraArena());
-        }
+        tilsagnJsonMapper.tilsagnTilJson(tub);
     }
 }

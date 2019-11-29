@@ -9,14 +9,14 @@ import org.springframework.kafka.test.EmbeddedKafkaBroker;
 
 @Slf4j
 @Configuration
-@Profile("dev")
+@Profile("kafka")
 public class KafkaKonfig {
 
     @Autowired
     public EmbeddedKafkaBroker kafkaBroker() {
         log.info("Starter embedded Kafka");
         EmbeddedKafkaBroker embeddedKafka = new EmbeddedKafkaBroker(1, true, ArenaConsumer.topic);
-        System.setProperty("spring.kafka.bootstrap-servers", embeddedKafka.getBrokersAsString());
+        System.setProperty("spring.kafka.consumer.bootstrap-servers", embeddedKafka.getBrokersAsString());
         embeddedKafka.afterPropertiesSet();
         return embeddedKafka;
     }

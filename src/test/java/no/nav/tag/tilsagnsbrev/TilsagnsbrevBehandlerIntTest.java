@@ -1,6 +1,8 @@
 package no.nav.tag.tilsagnsbrev;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
+import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
@@ -40,55 +42,88 @@ public class TilsagnsbrevBehandlerIntTest {
     @Autowired
     FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
 
-    final String goldengateJson = Testdata.hentFilString("arenaMelding.json");
-    final String altinnOkRespons = Testdata.hentFilString("altinn200Resp.xml");
-    final String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
+    @Autowired
+    TilsagnLoggRepository tilsagnLoggRepository;
+
+    @Autowired
+    TilsagnLoggCrudRepository loggCrudRepository;
+
+    private final static String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
+    private static ArenaMelding arenaMelding = Testdata.arenaMelding();
+    private static int tilsagsnbrev_id = 0;
 
     @Before
     public void setUp() {
         mockServer.stubForAltOk();
+        arenaMelding.getAfter().put("TILSAGNSBREV_ID", ++tilsagsnbrev_id);
     }
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         mockServer.getServer().resetAll();
         feiletTilsagnsbrevRepository.deleteAll();
+        loggCrudRepository.deleteAll();
     }
 
     @Test
-    public void behandlerTilsagn(){
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(UUID.randomUUID()).build();
+    public void behandlerTilsagn() {
+        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).build();
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
-        assertTrue(feiletTilsagnsbrevRepository.findAll().isEmpty());
+        assertTrue(loggCrudRepository.existsById(tilsagnUnderBehandling.getCid()));
+        assertFalse(feiletTilsagnsbrevRepository.existsById(tilsagnUnderBehandling.getCid()));
     }
 
     @Test
-    public void parserIkkeArenaMelding(){
+    public void parserIkkeArenaMelding() {
         final UUID CID = UUID.randomUUID();
-        final String feilbarGoldengateJson = Testdata.hentFilString("arenaMelding_som_feiler.json");
+        final String feilbarGoldengateJson = Testdata.hentFilString("TILSAGN_DATA_feil.json");
 
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(feilbarGoldengateJson).cid(CID).build();
+        ArenaMelding feiler = Testdata.arenaMelding();
+        feiler.getAfter().put("TILSAGN_DATA", feilbarGoldengateJson);
+        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(feiler).cid(CID).build();
+
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
         Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
-               assertFalse(tub.skalRekjoeres());
-               assertFalse(tub.isMappetFraArena());
-               assertEquals(feilbarGoldengateJson, tub.getJson());
-               assertNotNull(tub.getOpprettet());
+            assertFalse(tub.skalRekjoeres());
+            assertFalse(tub.isMappetFraArena());
+            assertEquals(feilbarGoldengateJson, tub.getJson());
+            assertNotNull(tub.getOpprettet());
             return tub;
         });
     }
 
     @Test
-    public void pdfGenFeil(){
+    public void pdfGenFeil() {
         mockServer.getServer().stubFor(post("/template/tilsagnsbrev-gruppe/create-pdf").willReturn(serverError()));
 
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
+        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(CID).build();
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+        Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
+
+        assertTrue(feilet.isPresent());
+        feilet.map(tub -> {
+            assertTrue(tub.skalRekjoeres());
+            assertFalse(tub.erJournalfoert());
+            assertNotNull(tub.getJson());
+            return tub;
+        });
+    }
+
+    @Test
+    public void feilFraJoark() {
+
+        mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true").willReturn(unauthorized()));
+
+        final UUID CID = UUID.randomUUID();
+        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(CID).build();
+
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+
         Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
@@ -100,34 +135,11 @@ public class TilsagnsbrevBehandlerIntTest {
     }
 
     @Test
-    public void feilFraJoark(){
-
-        mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true").willReturn(unauthorized()));
-
-        final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
-        tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
-
-        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
-
-        Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
-        assertTrue(feilet.isPresent());
-        feilet.map(tub -> {
-            assertTrue(tub.skalRekjoeres());
-            assertFalse(tub.erJournalfoert());
-            assertNotNull(tub.getJson());
-            return tub;
-        });
-    }
-
-    @Test
-    public void feilFraAltinn(){
+    public void feilFraAltinn() {
 
         mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
-
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
-        tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
+        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(CID).build();
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
@@ -141,14 +153,13 @@ public class TilsagnsbrevBehandlerIntTest {
     }
 
     @Test
-    public void feilFraAltinnOgJoark(){
+    public void feilFraAltinnOgJoark() {
 
         mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true").willReturn(unauthorized()));
         mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
 
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(goldengateJson).cid(CID).build();
-        tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
+        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(CID).build();
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 

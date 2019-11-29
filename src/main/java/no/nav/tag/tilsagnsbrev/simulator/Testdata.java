@@ -1,6 +1,9 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
+import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
 
 import java.nio.file.Files;
@@ -11,13 +14,16 @@ import java.util.Arrays;
 
 public class Testdata {
 
-    public static String JSON_FIL = "goldengate.json";
-    public static String JSON_FIL_FEILER = "fullRequest_som_feiler.json";
+    public static String JSON_FIL = "arenaMelding.json";
+    public static String JSON_FIL_FEILER = "arenaMelding_som_feiler.json";
 
     //Hentet fra fullREquest.tilsagn
     public static LocalDate TILSAGNSDATO = LocalDate.parse("2019-10-22");
     public static LocalDate FRA_DATO = LocalDate.parse("2019-10-01");
     public static LocalDate TIL_DATO = LocalDate.parse("2019-12-31");
+
+    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static String tilsagnDataStr = Testdata.hentFilString("TILSAGN_DATA.json");
 
     public static Tilsagn gruppeTilsagn() {
         return tilsagnsBuilder().antallDeltakere("17")
@@ -91,5 +97,12 @@ public class Testdata {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static ArenaMelding arenaMelding() {
+        ObjectNode after = objectMapper.createObjectNode();
+        after.put("TILSAGNSBREV_ID", 111);
+        after.put("TILSAGN_DATA", tilsagnDataStr);
+        return ArenaMelding.builder().after(after).build();
     }
 }

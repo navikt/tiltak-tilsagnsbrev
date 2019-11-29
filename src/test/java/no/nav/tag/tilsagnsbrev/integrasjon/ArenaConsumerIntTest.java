@@ -1,5 +1,8 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
+import kafka.server.KafkaConfig;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -7,6 +10,8 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,16 +27,23 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-@Ignore("TODO FIX!!")
+@Ignore("Fikse denne til mvn test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("dev")
+@ActiveProfiles({"kafka"})
 @DirtiesContext
 public class ArenaConsumerIntTest {
 
     @ClassRule
     public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true, ArenaConsumer.topic);
+
+//    @MockBean
+    @Autowired
+    private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     @Autowired
     private ArenaConsumer arenaConsumer;
@@ -52,7 +64,7 @@ public class ArenaConsumerIntTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUp(){
         Map<String, Object> senderProps = KafkaTestUtils.senderProps(embeddedKafkaRule.getEmbeddedKafka().getBrokersAsString());
         senderProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         senderProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -67,16 +79,10 @@ public class ArenaConsumerIntTest {
 
     @Test
     public void lytterPaArenaTilsagn() throws Exception {
-
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        arenaConsumer.setLatch(countDownLatch);
-
         String tilsagnJson = Testdata.hentFilString(Testdata.JSON_FIL);
-
         kafkaTemplate.send(ArenaConsumer.topic, "TODO", tilsagnJson);
-
-        countDownLatch.await(3, TimeUnit.SECONDS);
-        assertEquals(0, countDownLatch.getCount());
+        Thread.sleep(3000L);
+        verify(tilsagnsbrevbehandler, times(1)).behandleOgVerifisereTilsagn(any(TilsagnUnderBehandling.class));
     }
 
 }

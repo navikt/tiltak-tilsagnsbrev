@@ -72,12 +72,12 @@ public class JoarkService {
     }
 
     private void debugLogJournalpost(Journalpost journalpost) {
-//        if (log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             try {
                 log.info("JSON REQ: {}", new ObjectMapper().writeValueAsString(journalpost));
             } catch (JsonProcessingException e) {
             }
-        //}
+        }
     }
 
 }

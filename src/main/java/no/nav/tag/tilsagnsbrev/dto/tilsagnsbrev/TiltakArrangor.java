@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TiltakArrangor {
 
-    
     private String arbgiverNavn;
     
     private String kontoNummer;

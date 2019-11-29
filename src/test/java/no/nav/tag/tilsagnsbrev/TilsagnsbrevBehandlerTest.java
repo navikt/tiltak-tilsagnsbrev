@@ -1,5 +1,8 @@
 package no.nav.tag.tilsagnsbrev;
 
+import no.nav.tag.tilsagnsbrev.behandler.Oppgaver;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.SystemException;
@@ -28,6 +31,9 @@ public class TilsagnsbrevBehandlerTest {
     @Mock
     private PdfGenService pdfGenService;
 
+    @Mock
+    private TilsagnLoggRepository tilsagnLoggRepository;
+
     @InjectMocks
     private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
@@ -45,6 +51,7 @@ public class TilsagnsbrevBehandlerTest {
         when(feiletTilsagnBehandler.lagreEllerOppdaterFeil(eq(tilsagnUnderBehandling), any(SystemException.class))).thenReturn(true);
 
         doNothing().when(oppgaver).sendTilAltinn(tilsagnUnderBehandling, pdf);
+        when(tilsagnLoggRepository.lagretIdHvisNyMelding(any(TilsagnUnderBehandling.class))).thenReturn(true);
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         verify(oppgaver, times(1)).sendTilAltinn(tilsagnUnderBehandling, pdf);

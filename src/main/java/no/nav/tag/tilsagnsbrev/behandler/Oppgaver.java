@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev;
+package no.nav.tag.tilsagnsbrev.behandler;
 
 import lombok.extern.slf4j.Slf4j;
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
@@ -35,7 +35,6 @@ public class Oppgaver {
 
     public void arenaMeldingTilTilsagnData(TilsagnUnderBehandling tilsagnUnderBehandling){
         tilsagnJsonMapper.arenaMeldingTilTilsagn(tilsagnUnderBehandling);
-        tilsagnJsonMapper.tilsagnTilJson(tilsagnUnderBehandling);
     }
 
 
@@ -43,7 +42,7 @@ public class Oppgaver {
         try {
             Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tilsagnUnderBehandling.getTilsagn(), pdf);
             tilsagnUnderBehandling.setJournalpostId(joarkService.sendJournalpost(journalpost));
-            log.info("Journalført tilsagnsbrev, journalpostId: {}", journalpost);
+            log.info("Journalført tilsagnsbrev-id {}, journalpostId: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), tilsagnUnderBehandling.getJournalpostId());
         }catch (DataException de){
             throw de;
         } catch (Exception e) {
@@ -52,10 +51,10 @@ public class Oppgaver {
     }
 
     public void sendTilAltinn(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
-        log.info("Sender tilsagnsbrev til Altinn");
+        log.info("Sender tilsagnsbrev {} til Altinn", tilsagnUnderBehandling.getTilsagnsbrevId());
         InsertCorrespondenceBasicV2 wsRequest = mapTilWebserviceRequest(tilsagnUnderBehandling, pdf);
         sentWsRequest(tilsagnUnderBehandling, wsRequest);
-        log.info("Tilsagnsbrev er sendt til Altinn. kvittering {}", tilsagnUnderBehandling.getAltinnKittering());
+        log.info("Tilsagnsbrev {} er sendt til Altinn. kvittering {}",tilsagnUnderBehandling.getTilsagnsbrevId(), tilsagnUnderBehandling.getAltinnKittering());
     }
 
 
@@ -72,6 +71,7 @@ public class Oppgaver {
             int kvitteringId = altInnService.sendTilsagnsbrev(wsRequest);
             tilsagnUnderBehandling.setAltinnKittering(kvitteringId);
         } catch (Exception e) {
+            log.error("Feil ved sending av tilsagnsbrev {} til Altinn", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
             throw new SystemException(e.getMessage());
         }
     }

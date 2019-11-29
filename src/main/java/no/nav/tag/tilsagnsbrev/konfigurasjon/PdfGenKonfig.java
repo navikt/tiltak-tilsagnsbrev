@@ -1,7 +1,9 @@
 package no.nav.tag.tilsagnsbrev.konfigurasjon;
 
 import com.google.gson.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import no.nav.tag.tilsagnsbrev.mapper.json.GsonWrapper;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +15,8 @@ import java.util.Locale;
 
 @Data
 @Configuration
+@NoArgsConstructor
+@AllArgsConstructor
 @ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.pdfgen")
 public class PdfGenKonfig {
     private String uri;

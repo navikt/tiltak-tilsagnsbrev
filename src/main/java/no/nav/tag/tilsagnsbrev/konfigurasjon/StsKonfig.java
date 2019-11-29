@@ -15,7 +15,7 @@ import java.net.URI;
 @Data
 @Component
 @ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.sts")
-public class StsProperties {
+public class StsKonfig {
     private URI wsUri;
     private URI uri;
     private String bruker;
