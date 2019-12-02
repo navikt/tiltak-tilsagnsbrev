@@ -34,7 +34,9 @@ public class  Tilsagn {
     private Person saksbehandler;
 
     private LocalDate tilsagnDato;
-    
+
+    private LocalDate refusjonfristDato;
+
     private TilsagnNummer tilsagnNummer;
     
     private List<Tilskudd> tilskuddListe;
