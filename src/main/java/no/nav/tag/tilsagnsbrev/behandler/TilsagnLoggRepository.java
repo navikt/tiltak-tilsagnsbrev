@@ -30,7 +30,4 @@ public class TilsagnLoggRepository {
     private void lagre(TilsagnLogg tilsagnLogg) {
         jdbcTemplate.update("insert into tilsagn_logg values(?, ?, ?)", tilsagnLogg.getId(), tilsagnLogg.getTilsagnsbrevId(), tilsagnLogg.getTidspunktLest());
     }
-
-
-
 }

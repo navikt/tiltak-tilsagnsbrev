@@ -9,6 +9,8 @@ spring:
     name: tiltak-tilsagnsbrev
     main:
       banner-mode: "off"
+  jackson:
+    locale: "no"
 
   kafka:
     bootstrap-servers:

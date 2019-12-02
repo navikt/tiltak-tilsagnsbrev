@@ -4,21 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.gson.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
-import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
+import no.nav.tag.tilsagnsbrev.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.text.SimpleDateFormat;
-
-import static no.nav.tag.tilsagnsbrev.mapper.json.GsonWrapper.DATE_TIME_FORMATTER;
 
 @Slf4j
 @Component
@@ -30,14 +24,21 @@ public class TilsagnJsonMapper {
 
     private static final String JSON_ELEM_TILSAGN = "TILSAGN_DATA";
     private static final String JSON_ELEM_TILSAGNSBREV_ID = "TILSAGNSBREV_ID";
+<<<<<<< Updated upstream
     private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("dd MMMM yyyy"));
+=======
+>>>>>>> Stashed changes
 
     private static final String OLD_PATTERN_3 = "}\"";
     private static final String NEW_PATTERN_3 = "}";
 
+<<<<<<< Updated upstream
     private final GsonWrapper gsonWrapper;
 
     public void tilsagnTilJson(TilsagnUnderBehandling tilsagnUnderBehandling) {
+=======
+    public String opprettPdfJson(TilsagnUnderBehandling tilsagnUnderBehandling) {
+>>>>>>> Stashed changes
         try {
             String json = gsonWrapper.opprettPdfJson(tilsagnUnderBehandling.getTilsagn());
             tilsagnUnderBehandling.setJson(json);
@@ -75,9 +76,7 @@ public class TilsagnJsonMapper {
         tilsagnUnderBehandling.setMappetFraArena(true);
     }
 
-
-
-    private String meldingtilJsonString(String melding) { //TODO Sjekk ut Spring-boot Cusomize mapper
+    private String meldingtilJsonString(String melding) {
         return StringUtils.replace(melding, OLD_PATTERN_3, NEW_PATTERN_3);
     }
 }
