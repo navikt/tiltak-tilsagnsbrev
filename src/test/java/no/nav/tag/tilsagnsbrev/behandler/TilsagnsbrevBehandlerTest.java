@@ -49,7 +49,7 @@ public class TilsagnsbrevBehandlerTest {
 
         doNothing().when(tilsagnJsonMapper).pakkUtArenaMelding(tilsagnUnderBehandling);
         doNothing().when(tilsagnJsonMapper).opprettTilsagn(tilsagnUnderBehandling);
-        when(pdfGenService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling)).thenReturn(pdf);
+        //when(pdfGenService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling)).thenReturn(pdf);
         doThrow(SystemException.class).when(oppgaver).journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);
 
         doNothing().when(oppgaver).sendTilAltinn(tilsagnUnderBehandling, pdf);

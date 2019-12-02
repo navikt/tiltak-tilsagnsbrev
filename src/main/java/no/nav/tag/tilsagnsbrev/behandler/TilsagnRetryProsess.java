@@ -40,7 +40,7 @@ public class TilsagnRetryProsess {
     private void rekjoerTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
 
         tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
-        final byte[] pdf = pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling);
+        final byte[] pdf = null;//pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling);
 
         if (tilsagnUnderBehandling.skaljournalfoeres()) {
             oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);

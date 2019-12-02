@@ -33,6 +33,7 @@ public class  Tilsagn {
     
     private Person saksbehandler;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="Europe/Zagreb")
     private LocalDate tilsagnDato;
     
     private TilsagnNummer tilsagnNummer;

@@ -28,28 +28,25 @@ public class TilsagnJsonMapper {
     @Autowired
     private TilsagnLoggRepository tilsagnLoggRepository;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private static final String JSON_ELEM_TILSAGN = "TILSAGN_DATA";
     private static final String JSON_ELEM_TILSAGNSBREV_ID = "TILSAGNSBREV_ID";
-    private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("dd MMMM yyyy"));
+    //private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("dd MMMM yyyy"));
 
     private static final String OLD_PATTERN_3 = "}\"";
     private static final String NEW_PATTERN_3 = "}";
 
     private final GsonWrapper gsonWrapper;
 
-    public void tilsagnTilJson(TilsagnUnderBehandling tilsagnUnderBehandling) {
+    public String opprettPdfJson(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
-            String json = gsonWrapper.opprettPdfJson(tilsagnUnderBehandling.getTilsagn());
-            tilsagnUnderBehandling.setJson(json);
-            tilsagnUnderBehandling.setMappetFraArena(true);
+            return objectMapper.writeValueAsString(tilsagnUnderBehandling.getTilsagn());
         } catch (Exception e) {
             log.error("Feil v/mapping fra Tilsagn-dto til pdf-tilsagn ", e);
             throw new DataException(e.getMessage());
         }
-    }
-
-    public Tilsagn tilsagnJsonTilTilsagn(String tilsagnJson) {
-        return new Gson().fromJson(tilsagnJson, Tilsagn.class);
     }
 
     public void pakkUtArenaMelding(TilsagnUnderBehandling tilsagnUnderBehandling)  {
@@ -64,8 +61,8 @@ public class TilsagnJsonMapper {
          JsonNode tilsagnElem;
          Tilsagn tilsagn;
          try {
-             tilsagnElem = mapper.readTree(tilsagnUnderBehandling.getJson());
-             tilsagn = mapper.treeToValue(tilsagnElem, Tilsagn.class);
+             tilsagnElem = objectMapper.readTree(tilsagnUnderBehandling.getJson());
+             tilsagn = objectMapper.treeToValue(tilsagnElem, Tilsagn.class);
          } catch (JsonProcessingException e) {
              log.error("Feil ved oppretting av Tilsagnsbrev fra Arenameldind Json", e);
              throw  new DataException(e.getMessage());

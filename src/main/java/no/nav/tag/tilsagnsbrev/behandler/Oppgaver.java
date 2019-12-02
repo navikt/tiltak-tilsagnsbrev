@@ -9,6 +9,7 @@ import no.nav.tag.tilsagnsbrev.exception.SystemException;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
+import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
@@ -21,6 +22,9 @@ public class Oppgaver {
 
     @Autowired
     private TilsagnJsonMapper tilsagnJsonMapper;
+
+    @Autowired
+    private PdfGenService pdfService;
 
     @Autowired
     private JoarkService joarkService;
@@ -36,6 +40,11 @@ public class Oppgaver {
 
     @Autowired
     private FeiletTilsagnBehandler feiletTilsagnBehandler;
+
+    public byte[] opprettPdfDok(TilsagnUnderBehandling tilsagnUnderBehandling){
+        String pdfJson = tilsagnJsonMapper.opprettPdfJson(tilsagnUnderBehandling);
+        return pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJson);
+    }
 
 
     public void journalfoerTilsagnsbrev(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
