@@ -11,5 +11,6 @@ public class Tilskudd {
 
     private String tilskuddBelop;
     private String tilskuddType;
-
+    private String tilskuddProsent;
+    private Boolean visTilskuddProsent;
 }

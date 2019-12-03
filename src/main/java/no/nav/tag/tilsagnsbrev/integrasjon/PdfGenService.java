@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.nio.charset.Charset;
 
 @Slf4j
 @Service
@@ -31,7 +32,7 @@ public class PdfGenService {
     public PdfGenService(PdfGenKonfig pdfGenKonfig) {
         uriTilsagnGruppe = UriComponentsBuilder.fromUri(URI.create(pdfGenKonfig.getUri())).path(PATH_GRUPPE).build().toUri();
         uriTilsagnDeltaker = UriComponentsBuilder.fromUri(URI.create(pdfGenKonfig.getUri())).path(PATH_DELTAKER).build().toUri();
-        headers.setContentType((MediaType.APPLICATION_JSON));
+        headers.setContentType(new MediaType(MediaType.APPLICATION_JSON, Charset.defaultCharset()));
     }
 
     public byte[] tilsagnsbrevTilPdfBytes(TilsagnUnderBehandling tilsagnUnderBehandling, String pdfJson) {

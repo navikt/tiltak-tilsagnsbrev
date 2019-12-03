@@ -51,7 +51,7 @@ public class TilsagnsbrevBehandler {
 
     private boolean lagreNyMeldingILogg(TilsagnUnderBehandling tilsagnUnderBehandling){
         if (!tilsagnLoggRepository.lagretIdHvisNyMelding(tilsagnUnderBehandling)) {
-            log.warn("Melding med tilsagnsbrev-id {} er blitt prosessert tidligere. Avbryter videre behandling.");
+            log.warn("Melding med tilsagnsbrev-id {} er blitt prosessert tidligere. Avbryter videre behandling.", tilsagnUnderBehandling.getTilsagnsbrevId());
             return false;
         }
         return true;

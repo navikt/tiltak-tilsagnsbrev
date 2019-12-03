@@ -1,6 +1,10 @@
 server:
   port: 8082
 
+logging:
+  level:
+    no.nav.tag.tilsagnsbrev: INFO
+
 spring:
   kafka:
     consumer:
@@ -17,6 +21,7 @@ tilsagnsbrev:
   integrasjon:
     pdfgen:
       uri: http://localhost:8090
+#      uri: http://localhost:5913
     joark:
       uri: http://localhost:8090
     sts:

@@ -102,6 +102,7 @@ public class TilsagnsbrevBehandlerIntTest {
             assertFalse(tub.isMappetFraArena());
             assertEquals(feilbarGoldengateJson, tub.getJson());
             assertNotNull(tub.getOpprettet());
+            assertTrue("Ikke satt til datafeil", tub.isDatafeil());
             return tub;
         });
     }

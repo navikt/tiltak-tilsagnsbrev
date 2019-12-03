@@ -32,7 +32,7 @@ public class ArenaConsumer {
     @KafkaListener(topics = topic)
     public void lyttPaArenaTilsagn(ArenaMelding arenaMelding){
         cidManager.opprettCorrelationId();
-        log.info("Ny melding hentet fra topic {}", arenaMelding);
+        log.debug("Ny melding hentet fra topic {}", arenaMelding);
 
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder()
                 .opprettet(LocalDateTime.now())

@@ -41,8 +41,7 @@ public class ArenaConsumerIntTest {
     @ClassRule
     public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true, ArenaConsumer.topic);
 
-//    @MockBean
-    @Autowired
+    @MockBean
     private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     @Autowired

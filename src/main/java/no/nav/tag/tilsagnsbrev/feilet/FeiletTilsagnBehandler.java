@@ -2,6 +2,7 @@ package no.nav.tag.tilsagnsbrev.feilet;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
+import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ public class FeiletTilsagnBehandler {
         if (e instanceof TilsagnException) {
             TilsagnException te = (TilsagnException) e;
             tilsagnUnderBehandling.setRetry(te);
+            tilsagnUnderBehandling.setDatafeil(te.isDatafeil());
             return lagreEllerOppdater(tilsagnUnderBehandling);
         }
         return false;

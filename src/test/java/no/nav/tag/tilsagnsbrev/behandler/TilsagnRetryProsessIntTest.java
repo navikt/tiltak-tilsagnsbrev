@@ -131,8 +131,8 @@ public class TilsagnRetryProsessIntTest {
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling feilet = Testdata.tubBuilder().retry(1).cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
-        feiletTilsagnsbrevRepository.save(feilet);
 
+        feiletTilsagnsbrevRepository.save(feilet);
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
         Optional<TilsagnUnderBehandling> opt = feiletTilsagnsbrevRepository.findById(CID);
@@ -144,6 +144,7 @@ public class TilsagnRetryProsessIntTest {
         assertTrue("Til Altinn", tub.skalTilAltinn());
         assertTrue("Journalført", tub.erJournalfoert());
         assertEquals("Feil retry", 2, tub.getRetry());
+        assertEquals(feilet.getOpprettet(), tub.getOpprettet());
         assertMeldingBleIkkeLoggetVedRetry(tub.getTilsagnsbrevId());
     }
 
