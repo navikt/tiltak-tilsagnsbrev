@@ -1,7 +1,5 @@
 package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
 
-
-import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,8 +27,6 @@ public class TilsagnUnderBehandling {
     @Id
     private UUID cid;
     @Builder.Default
-    private LocalDateTime opprettet = LocalDateTime.now();
-    @Builder.Default
     private boolean mappetFraArena = false;
     @Builder.Default
     private int retry = 0;
@@ -39,18 +35,16 @@ public class TilsagnUnderBehandling {
     @Builder.Default
     private boolean behandlet = false; //Logisk sletting inntil videre
 
+    private LocalDateTime opprettet;
     private Integer tilsagnsbrevId;
     private String journalpostId;
     private Integer altinnKittering;
-
     private String json;
 
     @Transient
     private ArenaMelding arenaMelding;
     @Transient
     private Tilsagn tilsagn;
-    @Transient
-    private Gson gson = new Gson(); //TODO Bli kvitt denne
 
     public boolean skaljournalfoeres(){
         return this.journalpostId == null;
@@ -68,26 +62,12 @@ public class TilsagnUnderBehandling {
         return retry < MAX_RETRIES;
     }
 
-    public boolean skalMappesFraArenaMelding(){
-        return !this.mappetFraArena;
-    }
-
     public void setRetry(TilsagnException te){
         if(te instanceof DataException){
             retry = MAX_RETRIES;
             return;
         }
         retry += 1;
-    }
-
-    public void opprettTilsagn(){
-        if(this.tilsagn != null){
-            return;
-        }
-        if(!this.isMappetFraArena()){
-            throw new RuntimeException("Kan ikke opprette tilsagn fra en ubehandlet Arenamelding");
-        }
-        this.tilsagn = gson.fromJson(this.json, Tilsagn.class);
     }
 
     public TilsagnUnderBehandling oppdater(TilsagnUnderBehandling ny){

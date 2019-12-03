@@ -3,7 +3,7 @@ package no.nav.tag.tilsagnsbrev.behandler;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
-import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.After;
@@ -64,7 +64,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
     @Test
     public void behandlerTilsagn() {
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).build();
+        TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).build();
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         assertTrue(loggCrudRepository.existsById(tilsagnUnderBehandling.getCid()));
         assertFalse(feiletTilsagnsbrevRepository.existsById(tilsagnUnderBehandling.getCid()));
@@ -72,7 +72,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
     @Test
     public void abryterHvisAlleredeLest(){
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).tilsagnsbrevId(111).build();
+        TilsagnUnderBehandling tub = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).tilsagnsbrevId(111).build();
 
         assertTrue("Må logges før kjøring!", tilsagnLoggRepository.lagretIdHvisNyMelding(tub));
         tub.setCid(UUID.randomUUID());
@@ -91,7 +91,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
         ArenaMelding feiler = Testdata.arenaMelding();
         feiler.getAfter().put("TILSAGN_DATA", feilbarGoldengateJson);
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(feiler).cid(CID).build();
+        TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(feiler).cid(CID).build();
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
@@ -111,7 +111,7 @@ public class TilsagnsbrevBehandlerIntTest {
         mockServer.getServer().stubFor(post("/template/tilsagnsbrev-gruppe/create-pdf").willReturn(serverError()));
 
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(CID).build();
+        TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
@@ -131,7 +131,7 @@ public class TilsagnsbrevBehandlerIntTest {
         mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true").willReturn(unauthorized()));
 
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(CID).build();
+        TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
@@ -150,7 +150,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
         mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(CID).build();
+        TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
@@ -170,7 +170,7 @@ public class TilsagnsbrevBehandlerIntTest {
         mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
 
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).cid(CID).build();
+        TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 

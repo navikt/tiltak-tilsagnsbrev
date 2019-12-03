@@ -7,22 +7,31 @@ import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
-import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import static no.nav.tag.tilsagnsbrev.simulator.Testdata.*;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TilsagnJsonMapperTest {
 
-    TilsagnJsonMapper tilsagnJsonMapper = new TilsagnJsonMapper();
+    @Mock
+    private ObjectMapper objectMapper;
+
+    @Mock
+    private TilsagnLoggRepository tilsagnLoggRepository;
+
+    @InjectMocks
+    TilsagnJsonMapper tilsagnJsonMapper;
+
     final Tilsagn tilsagn = Testdata.gruppeTilsagn();
 
     @Test
@@ -40,14 +49,14 @@ public class TilsagnJsonMapperTest {
         assertFalse(tub.getJson().contains("}\""));
         assertFalse(tub.getJson().contains("TILSAGN_ID"));
         assertEquals(forventetJson, tub.getJson());
-
-
     }
 
     @Test
-    public void arenaMeldingTilTilsagnGirDatafeilMedInnhold() {
+    public void arenaMeldingTilTilsagnGirDatafeilMedInnhold() throws JsonProcessingException {
         ArenaMelding arenaMelding = Testdata.arenaMeldingMedFeil();
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).build();
+        when(objectMapper.readTree(anyString())).thenThrow(JsonProcessingException.class);
+
         try {
             tilsagnJsonMapper.pakkUtArenaMelding(tub);
             tilsagnJsonMapper.opprettTilsagn(tub);
@@ -61,10 +70,6 @@ public class TilsagnJsonMapperTest {
     public void tilsagnTilPdfJsonGirDatafeilMedInnhold() {
         tilsagnJsonMapper = new TilsagnJsonMapper();
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagn).build();
-<<<<<<< Updated upstream
-        tilsagnJsonMapper.tilsagnTilJson(tub);
-=======
         tilsagnJsonMapper.opprettPdfJson(tub);
->>>>>>> Stashed changes
     }
 }

@@ -34,13 +34,13 @@ public class PdfGenService {
         headers.setContentType((MediaType.APPLICATION_JSON));
     }
 
-    public byte[] tilsagnsbrevTilPdfBytes(TilsagnUnderBehandling tilsagnUnderBehandling) {
+    public byte[] tilsagnsbrevTilPdfBytes(TilsagnUnderBehandling tilsagnUnderBehandling, String pdfJson) {
         if (tilsagnUnderBehandling.getTilsagn().erGruppeTilsagn()) {
             log.info("Oppretter pdf av tilsagnsbrev for gruppe for bedrift {}", tilsagnUnderBehandling.getTilsagn().getTiltakArrangor().getOrgNummer());
-            return hentPdf(tilsagnUnderBehandling.getJson(), uriTilsagnGruppe);
+            return hentPdf(pdfJson, uriTilsagnGruppe);
         }
         log.info("Oppretter pdf av tilsagnsbrev for enkel deltaker for bedrift {}", tilsagnUnderBehandling.getTilsagn().getTiltakArrangor().getOrgNummer());
-        return hentPdf(tilsagnUnderBehandling.getJson(), uriTilsagnDeltaker);
+        return hentPdf(pdfJson, uriTilsagnDeltaker);
     }
 
     private byte[] hentPdf(String tilsagnJson, URI uri) {

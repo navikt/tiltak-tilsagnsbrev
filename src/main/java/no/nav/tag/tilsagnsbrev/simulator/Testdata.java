@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class Testdata {
@@ -98,6 +99,10 @@ public class Testdata {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static TilsagnUnderBehandling.TilsagnUnderBehandlingBuilder tubBuilder(){
+        return TilsagnUnderBehandling.builder().opprettet(LocalDateTime.now());
     }
 
     public static ArenaMelding arenaMelding() {

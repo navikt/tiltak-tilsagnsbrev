@@ -2,12 +2,11 @@ package no.nav.tag.tilsagnsbrev.behandler;
 
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
-import no.nav.tag.tilsagnsbrev.mapper.json.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import no.nav.tag.tilsagnsbrev.simulator.Testdata;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,28 +61,35 @@ public class TilsagnRetryProsessIntTest {
     }
 
     @Test
-    public void behandlerTilsagnEtterEnManuellBehandlingAvArenaMappingFeil() {
-        final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(tilsagnData).mappetFraArena(false).cid(CID).tilsagnsbrevId(1).build();
-        feiletTilsagnsbrevRepository.save(tilsagnUnderBehandling);
+    public void behandlerToFeiledeTilsagn() {
+        final UUID CID1 = UUID.randomUUID();
+        final UUID CID2 = UUID.randomUUID();
+        TilsagnUnderBehandling tub1 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(false).cid(CID1).tilsagnsbrevId(1).opprettet(LocalDateTime.now()).build();
+        TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).altinnKittering(1).cid(CID2).opprettet(LocalDateTime.now()).tilsagnsbrevId(2).build();
+
+        feiletTilsagnsbrevRepository.saveAll(Arrays.asList(tub1, tub2));
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
-        Optional<TilsagnUnderBehandling> opt = feiletTilsagnsbrevRepository.findById(CID);
-        assertTrue("Tilsagn ikke i database", opt.isPresent());
+        List<TilsagnUnderBehandling> tubList = feiletTilsagnsbrevRepository.findAll();
 
-        TilsagnUnderBehandling tub = opt.get();
-        assertTrue("Ikke behandlet", tub.isBehandlet());
-        assertTrue("MappetFraArena", tub.isMappetFraArena());
-        assertFalse("Til Altinn", tub.skalTilAltinn());
-        assertTrue("Journalført", tub.erJournalfoert());
-        assertMeldingBleIkkeLoggetVedRetry(tub.getTilsagnsbrevId());
+        assertEquals(2, tubList.size());
+        assertTrue(tubList.stream().anyMatch(tub -> tub.getCid().equals(CID1)));
+        assertTrue(tubList.stream().anyMatch(tub -> tub.getCid().equals(CID2)));
+
+        tubList.stream().forEach(tub -> {
+            assertTrue("Ikke behandlet", tub.isBehandlet());
+            assertTrue("MappetFraArena", tub.isMappetFraArena());
+            assertFalse("Til Altinn", tub.skalTilAltinn());
+            assertTrue("Journalført", tub.erJournalfoert());
+            assertMeldingBleIkkeLoggetVedRetry(tub.getTilsagnsbrevId());
+        });
     }
 
     @Test
     public void behandlerTilsagnEtterFeiletJournalforing() {
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling feilet = TilsagnUnderBehandling.builder().cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).altinnKittering(002).build();
+        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).altinnKittering(002).build();
         feiletTilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
@@ -100,7 +109,7 @@ public class TilsagnRetryProsessIntTest {
     @Test
     public void behandlerTilsagnEtterFeiletAltinnSending() {
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling feilet = TilsagnUnderBehandling.builder().cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
+        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
         feiletTilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
@@ -121,7 +130,7 @@ public class TilsagnRetryProsessIntTest {
         mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
 
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling feilet = TilsagnUnderBehandling.builder().retry(1).cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
+        TilsagnUnderBehandling feilet = Testdata.tubBuilder().retry(1).cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
         feiletTilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
@@ -138,7 +147,7 @@ public class TilsagnRetryProsessIntTest {
         assertMeldingBleIkkeLoggetVedRetry(tub.getTilsagnsbrevId());
     }
 
-    private void assertMeldingBleIkkeLoggetVedRetry(Integer tilsagnsbrevId){
-         assertFalse(tilsagnLoggRepository.tilsagnsbevIdFinnes(tilsagnsbrevId));
+    private void assertMeldingBleIkkeLoggetVedRetry(Integer tilsagnsbrevId) {
+        assertFalse(tilsagnLoggRepository.tilsagnsbevIdFinnes(tilsagnsbrevId));
     }
 }
