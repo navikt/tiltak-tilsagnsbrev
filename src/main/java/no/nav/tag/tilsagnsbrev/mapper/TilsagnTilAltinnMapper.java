@@ -15,6 +15,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Component
 public class TilsagnTilAltinnMapper {
@@ -28,33 +29,31 @@ public class TilsagnTilAltinnMapper {
     private static final String SYSTEM_USERCODE = "TAG_TILSAGN";
 
 
-    private static final String SERVICE_CODE = "5278"; //TODO Sjekk bruken av dette.
-    private static final String SERVICE_EDITION = "1"; //TODO Sjekk bruken av dette.
-    private static final String LANGUAGE_CODE = "1044"; //TODO Sjekk bruken av dette.
-    private static final String SENDER_REF = SYSTEM_USERCODE; //TODO Sjekk bruken av dette.
-    private static final String MSG_SENDER = "NAV"; //TODO Sjekk bruken av dette.
+    private static final String SERVICE_CODE = "TAG";
+    private static final String SERVICE_EDITION = "1";
+    private static final String LANGUAGE_CODE = "1044";
+    private static final String MSG_SENDER = "NAV";
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(final Tilsagn tilsagn, final byte[] pdf) {
         return new InsertCorrespondenceBasicV2()
                 .withSystemUserName(altinnProperties.getSystemBruker())
                 .withSystemPassword(altinnProperties.getSystemPassord())
                 .withSystemUserCode(SYSTEM_USERCODE)
-                .withExternalShipmentReference(extShipmentRef())
                 .withCorrespondence(new InsertCorrespondenceV2()
                         .withServiceCode(SERVICE_CODE)
                         .withServiceEdition(SERVICE_EDITION)
-                        .withVisibleDateTime(fromLocalDate(LocalDateTime.now())) //TODO Sjekk
-                        .withAllowSystemDeleteDateTime(fromLocalDate(LocalDateTime.now().plusMonths(3))) //TODO Sjekk
-                        .withDueDateTime(fromLocalDate(LocalDateTime.now().plusMonths(3)))   //TODO Sjekk
+                        .withVisibleDateTime(fromLocalDate(LocalDateTime.now()))
+                        .withAllowSystemDeleteDateTime(fromLocalDate(LocalDateTime.now().plusYears(10))) //TODO Sjekk
+                        .withDueDateTime(fromLocalDate(tilsagn.getRefusjonfristDato().atTime(LocalTime.MIDNIGHT).plusNanos(1)))
                         .withAllowForwarding(false)
                         .withMessageSender(MSG_SENDER)
                         .withReportee(tilsagn.getTiltakArrangor().getOrgNummer())
                         .withContent(new ExternalContentV2()
                                 .withLanguageCode(LANGUAGE_CODE)
+                                .withMessageTitle(vedleggNavn(tilsagn))
                                 .withAttachments(new AttachmentsV2()
                                         .withBinaryAttachments(new BinaryAttachmentExternalBEV2List()
                                                 .withBinaryAttachmentV2(new BinaryAttachmentV2()
-                                                        .withSendersReference(SENDER_REF)
                                                         .withData(pdf)
                                                         .withFileName(new StringBuilder()
                                                                 .append(FILE_NAME_PREFIX)
@@ -68,7 +67,8 @@ public class TilsagnTilAltinnMapper {
         StringBuilder sb = new StringBuilder()
                 .append(ATTACHMENT_NAME_PREFIX)
                 .append(" ")
-                .append(tilsagn.getTiltakNavn());
+                .append(tilsagn.getTiltakNavn())
+                .append(" ");
 
         if (tilsagn.erGruppeTilsagn()){
             return sb.append(tilsagn.getPeriode().getFraDato()).append(" til ").append(tilsagn.getPeriode().getTilDato()).toString();

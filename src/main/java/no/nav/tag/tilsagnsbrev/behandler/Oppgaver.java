@@ -70,6 +70,7 @@ public class Oppgaver {
         try {
             return tilsagnTilAltinnMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), pdf);
         } catch (Exception e) {
+            log.error("Feil ved oppretterlse av Altinn melding fra Tilsagn id {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
             throw new DataException(e.getMessage());
         }
     }
