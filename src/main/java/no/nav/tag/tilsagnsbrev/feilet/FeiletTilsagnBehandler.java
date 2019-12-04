@@ -32,10 +32,6 @@ public class FeiletTilsagnBehandler {
         return false;
     }
 
-    public boolean oppdater(TilsagnUnderBehandling oppdatertTilsagn, Exception e) {
-        return oppdaterFeilet(oppdatertTilsagn, Optional.of(e));
-    }
-
     public boolean oppdater(TilsagnUnderBehandling oppdatertTilsagn) {
         return oppdaterFeilet(oppdatertTilsagn, Optional.empty());
     }

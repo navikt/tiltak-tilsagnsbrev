@@ -2,7 +2,6 @@ package no.nav.tag.tilsagnsbrev.simulator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.Gson;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
 
@@ -80,10 +79,6 @@ public class Testdata {
                 .tiltakNavn("Bedriftsintern opplæring (BIO)")
                 .totaltTilskuddbelop("28000")
                 .valutaKode("NOK");
-    }
-
-    public static String tilsagnTilJson(Tilsagn tilsagn) {
-        return new Gson().toJson(tilsagn);
     }
 
     public static String hentFilString(String filnavn) {

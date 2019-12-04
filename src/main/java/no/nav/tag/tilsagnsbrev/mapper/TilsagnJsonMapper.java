@@ -1,6 +1,5 @@
 package no.nav.tag.tilsagnsbrev.mapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -40,29 +39,29 @@ public class TilsagnJsonMapper {
         }
     }
 
-    public void pakkUtArenaMelding(TilsagnUnderBehandling tilsagnUnderBehandling)  {
+    public void pakkUtArenaMelding(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
             ObjectNode after = tilsagnUnderBehandling.getArenaMelding().getAfter();
             tilsagnUnderBehandling.setTilsagnsbrevId(after.get(JSON_ELEM_TILSAGNSBREV_ID).intValue());
             log.info("Behandler melding med tilsagnsbrev-id {}", tilsagnUnderBehandling.getTilsagnsbrevId());
             String jsonStr = meldingtilJsonString(after.get(JSON_ELEM_TILSAGN).asText());
             tilsagnUnderBehandling.setJson(jsonStr);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Feil ved utpakking av Arena-melding til tilsagnsbrev {}", tilsagnUnderBehandling.getArenaMelding(), e);
             throw new DataException(e.getMessage());
         }
     }
 
-     public void opprettTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling)  {
-         JsonNode tilsagnElem;
-         Tilsagn tilsagn;
-         try {
-             tilsagnElem = objectMapper.readTree(tilsagnUnderBehandling.getJson());
-             tilsagn = objectMapper.treeToValue(tilsagnElem, Tilsagn.class);
-         } catch (Exception e) {
-             log.error("Feil ved oppretting av Tilsagnsbrev fra Arenameldind Json", e);
-             throw  new DataException(e.getMessage());
-         }
+    public void opprettTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
+        JsonNode tilsagnElem;
+        Tilsagn tilsagn;
+        try {
+            tilsagnElem = objectMapper.readTree(tilsagnUnderBehandling.getJson());
+            tilsagn = objectMapper.treeToValue(tilsagnElem, Tilsagn.class);
+        } catch (Exception e) {
+            log.error("Feil ved oppretting av Tilsagnsbrev fra Arenameldind Json", e);
+            throw new DataException(e.getMessage());
+        }
 
         tilsagnUnderBehandling.setTilsagn(tilsagn);
         tilsagnUnderBehandling.setMappetFraArena(true);

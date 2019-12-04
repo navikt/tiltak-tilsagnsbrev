@@ -3,9 +3,9 @@ package no.nav.tag.tilsagnsbrev.behandler;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
-import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -16,9 +16,6 @@ public class TilsagnRetryProsess {
     Oppgaver oppgaver;
 
     @Autowired
-    private PdfGenService pdfService;
-
-    @Autowired
     FeiletTilsagnBehandler feiletTilsagnBehandler;
 
     @Autowired
@@ -27,9 +24,11 @@ public class TilsagnRetryProsess {
 
     //@Scheduled(cron = "${prosess.cron}")
     public void finnOgRekjoerFeiletTilsagn() {
+        log.debug("Sjekker tilsagnsbrev som feilet");
         feiletTilsagnBehandler.hentAlleTilRekjoring()
                 .forEach(feiletTilsagnsbrev -> {
                     try {
+                        log.info("Retry feilet tilsagnsbrev {}", feiletTilsagnsbrev.getTilsagnsbrevId());
                         rekjoerTilsagn(feiletTilsagnsbrev);
                     } catch (Exception e) {
                         oppgaver.oppdaterFeiletTilsagn(feiletTilsagnsbrev, e);

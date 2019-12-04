@@ -34,7 +34,7 @@ public class ArenaSimulatorController {
 
 
     @PostMapping(value = "kafka")
-    public void leggMeldingPaKafkaToppic(@RequestBody String json) throws Exception {
+    public void leggMeldingPaKafkaTopic(@RequestBody String json) throws Exception {
         try {
             UUID cid = cidManager.opprettCorrelationId();
             TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().cid(cid).json(json).build();
@@ -56,7 +56,6 @@ public class ArenaSimulatorController {
 
     @GetMapping("altinn/{tilsagnNr}")
     public String sendTilAltinn(@PathVariable String tilsagnNr) throws Exception {
-//        byte[] pdf = EncodedString.getEncAsBytes();
         byte[] pdf = EncodedString.getDecAsBytes();
         Tilsagn tilsagn = Testdata.tilsagnEnDeltaker();
         altInnService.sendTilsagnsbrev(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, pdf));

@@ -46,7 +46,6 @@ public class Oppgaver {
         return pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJson);
     }
 
-
     public void journalfoerTilsagnsbrev(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
         try {
             Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tilsagnUnderBehandling.getTilsagn(), pdf);

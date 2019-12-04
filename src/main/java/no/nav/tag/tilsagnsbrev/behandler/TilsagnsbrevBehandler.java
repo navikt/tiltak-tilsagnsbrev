@@ -13,8 +13,6 @@ public class TilsagnsbrevBehandler {
     @Autowired
     private Oppgaver oppgaver;
 
-
-
     @Autowired
     private TilsagnLoggRepository tilsagnLoggRepository;
 
@@ -27,7 +25,7 @@ public class TilsagnsbrevBehandler {
         } catch (Exception e) {
             oppgaver.oppdaterFeiletTilsagn(tilsagnUnderBehandling, e);
         } finally {
-            tilsagnLoggRepository.lagretIdHvisNyMelding(tilsagnUnderBehandling); //TODO Trengs denne?
+            tilsagnLoggRepository.lagretIdHvisNyMelding(tilsagnUnderBehandling);
         }
     }
 

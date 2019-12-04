@@ -14,6 +14,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Slf4j
@@ -31,13 +32,13 @@ public class ArenaConsumer {
 
     @KafkaListener(topics = topic)
     public void lyttPaArenaTilsagn(ArenaMelding arenaMelding){
-        cidManager.opprettCorrelationId();
+        final UUID cid = cidManager.opprettCorrelationId();
         log.debug("Ny melding hentet fra topic {}", arenaMelding);
 
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder()
                 .opprettet(LocalDateTime.now())
                 .arenaMelding(arenaMelding)
-                .cid(cidManager.opprettCorrelationId()).build();
+                .cid(cid).build();
         try {
             tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         } finally {
