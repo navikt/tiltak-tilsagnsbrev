@@ -60,7 +60,7 @@ public class Tilsagn {
             return tilskuddListe.stream().findFirst()
                     .map(tilskudd -> {
                         if (tilskudd.getVisTilskuddProsent()) {
-                            return tilskudd.getTilskuddProsent() + " %";
+                            return tilskudd.getTilskuddProsent();
                         }
                         return null;
                     }).orElse(null);

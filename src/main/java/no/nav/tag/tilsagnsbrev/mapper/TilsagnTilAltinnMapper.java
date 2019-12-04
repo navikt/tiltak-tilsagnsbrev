@@ -22,8 +22,8 @@ public class TilsagnTilAltinnMapper {
     @Autowired
     private AltinnProperties altinnProperties;
 
-    private static final String ATTACHMENT_NAME_PREFIX = "NAV-Tilsagnsbrev ";
-    private static final String FILE_NAME_PREFIX = "Tilsagnsbrev-";
+    private static final String ATTACHMENT_NAME_PREFIX = "Tilskuddsbrev ";
+    private static final String FILE_NAME_PREFIX = "Tilskuddsbrev-";
     private static final String FIL_EXT = ".pdf";
     private static final String SYSTEM_USERCODE = "TAG_TILSAGN";
 
@@ -31,7 +31,7 @@ public class TilsagnTilAltinnMapper {
     private static final String SERVICE_CODE = "5278"; //TODO Sjekk bruken av dette.
     private static final String SERVICE_EDITION = "1"; //TODO Sjekk bruken av dette.
     private static final String LANGUAGE_CODE = "1044"; //TODO Sjekk bruken av dette.
-    private static final String SENDER_REF = "test_ref"; //TODO Sjekk bruken av dette.
+    private static final String SENDER_REF = SYSTEM_USERCODE; //TODO Sjekk bruken av dette.
     private static final String MSG_SENDER = "NAV"; //TODO Sjekk bruken av dette.
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(final Tilsagn tilsagn, final byte[] pdf) {
@@ -58,16 +58,22 @@ public class TilsagnTilAltinnMapper {
                                                         .withData(pdf)
                                                         .withFileName(new StringBuilder()
                                                                 .append(FILE_NAME_PREFIX)
-                                                                .append(tilsagn.getTiltakArrangor().getOrgNummer())
+                                                                .append(tilsagn.getTiltakNavn())
                                                                 .append(FIL_EXT)
                                                                 .toString())
-                                                        .withName(new StringBuilder()
-                                                                .append(ATTACHMENT_NAME_PREFIX)
-                                                                .append(" for ")
-                                                                .append(tilsagn.getTiltakArrangor().getOrgNummer())
-                                                                .append(" ")
-                                                                .append(tilsagn.getTilsagnDato())
-                                                                .toString()))))));
+                                                        .withName(vedleggNavn(tilsagn)))))));
+    }
+
+    private String vedleggNavn(Tilsagn tilsagn){
+        StringBuilder sb = new StringBuilder()
+                .append(ATTACHMENT_NAME_PREFIX)
+                .append(" ")
+                .append(tilsagn.getTiltakNavn());
+
+        if (tilsagn.erGruppeTilsagn()){
+            return sb.append(tilsagn.getPeriode().getFraDato()).append(" til ").append(tilsagn.getPeriode().getTilDato()).toString();
+        }
+        return sb.append(tilsagn.getDeltaker().getEtternavn()).toString();
     }
 
     private XMLGregorianCalendar fromLocalDate(LocalDateTime localDateTime) {
