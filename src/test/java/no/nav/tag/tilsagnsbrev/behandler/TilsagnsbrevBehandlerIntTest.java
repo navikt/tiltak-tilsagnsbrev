@@ -109,7 +109,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
     @Test
     public void pdfGenFeil() {
-        mockServer.getServer().stubFor(post("/template/tilsagnsbrev-gruppe/create-pdf").willReturn(serverError()));
+        mockServer.getServer().stubFor(post("/template/tilsagnsbrev-deltaker/create-pdf").willReturn(serverError()));
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();
@@ -121,6 +121,7 @@ public class TilsagnsbrevBehandlerIntTest {
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
             assertFalse(tub.erJournalfoert());
+            assertTrue(tub.skalTilAltinn());
             assertNotNull(tub.getJson());
             return tub;
         });
