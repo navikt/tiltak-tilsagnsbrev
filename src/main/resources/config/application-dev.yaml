@@ -11,6 +11,8 @@ spring:
     consumer:
       group-id: group-id
       bootstrap-servers: ${spring.embedded.kafka.brokers}
+    producer:
+      bootstrap-servers: ${spring.embedded.kafka.brokers}
   h2:
     console:
       enabled: true

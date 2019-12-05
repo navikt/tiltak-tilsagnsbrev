@@ -7,7 +7,7 @@ import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.SystemException;
 import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
-import no.nav.tag.tilsagnsbrev.simulator.Testdata;
+import no.nav.tag.tilsagnsbrev.Testdata;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

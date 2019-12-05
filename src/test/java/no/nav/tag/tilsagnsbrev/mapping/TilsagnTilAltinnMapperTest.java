@@ -5,7 +5,7 @@ import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAtta
 import no.nav.tag.tilsagnsbrev.konfigurasjon.altinn.AltinnProperties;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.simulator.EncodedString;
-import no.nav.tag.tilsagnsbrev.simulator.Testdata;
+import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -20,7 +20,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.File;
-import java.util.Base64;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

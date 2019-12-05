@@ -16,7 +16,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 @Getter
 public class IntegrasjonerMockServer implements DisposableBean {
     private final WireMockServer server;
-    private final String altinnOkRespons = Testdata.hentFilString("mappings/altinn200Resp.xml");
+    private final String altinnOkRespons = SimUtil.lesFil("mappings/altinn200Resp.xml");
 
     public IntegrasjonerMockServer() {
         log.info("Starter mockserver for eksterne integrasjoner.");

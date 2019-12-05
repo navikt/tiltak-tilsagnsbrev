@@ -1,4 +1,4 @@
-package no.nav.tag.tilsagnsbrev.simulator;
+package no.nav.tag.tilsagnsbrev;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

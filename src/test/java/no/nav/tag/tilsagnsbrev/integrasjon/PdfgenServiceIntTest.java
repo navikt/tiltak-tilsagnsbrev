@@ -2,7 +2,7 @@ package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
-import no.nav.tag.tilsagnsbrev.simulator.Testdata;
+import no.nav.tag.tilsagnsbrev.Testdata;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.Ignore;
 import org.junit.Test;

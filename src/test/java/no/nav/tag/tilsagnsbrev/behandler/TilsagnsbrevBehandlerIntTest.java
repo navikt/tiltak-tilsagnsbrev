@@ -5,7 +5,7 @@ import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
-import no.nav.tag.tilsagnsbrev.simulator.Testdata;
+import no.nav.tag.tilsagnsbrev.Testdata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
