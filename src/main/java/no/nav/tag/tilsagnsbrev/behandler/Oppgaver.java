@@ -59,8 +59,8 @@ public class Oppgaver {
     }
 
     public void sendTilAltinn(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
-        log.info("Sender tilsagnsbrev {} til Altinn", tilsagnUnderBehandling.getTilsagnsbrevId());
         InsertCorrespondenceBasicV2 wsRequest = mapTilWebserviceRequest(tilsagnUnderBehandling, pdf);
+        log.info("Sender tilsagnsbrev {} til Altinn. Ekstern-ref {}", tilsagnUnderBehandling.getTilsagnsbrevId(), wsRequest.getExternalShipmentReference());
         sentWsRequest(tilsagnUnderBehandling, wsRequest);
         log.info("Tilsagnsbrev {} er sendt til Altinn. kvittering {}",tilsagnUnderBehandling.getTilsagnsbrevId(), tilsagnUnderBehandling.getAltinnKittering());
     }

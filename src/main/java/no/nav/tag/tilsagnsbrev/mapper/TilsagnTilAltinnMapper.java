@@ -39,6 +39,7 @@ public class TilsagnTilAltinnMapper {
                 .withSystemUserName(altinnProperties.getSystemBruker())
                 .withSystemPassword(altinnProperties.getSystemPassord())
                 .withSystemUserCode(SYSTEM_USERCODE)
+                .withExternalShipmentReference(extShipmentRef())
                 .withCorrespondence(new InsertCorrespondenceV2()
                         .withServiceCode(SERVICE_CODE)
                         .withServiceEdition(SERVICE_EDITION)
