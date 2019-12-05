@@ -17,11 +17,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 public class IntegrasjonerMockServer implements DisposableBean {
     private final WireMockServer server;
     private final String altinnOkRespons = SimUtil.lesFil("mappings/altinn200Resp.xml");
+    private final String pdfFil = EncodedString.ENC_STR;
 
     public IntegrasjonerMockServer() {
         log.info("Starter mockserver for eksterne integrasjoner.");
         server = new WireMockServer(WireMockConfiguration.options().usingFilesUnderClasspath(".").port(8090));
         server.start();
+        stubForAltOk();
     }
 
     @Override
@@ -33,7 +35,7 @@ public class IntegrasjonerMockServer implements DisposableBean {
     public void stubForAltOk() {
         server.stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
                 .willReturn(okJson("{\"journalpostId\" : \"001\", \"journalstatus\" : \"MIDLERTIDIG\", \"melding\" : \"Gikk bra\"}")));
-        server.stubFor(post("/template/tilsagnsbrev-deltaker/create-pdf").willReturn(okJson("{\"pdf\" : \"[B@b78a709\"}")));
+        server.stubFor(post("/template/tilsagnsbrev-deltaker/create-pdf").willReturn(okJson("{\"pdf\" : \"" + pdfFil + "\"}")));
         server.stubFor(post("/template/tilsagnsbrev-gruppe/create-pdf").willReturn(okJson("{\"pdf\" : \"[B@b78a709\"}")));
         server.stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(ok().withBody(altinnOkRespons)));
     }

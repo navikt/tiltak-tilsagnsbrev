@@ -85,7 +85,7 @@ public class TilsagnTilAltinnMapper {
         }
     }
 
-    private static final String EXT_REF = "ESR_NAV";    //TODO Sjekk bruken av dette.
+    private static final String EXT_REF = "ESR_NAV";
     private String extShipmentRef(){
         return  EXT_REF + Double.valueOf(Math.random() * 1000000000);
     }
