@@ -29,7 +29,7 @@ public class TilsagnTilAltinnMapper {
     private static final String SYSTEM_USERCODE = "TAG_TILSAGN";
 
 
-    private static final String SERVICE_CODE = "TAG";
+    private static final String SERVICE_CODE = "5278";
     private static final String SERVICE_EDITION = "1";
     private static final String LANGUAGE_CODE = "1044";
     private static final String MSG_SENDER = "NAV";
