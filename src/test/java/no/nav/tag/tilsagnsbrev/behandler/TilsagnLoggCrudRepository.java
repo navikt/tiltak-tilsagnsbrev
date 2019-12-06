@@ -6,6 +6,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.UUID;
 
 @ActiveProfiles("dev")
-interface TilsagnLoggCrudRepository extends CrudRepository<TilsagnLogg, UUID> {
+public interface TilsagnLoggCrudRepository extends CrudRepository<TilsagnLogg, UUID> {
 
 }

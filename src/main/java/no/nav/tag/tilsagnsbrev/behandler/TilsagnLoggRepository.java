@@ -26,7 +26,10 @@ public class TilsagnLoggRepository {
         return erNyMelding;
     }
 
-    public boolean tilsagnsbevIdFinnes(int tilsagnsbrevId) {
+    public boolean tilsagnsbevIdFinnes(Integer tilsagnsbrevId) {
+        if(tilsagnsbrevId == null){
+            return false;
+        }
         return jdbcTemplate.queryForObject(SQL_ID_FINNES, Boolean.class, tilsagnsbrevId);
     }
 

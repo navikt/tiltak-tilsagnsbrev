@@ -48,12 +48,6 @@ public class TilsagnsbrevBehandlerIntTest {
 
     private final static String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
     private static ArenaMelding arenaMelding = Testdata.arenaMelding();
-    private static int tilsagsnbrev_id = 0;
-
-    @Before
-    public void setUp() {
-        mockServer.stubForAltOk();
-    }
 
     @After
     public void tearDown() {
@@ -63,19 +57,11 @@ public class TilsagnsbrevBehandlerIntTest {
     }
 
     @Test
-    public void behandlerTilsagn() {
-        TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).build();
-        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
-        assertTrue(loggCrudRepository.existsById(tilsagnUnderBehandling.getCid()));
-        assertFalse(feiletTilsagnsbrevRepository.existsById(tilsagnUnderBehandling.getCid()));
-    }
-
-    @Test
     public void abryterHvisAlleredeLest(){
         TilsagnUnderBehandling tub = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).tilsagnsbrevId(111).build();
 
         assertTrue("Må logges før kjøring!", tilsagnLoggRepository.lagretIdHvisNyMelding(tub));
-        tub.setCid(UUID.randomUUID());
+        tub.setCid(UUID.randomUUID()); //Blir lest fra topic igjen som en 'ny' melding
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
         //Skal ikke gjennomføre disse kallene
@@ -85,7 +71,7 @@ public class TilsagnsbrevBehandlerIntTest {
     }
 
     @Test
-    public void parserIkkeArenaMelding() {
+    public void oppretterIkkeTilsagnObjektFraArenaMelding() {
         final UUID CID = UUID.randomUUID();
         final String feilbarGoldengateJson = Testdata.hentFilString("TILSAGN_DATA_feil.json");
 
