@@ -7,7 +7,6 @@ import no.nav.tag.tilsagnsbrev.behandler.CidManager;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;

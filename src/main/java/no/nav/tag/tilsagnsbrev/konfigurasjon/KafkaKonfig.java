@@ -11,7 +11,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 
 @Slf4j
 @Configuration
-@Profile("dev")
+@Profile("local")
 public class KafkaKonfig {
 
     @Autowired

@@ -26,10 +26,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@Ignore("Fikse denne til mvn test")
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"kafka"})
+@ActiveProfiles({"dev","kafka"})
 @DirtiesContext
 public class ArenaConsumerIntTest {
 
