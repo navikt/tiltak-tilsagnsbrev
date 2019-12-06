@@ -5,11 +5,13 @@ import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@EnableScheduling
 public class TilsagnRetryProsess {
 
     @Autowired
@@ -21,10 +23,9 @@ public class TilsagnRetryProsess {
     @Autowired
     TilsagnJsonMapper tilsagnJsonMapper;
 
-
-    //@Scheduled(cron = "${prosess.cron}")
+    @Scheduled(cron = "${tilsagnsbrev.retry.cron}")
     public void finnOgRekjoerFeiletTilsagn() {
-        log.debug("Sjekker tilsagnsbrev som feilet");
+        log.info("Starter retry");
         feiletTilsagnBehandler.hentAlleTilRekjoring()
                 .forEach(feiletTilsagnsbrev -> {
                     try {

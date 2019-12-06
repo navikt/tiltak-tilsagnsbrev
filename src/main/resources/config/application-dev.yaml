@@ -21,6 +21,8 @@ spring:
     banner-mode: "console"
 
 tilsagnsbrev:
+  retry:
+    cron: "5 * * * * *"
   integrasjon:
     pdfgen:
       uri: http://localhost:8090

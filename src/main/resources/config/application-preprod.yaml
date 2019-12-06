@@ -22,6 +22,8 @@ spring:
       group-id: ${tilsagnsbrev.consumer.group.id}
 
 tilsagnsbrev:
+  retry:
+    cron: ${tilsagnsbrev.process.cron}
   database:
     database-navn: tiltak-tilsagnsbrev-feilet-preprod
     database-url: ${spring.datasource.url}

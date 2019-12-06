@@ -26,6 +26,8 @@ spring:
             value.default.type: no.nav.tag.tilsagnsbrev.dto.ArenaMelding
 
 tilsagnsbrev:
+  retry:
+    cron:
   integrasjon:
     pdfgen:
       uri: uri
