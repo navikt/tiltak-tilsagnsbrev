@@ -3,16 +3,15 @@ package no.nav.tag.tilsagnsbrev.simulator;
 import no.nav.tag.tilsagnsbrev.behandler.CidManager;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnRetryProsess;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
-import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
+import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @Profile({"local", "preprod"})
@@ -25,26 +24,38 @@ public class ArenaSimulatorController {
     private TilsagnRetryProsess tilsagnRetryProsess;
 
     @Autowired
-    private AltInnService altInnService;
-
-    @Autowired
-    private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
-
-    @Autowired
     private CidManager cidManager;
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-
     @PostMapping(value = "kafka")
-    public void leggMeldingPaKafkaTopic(@RequestBody String arenaJson) throws Exception {
+    public String leggMeldingPaKafkaTopic(@RequestBody String arenaJson) throws Exception {
+        try {
             kafkaTemplate.send(ArenaConsumer.topic, "TODO", arenaJson);
+            return "OK";
+        } catch (Exception e){
+            throw new RuntimeException("Fungerer ikke i preprod", e);
+        }
+    }
+
+    @PostMapping(value = "behandler/{tilsagnNr}")
+    public String behandle(@PathVariable Integer tilsagnNr, @RequestBody String tilsagnJson) {
+        UUID cid = cidManager.opprettCorrelationId();
+        ArenaMelding arenaMelding = SimUtil.arenaMelding(tilsagnNr, tilsagnJson);
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).tilsagnsbrevId(tilsagnNr).cid(cid).build();
+        try {
+            tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
+            return "OK";
+        }finally {
+            cidManager.fjernCorrelationId();
+        }
     }
 
     @GetMapping(value = "retry")
-    public void kjoerRetry(@RequestBody String json) throws Exception {
+    public String kjoerRetry(@RequestBody String json) throws Exception {
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
+        return "OK";
     }
 
     @GetMapping(value = "ping")
