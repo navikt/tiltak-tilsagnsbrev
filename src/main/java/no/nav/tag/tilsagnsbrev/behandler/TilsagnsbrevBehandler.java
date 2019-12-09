@@ -2,6 +2,7 @@ package no.nav.tag.tilsagnsbrev.behandler;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
+import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,10 +23,8 @@ public class TilsagnsbrevBehandler {
     public void behandleOgVerifisereTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
             behandleTilsagn(tilsagnUnderBehandling);
-        } catch (Exception e) {
+        } catch (TilsagnException e) {
             oppgaver.oppdaterFeiletTilsagn(tilsagnUnderBehandling, e);
-        } finally {
-            tilsagnLoggRepository.lagretIdHvisNyMelding(tilsagnUnderBehandling);
         }
     }
 

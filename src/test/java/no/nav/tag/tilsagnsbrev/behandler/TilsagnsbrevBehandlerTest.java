@@ -41,7 +41,7 @@ public class TilsagnsbrevBehandlerTest {
         when(tilsagnLoggRepository.lagretIdHvisNyMelding(tub)).thenReturn(true);
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
         verify(tilsagnJsonMapper, times(1)).pakkUtArenaMelding(tub);
-        verify(tilsagnLoggRepository, times(2)).lagretIdHvisNyMelding(tub);
+        verify(tilsagnLoggRepository, atLeastOnce()).lagretIdHvisNyMelding(tub);
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(any(TilsagnUnderBehandling.class));
         verify(oppgaver, times(1)).opprettPdfDok(any(TilsagnUnderBehandling.class));
         verify(oppgaver, times(1)).journalfoerTilsagnsbrev(any(TilsagnUnderBehandling.class), any());
@@ -67,23 +67,23 @@ public class TilsagnsbrevBehandlerTest {
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
         verify(oppgaver, times(1)).sendTilAltinn(tub, pdf);
         verify(oppgaver, times(1)).oppdaterFeiletTilsagn(eq(tub), any(SystemException.class));
-        verify(tilsagnLoggRepository, times(2)).lagretIdHvisNyMelding(eq(tub));
+        verify(tilsagnLoggRepository, times(1)).lagretIdHvisNyMelding(eq(tub));
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void parserIkkeArenaMeldingOgAvbryter() {
         ArenaMelding feiler = Testdata.arenaMeldingMedFeil();
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(feiler).build();
 
-        doThrow(DataException.class).when(tilsagnJsonMapper).pakkUtArenaMelding(tilsagnUnderBehandling);
+        doThrow(RuntimeException.class).when(tilsagnJsonMapper).pakkUtArenaMelding(tilsagnUnderBehandling);
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
-        verify(tilsagnLoggRepository, atLeastOnce()).lagretIdHvisNyMelding(tilsagnUnderBehandling);
+        verify(tilsagnLoggRepository, never()).lagretIdHvisNyMelding(tilsagnUnderBehandling);
         verify(tilsagnJsonMapper, never()).opprettTilsagn(any(TilsagnUnderBehandling.class));
         verify(oppgaver, never()).opprettPdfDok(any(TilsagnUnderBehandling.class));
         verify(oppgaver, never()).journalfoerTilsagnsbrev(any(TilsagnUnderBehandling.class), any());
         verify(oppgaver, never()).sendTilAltinn(any(TilsagnUnderBehandling.class), any());
-        verify(oppgaver, times(1)).oppdaterFeiletTilsagn(eq(tilsagnUnderBehandling), any(TilsagnException.class));
+        verify(oppgaver, never()).oppdaterFeiletTilsagn(eq(tilsagnUnderBehandling), any(TilsagnException.class));
     }
 
     @Test

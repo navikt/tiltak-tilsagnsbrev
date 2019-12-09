@@ -23,7 +23,7 @@ public class TilsagnJournalpostMapper {
         }
     }
 
-    private Journalpost opprettJournalpost(Tilsagn tilsagnsbrev, final byte[] pdfBytes) { //TODO Utlede tittel fra tilsagnsbrevet
+    private Journalpost opprettJournalpost(Tilsagn tilsagnsbrev, final byte[] pdfBytes) { //TODO Bruk samme tittel som i Altinn
         Sak sak = new Sak(opprettArkivsaknr(tilsagnsbrev.getTilsagnNummer()));
         Bruker bruker = new Bruker(tilsagnsbrev.getTiltakArrangor().getOrgNummer());
         Mottaker mottaker = new Mottaker(tilsagnsbrev.getTiltakArrangor().getOrgNummer(), tilsagnsbrev.getTiltakArrangor().getArbgiverNavn());

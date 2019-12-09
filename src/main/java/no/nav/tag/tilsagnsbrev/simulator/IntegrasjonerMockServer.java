@@ -36,7 +36,7 @@ public class IntegrasjonerMockServer implements DisposableBean {
         server.stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true")
                 .willReturn(okJson("{\"journalpostId\" : \"001\", \"journalstatus\" : \"MIDLERTIDIG\", \"melding\" : \"Gikk bra\"}")));
         server.stubFor(post("/template/tilsagnsbrev-deltaker/create-pdf").willReturn(okJson("{\"pdf\" : \"" + pdfFil + "\"}")));
-        server.stubFor(post("/template/tilsagnsbrev-gruppe/create-pdf").willReturn(okJson("{\"pdf\" : \"[B@b78a709\"}")));
+        server.stubFor(post("/template/tilsagnsbrev-gruppe/create-pdf").willReturn(okJson("{\"pdf\" : \"" + pdfFil + "\"}")));
         server.stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(ok().withBody(altinnOkRespons)));
     }
 }

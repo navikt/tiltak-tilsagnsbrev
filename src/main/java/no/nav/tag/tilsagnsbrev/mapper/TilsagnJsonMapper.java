@@ -48,7 +48,7 @@ public class TilsagnJsonMapper {
             tilsagnUnderBehandling.setJson(jsonStr);
         } catch (Exception e) {
             log.error("Feil ved utpakking av Arena-melding til tilsagnsbrev {}", tilsagnUnderBehandling.getArenaMelding(), e);
-            throw new DataException(e.getMessage());
+            throw new RuntimeException();
         }
     }
 

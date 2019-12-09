@@ -29,7 +29,7 @@ public class TilsagnRetryProsess {
         feiletTilsagnBehandler.hentAlleTilRekjoring()
                 .forEach(feiletTilsagnsbrev -> {
                     try {
-                        log.info("Retry feilet tilsagnsbrev {}", feiletTilsagnsbrev.getTilsagnsbrevId());
+                        log.info("Tilsagnsbrev {} retry no. {}", feiletTilsagnsbrev.getTilsagnsbrevId(), feiletTilsagnsbrev.getRetry());
                         rekjoerTilsagn(feiletTilsagnsbrev);
                     } catch (Exception e) {
                         oppgaver.oppdaterFeiletTilsagn(feiletTilsagnsbrev, e);
