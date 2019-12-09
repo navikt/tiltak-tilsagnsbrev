@@ -1,21 +1,28 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
-import no.nav.tag.tilsagnsbrev.Tilsagnsbehandler;
-import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
-import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
-import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
+import no.nav.tag.tilsagnsbrev.behandler.CidManager;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnRetryProsess;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
+import no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Profile({"dev", "preprod"})
 @RestController
+@Profile({"local", "preprod"})
 public class ArenaSimulatorController {
 
     @Autowired
-    private Tilsagnsbehandler tilsagnsbehandler;
+    private TilsagnsbrevBehandler tilsagnsbrevbehandler;
+
+    @Autowired
+    private TilsagnRetryProsess tilsagnRetryProsess;
 
     @Autowired
     private AltInnService altInnService;
@@ -23,23 +30,25 @@ public class ArenaSimulatorController {
     @Autowired
     private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
+    @Autowired
+    private CidManager cidManager;
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
 
     @PostMapping(value = "kafka")
-    public void leggMeldingPaKafkaToppic(@RequestBody String json) throws Exception {
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(json).build();
-        tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+    public void leggMeldingPaKafkaTopic(@RequestBody String arenaJson) throws Exception {
+            kafkaTemplate.send(ArenaConsumer.topic, "TODO", arenaJson);
+    }
+
+    @GetMapping(value = "retry")
+    public void kjoerRetry(@RequestBody String json) throws Exception {
+        tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
     }
 
     @GetMapping(value = "ping")
     public String ping() throws Exception {
-        return "OK";
-    }
-
-    @GetMapping("altinn/{tilsagnNr}")
-    public String sendTilAltinn(@PathVariable String tilsagnNr) throws Exception {
-        byte[] pdf = EncodedString.getEncAsBytes();
-        Tilsagn tilsagn = Testdata.tilsagnEnDeltaker();
-        altInnService.sendTilsagnsbrev(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, pdf));
         return "OK";
     }
 }

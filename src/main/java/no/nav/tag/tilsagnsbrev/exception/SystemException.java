@@ -6,6 +6,6 @@ import lombok.Getter;
 public class SystemException extends TilsagnException {
 
     public SystemException(String errMsg) {
-        super(errMsg);
+        super(errMsg, false);
     }
 }

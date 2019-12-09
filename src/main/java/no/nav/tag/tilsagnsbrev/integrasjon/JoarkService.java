@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
+import no.nav.tag.tilsagnsbrev.dto.journalpost.JournalpostResponse;
 import no.nav.tag.tilsagnsbrev.integrasjon.sts.StsService;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.JoarkKonfig;
-import no.nav.tag.tilsagnsbrev.mapper.journalpost.TilsagnJournalpostMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -46,23 +47,22 @@ public class JoarkService {
         headers.setContentType((MediaType.APPLICATION_JSON));
     }
 
-    public void sendJournalpost(final Journalpost journalpost) {
+    public String sendJournalpost(final Journalpost journalpost) {
         debugLogJournalpost(journalpost);
-        String response = null; //TODO Bruke noe annet
+        JournalpostResponse response = null;
         try {
-            log.info("Forsøker å journalføre tilsagnsbrev {}", journalpost.getEksternReferanseId());
-            restTemplate.postForObject(uri, entityMedStsToken(journalpost), String.class);
+            log.info("Forsøker å journalføre tilsagnsbrev");
+            return restTemplate.postForObject(uri, entityMedStsToken(journalpost), JournalpostResponse.class).getJournalpostId();
         } catch (Exception e1) {
             stsService.evict();
             log.warn("Feil ved kommunikasjon mot journalpost-API. Henter nytt sts-token og forsøker igjen");
             try {
-                response = restTemplate.postForObject(uri, entityMedStsToken(journalpost), String.class);
+                return restTemplate.postForObject(uri, entityMedStsToken(journalpost), JournalpostResponse.class).getJournalpostId();
             } catch (Exception e2) {
                 log.error("Kall til Joark feilet: {}", response != null ? response : "", e2);
                 throw new RuntimeException("Kall til Joark feilet: " + e2);
             }
         }
-        log.info("Journalført tilsagnsbrev {}", journalpost.getEksternReferanseId());
     }
 
     private HttpEntity<Journalpost> entityMedStsToken(final Journalpost journalpost) {
@@ -74,7 +74,7 @@ public class JoarkService {
     private void debugLogJournalpost(Journalpost journalpost) {
         if (log.isDebugEnabled()) {
             try {
-                log.info("JSON REQ: {}", new ObjectMapper().writeValueAsString(journalpost));
+                log.debug("JSON REQ: {}", new ObjectMapper().writeValueAsString(journalpost));
             } catch (JsonProcessingException e) {
             }
         }

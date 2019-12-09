@@ -10,6 +10,7 @@ public class TilsagnsbrevApplication {
 	public static void main(String[] args) {
 		SpringApplication application = new SpringApplicationBuilder(TilsagnsbrevApplication.class)
 				.initializers(new SjekkAktiveProfilerInitializer())
+				.profiles("kafka")
 				.build();
 		application.run(args);
 	}

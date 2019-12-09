@@ -1,22 +1,16 @@
 package no.nav.tag.tilsagnsbrev.dto.journalpost;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class DokumentVariant {
 
-    public static final String FILTYPE_XML = "XML";
     public static final String FILTYPE_PDF = "PDFA";
-    public static final String VARIANFORMAT_XML = "ORIGINAL";
-    public static final String VARIANFORMAT_PDF = "ARKIV";
+    public static final String VARIANFORMAT = "ARKIV";
 
-    private final String filtype;
-    private final String variantformat;
+    private final String filtype = FILTYPE_PDF;
+    private final String variantformat = VARIANFORMAT;
     private final String fysiskDokument;
-
-    public DokumentVariant(String filtype, String variantFormat, String fysiskDokument) {
-        this.filtype = filtype;
-        this.variantformat = variantFormat;
-        this.fysiskDokument = fysiskDokument;
-    }
 }

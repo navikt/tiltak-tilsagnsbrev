@@ -1,10 +1,21 @@
 server:
   port: 8082
 
+logging:
+  level:
+    no.nav.tag.tilsagnsbrev: INFO
+    org.apache.cfx: OFF
+
 spring:
   kafka:
     consumer:
+      group-id: group-id
       bootstrap-servers: ${spring.embedded.kafka.brokers}
+    producer:
+      bootstrap-servers: ${spring.embedded.kafka.brokers}
+  h2:
+    console:
+      enabled: true
 
   main:
     banner-mode: "console"
@@ -13,6 +24,7 @@ tilsagnsbrev:
   integrasjon:
     pdfgen:
       uri: http://localhost:8090
+#      uri: http://localhost:5913
     joark:
       uri: http://localhost:8090
     sts:

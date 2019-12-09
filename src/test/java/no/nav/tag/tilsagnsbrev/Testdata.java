@@ -1,33 +1,40 @@
-package no.nav.tag.tilsagnsbrev.simulator;
+package no.nav.tag.tilsagnsbrev;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 public class Testdata {
 
-    public static String JSON_FIL = "goldengate.json";
-    public static String JSON_FIL_FEILER = "fullRequest_som_feiler.json";
+    public static String JSON_FIL = "arenaMelding.json";
+    public static String JSON_FIL_FEILER = "arenaMelding_som_feiler.json";
 
     //Hentet fra fullREquest.tilsagn
     public static LocalDate TILSAGNSDATO = LocalDate.parse("2019-10-22");
     public static LocalDate FRA_DATO = LocalDate.parse("2019-10-01");
     public static LocalDate TIL_DATO = LocalDate.parse("2019-12-31");
 
+    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static String tilsagnDataStr = Testdata.hentFilString("TILSAGN_DATA.json");
+    private static String tilsagnDataFeilStr = Testdata.hentFilString("TILSAGN_DATA_feil.json");
+
     public static Tilsagn gruppeTilsagn() {
-        return Tilsagn.builder().antallDeltakere("17")
+        return tilsagnsBuilder().antallDeltakere("17")
                 .antallTimeverk("2932").build();
     }
 
     public static Tilsagn tilsagnEnDeltaker() {
-        return Tilsagn.builder().deltaker(Deltaker.builder()
+        return tilsagnsBuilder().deltaker(Deltaker.builder()
                 .etternavn("Nilsen")
-                .fornavn("Nils")
+                .fornavn("Kurt")
                 .fodselsnr("05055599999")
                 .landKode("NO")
                 .postAdresse("Waldemar Thranesgt 89")
@@ -52,31 +59,26 @@ public class Testdata {
                         .faks("52048361")
                         .build())
                 .periode(new Periode(FRA_DATO, TIL_DATO))
-                .saksbehandler(new Person("Johannessen", "Odd Helge"))
+                .saksbehandler(new Person("Åsberg", "Kristina"))
                 .tilsagnDato(TILSAGNSDATO)
                 .tilsagnNummer(new TilsagnNummer("2019", "366023", "1"))
                 .tilskuddListe(Arrays.asList(
-                        new Tilskudd("142000", "Opplæringstilskudd"),
-                        new Tilskudd("142000", "Lønnstilskudd")))
+                        new Tilskudd("28000", "Lønnstilskudd", "60", true)))
                 .tiltakArrangor(TiltakArrangor.builder()
-                        .arbgiverNavn("L.S. Solland AS")
+                        .arbgiverNavn("BIRTAVARRE OG VÆRLANDET REGNSKAP")
                         .kontoNummer("32010501481")
                         .landKode("NO")
                         .maalform("Nynorsk")
-                        .orgNummer("973152289")
-                        .orgNummerMorselskap("918160922")
+                        .orgNummer("910825607")
+                        .orgNummerMorselskap("943506698")
                         .postAdresse("Pedersgata 110 ")
                         .postNummer("4014")
                         .postSted("Oslo")
                         .build())
                 .tiltakKode("BIO")
                 .tiltakNavn("Bedriftsintern opplæring (BIO)")
-                .totaltTilskuddbelop("284000")
+                .totaltTilskuddbelop("28000")
                 .valutaKode("NOK");
-    }
-
-    public static Tilsagn jsonTilTilsagn(String json) throws Exception {
-        return new Gson().fromJson(json, Tilsagn.class);
     }
 
     public static String hentFilString(String filnavn) {
@@ -91,5 +93,23 @@ public class Testdata {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static TilsagnUnderBehandling.TilsagnUnderBehandlingBuilder tubBuilder(){
+        return TilsagnUnderBehandling.builder().opprettet(LocalDateTime.now());
+    }
+
+    public static ArenaMelding arenaMelding() {
+        ObjectNode after = objectMapper.createObjectNode();
+        after.put("TILSAGNSBREV_ID", 111);
+        after.put("TILSAGN_DATA", tilsagnDataStr);
+        return ArenaMelding.builder().after(after).build();
+    }
+
+    public static ArenaMelding arenaMeldingMedFeil() {
+        ObjectNode after = objectMapper.createObjectNode();
+        after.put("TILSAGNSBREV_ID", 111);
+        after.put("TILSAGN_DATA", tilsagnDataFeilStr);
+        return ArenaMelding.builder().after(after).build();
     }
 }

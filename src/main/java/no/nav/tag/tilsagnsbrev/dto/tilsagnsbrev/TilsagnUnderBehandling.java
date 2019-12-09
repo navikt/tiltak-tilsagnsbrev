@@ -1,21 +1,18 @@
 package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
-import no.nav.tag.tilsagnsbrev.feilet.NesteSteg;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import static no.nav.tag.tilsagnsbrev.feilet.NesteSteg.*;
 
 @Data
 @Builder
@@ -29,38 +26,40 @@ public class TilsagnUnderBehandling {
 
     @Id
     private UUID cid;
-    private String feilmelding;
     @Builder.Default
-    private LocalDateTime opprettet = LocalDateTime.now();
+    private boolean mappetFraArena = false;
     @Builder.Default
-    private NesteSteg nesteSteg = START;
-    private int retry;
+    private int retry = 0;
+    @Builder.Default
+    boolean datafeil = false;
+    @Builder.Default
+    private boolean behandlet = false; //Logisk sletting inntil videre
+
+    private LocalDateTime opprettet;
+    private Integer tilsagnsbrevId;
+    private String journalpostId;
+    private Integer altinnKittering;
     private String json;
+
+    @Transient
+    private ArenaMelding arenaMelding;
     @Transient
     private Tilsagn tilsagn;
 
-    public boolean erDefualt(){
-        return nesteSteg.equals(START);
+    public boolean skaljournalfoeres(){
+        return this.journalpostId == null;
     }
 
-    public boolean skaljournalfoeres(){
-        return this.getNesteSteg().equals(JOURNALFOER);
+    public boolean erJournalfoert(){
+        return this.journalpostId != null;
     }
 
     public boolean skalTilAltinn(){
-        return this.getNesteSteg().equals(TIL_ALTINN);
+        return altinnKittering == null;
     }
 
     public boolean skalRekjoeres(){
         return retry < MAX_RETRIES;
-    }
-
-    public void setFeilmelding(String feilmelding){
-        if(feilmelding != null && feilmelding.length() > FEILMELDING_MAXLENGTH){
-            this.feilmelding = feilmelding.substring(0, FEILMELDING_MAXLENGTH);
-            return;
-        }
-        this.feilmelding = feilmelding;
     }
 
     public void setRetry(TilsagnException te){
@@ -69,5 +68,16 @@ public class TilsagnUnderBehandling {
             return;
         }
         retry += 1;
+    }
+
+    public TilsagnUnderBehandling oppdater(TilsagnUnderBehandling ny){
+        this.mappetFraArena = ny.mappetFraArena;
+        this.retry = ny.retry;
+        this.datafeil = ny.datafeil;
+        this.journalpostId = ny.journalpostId;
+        this.altinnKittering = ny.altinnKittering;
+        this.behandlet = ny.behandlet;
+        this.json = ny.json;
+        return this;
     }
 }
