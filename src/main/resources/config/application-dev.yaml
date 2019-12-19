@@ -4,7 +4,7 @@ server:
 logging:
   level:
     no.nav.tag.tilsagnsbrev: INFO
-    org.apache.cfx: OFF
+    org.apache.cxf.services.*: INFO
 
 spring:
   kafka:

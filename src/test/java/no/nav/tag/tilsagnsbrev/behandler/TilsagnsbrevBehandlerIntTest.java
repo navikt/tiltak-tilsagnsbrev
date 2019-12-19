@@ -1,11 +1,11 @@
 package no.nav.tag.tilsagnsbrev.behandler;
 
+import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
-import no.nav.tag.tilsagnsbrev.Testdata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +56,11 @@ public class TilsagnsbrevBehandlerIntTest {
         loggCrudRepository.deleteAll();
     }
 
+    @Before
+    public void setUp(){
+        mockServer.stubForAltOk();
+    }
+
     @Test
     public void abryterHvisAlleredeLest(){
         TilsagnUnderBehandling tub = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).tilsagnsbrevId(111).build();
@@ -71,7 +76,7 @@ public class TilsagnsbrevBehandlerIntTest {
     }
 
     @Test
-    public void oppretterIkkeTilsagnObjektFraArenaMelding() {
+    public void oppretterIkkeTilsagnObjektFraTilsagnJson() {
         final UUID CID = UUID.randomUUID();
         final String feilbarGoldengateJson = Testdata.hentFilString("TILSAGN_DATA_feil.json");
 
@@ -129,6 +134,7 @@ public class TilsagnsbrevBehandlerIntTest {
             assertTrue(tub.skalRekjoeres());
             assertFalse(tub.erJournalfoert());
             assertNotNull(tub.getJson());
+            assertNotNull(tub.getPdf());
             return tub;
         });
     }
@@ -147,6 +153,7 @@ public class TilsagnsbrevBehandlerIntTest {
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
             assertNotNull(tub.getJson());
+            assertNotNull(tub.getPdf());
             return tub;
         });
     }
@@ -167,6 +174,7 @@ public class TilsagnsbrevBehandlerIntTest {
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
             assertNotNull(tub.getJson());
+            assertNotNull(tub.getPdf());
             return tub;
         });
     }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.*;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnNummer;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +15,9 @@ import java.util.Collections;
 @Component
 public class TilsagnJournalpostMapper {
 
-    public Journalpost tilsagnTilJournalpost(Tilsagn tilsagn,  final byte[] pdfBytes){
+    public Journalpost tilsagnTilJournalpost(TilsagnUnderBehandling tilsagnUnderBehandling){
         try {
-            return opprettJournalpost(tilsagn, pdfBytes);
+            return opprettJournalpost(tilsagnUnderBehandling.getTilsagn(), tilsagnUnderBehandling.getPdf());
         } catch (Exception e){
             log.error("Feil ved mapping til Journalpost", e);
             throw new DataException(e.getMessage());

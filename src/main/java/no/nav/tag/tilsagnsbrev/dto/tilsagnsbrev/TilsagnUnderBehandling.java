@@ -22,7 +22,6 @@ import java.util.UUID;
 public class TilsagnUnderBehandling {
 
     public static final int MAX_RETRIES = 4;
-    static final int FEILMELDING_MAXLENGTH = 255;
 
     @Id
     private UUID cid;
@@ -38,8 +37,9 @@ public class TilsagnUnderBehandling {
     private LocalDateTime opprettet;
     private Integer tilsagnsbrevId;
     private String journalpostId;
-    private Integer altinnKittering;
+    private Integer altinnReferanse;
     private String json;
+    private byte[] pdf;
 
     @Transient
     private ArenaMelding arenaMelding;
@@ -55,11 +55,15 @@ public class TilsagnUnderBehandling {
     }
 
     public boolean skalTilAltinn(){
-        return altinnKittering == null;
+        return this.altinnReferanse == null;
     }
 
     public boolean skalRekjoeres(){
-        return retry < MAX_RETRIES;
+        return this.retry < MAX_RETRIES;
+    }
+
+    public boolean manglerPdf(){
+        return this.pdf == null;
     }
 
     public void setRetry(TilsagnException te){
@@ -75,9 +79,10 @@ public class TilsagnUnderBehandling {
         this.retry = ny.retry;
         this.datafeil = ny.datafeil;
         this.journalpostId = ny.journalpostId;
-        this.altinnKittering = ny.altinnKittering;
+        this.altinnReferanse = ny.altinnReferanse;
         this.behandlet = ny.behandlet;
         this.json = ny.json;
+        this.pdf = ny.pdf;
         return this;
     }
 }

@@ -20,6 +20,6 @@ public class CidManager {
     }
 
     public void fjernCorrelationId(){
-        Optional.ofNullable(MDC.get(CID)).ifPresent(cid -> MDC.remove(cid));
+        MDC.remove(CID);
     }
 }

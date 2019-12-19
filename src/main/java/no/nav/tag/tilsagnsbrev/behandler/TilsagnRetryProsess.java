@@ -31,6 +31,7 @@ public class TilsagnRetryProsess {
                     try {
                         log.info("Tilsagnsbrev {} retry no. {}", feiletTilsagnsbrev.getTilsagnsbrevId(), feiletTilsagnsbrev.getRetry());
                         rekjoerTilsagn(feiletTilsagnsbrev);
+                        log.info("Fullført retry på tilsagnsbrev {}.", feiletTilsagnsbrev.getTilsagnsbrevId());
                     } catch (Exception e) {
                         oppgaver.oppdaterFeiletTilsagn(feiletTilsagnsbrev, e);
                     }
@@ -40,14 +41,17 @@ public class TilsagnRetryProsess {
     private void rekjoerTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
 
         tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
-        final byte[] pdf = oppgaver.opprettPdfDok(tilsagnUnderBehandling);
+
+        if(tilsagnUnderBehandling.manglerPdf()) {
+            oppgaver.opprettPdfDok(tilsagnUnderBehandling);
+        }
 
         if (tilsagnUnderBehandling.skaljournalfoeres()) {
-            oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);
+            oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling);
         }
 
         if (tilsagnUnderBehandling.skalTilAltinn()) {
-            oppgaver.sendTilAltinn(tilsagnUnderBehandling, pdf);
+            oppgaver.sendTilAltinn(tilsagnUnderBehandling);
         }
         tilsagnUnderBehandling.setBehandlet(true);
         feiletTilsagnBehandler.oppdater(tilsagnUnderBehandling);

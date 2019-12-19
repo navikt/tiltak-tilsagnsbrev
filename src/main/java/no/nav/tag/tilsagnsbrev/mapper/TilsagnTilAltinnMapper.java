@@ -27,6 +27,7 @@ public class TilsagnTilAltinnMapper {
     private static final String FILE_NAME_PREFIX = "Tilskuddsbrev-";
     private static final String FIL_EXT = ".pdf";
     private static final String SYSTEM_USERCODE = "TAG_TILSAGN";
+    private static final String EXT_REF = "ESR_NAV";
 
 
     private static final String SERVICE_CODE = "5278";
@@ -85,7 +86,6 @@ public class TilsagnTilAltinnMapper {
         }
     }
 
-    private static final String EXT_REF = "ESR_NAV";
     private String extShipmentRef(){
         return  EXT_REF + Double.valueOf(Math.random() * 1000000000);
     }

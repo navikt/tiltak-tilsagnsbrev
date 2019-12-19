@@ -1,10 +1,10 @@
 package no.nav.tag.tilsagnsbrev.behandler;
 
+import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
-import no.nav.tag.tilsagnsbrev.Testdata;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +65,7 @@ public class TilsagnRetryProsessIntTest {
         final UUID CID1 = UUID.randomUUID();
         final UUID CID2 = UUID.randomUUID();
         TilsagnUnderBehandling tub1 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(false).cid(CID1).tilsagnsbrevId(1).opprettet(LocalDateTime.now()).build();
-        TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).altinnKittering(1).cid(CID2).opprettet(LocalDateTime.now()).tilsagnsbrevId(2).build();
+        TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).pdf("pdf".getBytes()).altinnReferanse(1).cid(CID2).opprettet(LocalDateTime.now()).tilsagnsbrevId(2).build();
 
         feiletTilsagnsbrevRepository.saveAll(Arrays.asList(tub1, tub2));
 
@@ -89,7 +89,7 @@ public class TilsagnRetryProsessIntTest {
     @Test
     public void behandlerTilsagnEtterFeiletJournalforing() {
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).altinnKittering(002).build();
+        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdf("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).altinnReferanse(002).build();
         feiletTilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
@@ -109,7 +109,7 @@ public class TilsagnRetryProsessIntTest {
     @Test
     public void behandlerTilsagnEtterFeiletAltinnSending() {
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
+        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdf("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
         feiletTilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();

@@ -35,9 +35,9 @@ public class PdfgenServiceIntTest {
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(Testdata.gruppeTilsagn()).build();
         String pdfJson = tilsagnJsonMapper.opprettPdfJson(tub);
         System.out.println(pdfJson);
-        byte[] pdfBytes = pdfGenService.tilsagnsbrevTilPdfBytes(tub, pdfJson);
+        pdfGenService.tilsagnsbrevTilPdfBytes(tub, pdfJson);
 
-        PDDocument pdf = PDDocument.load(new ByteArrayInputStream(pdfBytes));
+        PDDocument pdf = PDDocument.load(new ByteArrayInputStream(tub.getPdf()));
         pdf.save("src/test/resources/Resultat.pdf");
         pdf.close();
     }

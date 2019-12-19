@@ -41,14 +41,14 @@ public class Oppgaver {
     @Autowired
     private FeiletTilsagnBehandler feiletTilsagnBehandler;
 
-    public byte[] opprettPdfDok(TilsagnUnderBehandling tilsagnUnderBehandling){
+    public void opprettPdfDok(TilsagnUnderBehandling tilsagnUnderBehandling){
         String pdfJson = tilsagnJsonMapper.opprettPdfJson(tilsagnUnderBehandling);
-        return pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJson);
+        pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJson);
     }
 
-    public void journalfoerTilsagnsbrev(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
+    public void journalfoerTilsagnsbrev(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
-            Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tilsagnUnderBehandling.getTilsagn(), pdf);
+            Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tilsagnUnderBehandling);
             tilsagnUnderBehandling.setJournalpostId(joarkService.sendJournalpost(journalpost));
             log.info("Journalført tilsagnsbrev-id {}, journalpostId: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), tilsagnUnderBehandling.getJournalpostId());
         }catch (DataException de){
@@ -58,17 +58,17 @@ public class Oppgaver {
         }
     }
 
-    public void sendTilAltinn(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
-        InsertCorrespondenceBasicV2 wsRequest = mapTilWebserviceRequest(tilsagnUnderBehandling, pdf);
+    public void sendTilAltinn(TilsagnUnderBehandling tilsagnUnderBehandling) {
+        InsertCorrespondenceBasicV2 wsRequest = mapTilWebserviceRequest(tilsagnUnderBehandling);
         log.info("Sender tilsagnsbrev {} til Altinn. Ekstern-ref {}", tilsagnUnderBehandling.getTilsagnsbrevId(), wsRequest.getExternalShipmentReference());
         sentWsRequest(tilsagnUnderBehandling, wsRequest);
-        log.info("Tilsagnsbrev {} er sendt til Altinn. kvittering {}",tilsagnUnderBehandling.getTilsagnsbrevId(), tilsagnUnderBehandling.getAltinnKittering());
+        log.info("Tilsagnsbrev {} er sendt til Altinn. Referanse {}",tilsagnUnderBehandling.getTilsagnsbrevId(), tilsagnUnderBehandling.getAltinnReferanse());
     }
 
 
-    private InsertCorrespondenceBasicV2 mapTilWebserviceRequest(TilsagnUnderBehandling tilsagnUnderBehandling, byte[] pdf) {
+    private InsertCorrespondenceBasicV2 mapTilWebserviceRequest(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
-            return tilsagnTilAltinnMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), pdf);
+            return tilsagnTilAltinnMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), tilsagnUnderBehandling.getPdf());
         } catch (Exception e) {
             log.error("Feil ved oppretterlse av Altinn melding fra Tilsagn id {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
             throw new DataException(e.getMessage());
@@ -78,7 +78,7 @@ public class Oppgaver {
     private void sentWsRequest(TilsagnUnderBehandling tilsagnUnderBehandling, InsertCorrespondenceBasicV2 wsRequest) {
         try{
             int kvitteringId = altInnService.sendTilsagnsbrev(wsRequest);
-            tilsagnUnderBehandling.setAltinnKittering(kvitteringId);
+            tilsagnUnderBehandling.setAltinnReferanse(kvitteringId);
         } catch (Exception e) {
             log.error("Feil ved sending av tilsagnsbrev {} til Altinn", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
             throw new SystemException(e.getMessage());

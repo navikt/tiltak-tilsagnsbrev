@@ -36,14 +36,14 @@ public class TilsagnsbrevBehandler {
         }
 
         tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
-        final byte[] pdf = oppgaver.opprettPdfDok(tilsagnUnderBehandling);
+        oppgaver.opprettPdfDok(tilsagnUnderBehandling);
 
         try {
-            oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling, pdf);
+            oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling);
         } catch (Exception e) {
             oppgaver.oppdaterFeiletTilsagn(tilsagnUnderBehandling, e);
         }
-        oppgaver.sendTilAltinn(tilsagnUnderBehandling, pdf);
+        oppgaver.sendTilAltinn(tilsagnUnderBehandling);
     }
 
     private boolean lagreNyMeldingILogg(TilsagnUnderBehandling tilsagnUnderBehandling){

@@ -62,7 +62,7 @@ public class TilsagnJsonMapperTest {
             tilsagnJsonMapper.opprettTilsagn(tub);
             fail("Kaster ikke DataException");
         } catch (DataException de) {
-            assertFalse(tub.isMappetFraArena());
+            assertNotNull(tub.getJson());
         }
     }
 

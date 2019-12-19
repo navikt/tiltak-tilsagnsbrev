@@ -44,8 +44,8 @@ public class TilsagnsbrevBehandlerTest {
         verify(tilsagnLoggRepository, atLeastOnce()).lagretIdHvisNyMelding(tub);
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(any(TilsagnUnderBehandling.class));
         verify(oppgaver, times(1)).opprettPdfDok(any(TilsagnUnderBehandling.class));
-        verify(oppgaver, times(1)).journalfoerTilsagnsbrev(any(TilsagnUnderBehandling.class), any());
-        verify(oppgaver, times(1)).sendTilAltinn(any(TilsagnUnderBehandling.class), any());
+        verify(oppgaver, times(1)).journalfoerTilsagnsbrev(any(TilsagnUnderBehandling.class));
+        verify(oppgaver, times(1)).sendTilAltinn(any(TilsagnUnderBehandling.class));
     }
 
     @Test
@@ -59,13 +59,13 @@ public class TilsagnsbrevBehandlerTest {
         doNothing().when(tilsagnJsonMapper).pakkUtArenaMelding(tub);
 
         doNothing().when(tilsagnJsonMapper).opprettTilsagn(tub);
-        when(oppgaver.opprettPdfDok(tub)).thenReturn(pdf);
-        doThrow(SystemException.class).when(oppgaver).journalfoerTilsagnsbrev(tub, pdf);
-        doNothing().when(oppgaver).sendTilAltinn(tub, pdf);
+        doNothing().when(oppgaver).opprettPdfDok(tub);
+        doThrow(SystemException.class).when(oppgaver).journalfoerTilsagnsbrev(tub);
+        doNothing().when(oppgaver).sendTilAltinn(tub);
         when(tilsagnLoggRepository.lagretIdHvisNyMelding(any(TilsagnUnderBehandling.class))).thenReturn(true);
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
-        verify(oppgaver, times(1)).sendTilAltinn(tub, pdf);
+        verify(oppgaver, times(1)).sendTilAltinn(tub);
         verify(oppgaver, times(1)).oppdaterFeiletTilsagn(eq(tub), any(SystemException.class));
         verify(tilsagnLoggRepository, times(1)).lagretIdHvisNyMelding(eq(tub));
     }
@@ -81,8 +81,8 @@ public class TilsagnsbrevBehandlerTest {
         verify(tilsagnLoggRepository, never()).lagretIdHvisNyMelding(tilsagnUnderBehandling);
         verify(tilsagnJsonMapper, never()).opprettTilsagn(any(TilsagnUnderBehandling.class));
         verify(oppgaver, never()).opprettPdfDok(any(TilsagnUnderBehandling.class));
-        verify(oppgaver, never()).journalfoerTilsagnsbrev(any(TilsagnUnderBehandling.class), any());
-        verify(oppgaver, never()).sendTilAltinn(any(TilsagnUnderBehandling.class), any());
+        verify(oppgaver, never()).journalfoerTilsagnsbrev(any(TilsagnUnderBehandling.class));
+        verify(oppgaver, never()).sendTilAltinn(any(TilsagnUnderBehandling.class));
         verify(oppgaver, never()).oppdaterFeiletTilsagn(eq(tilsagnUnderBehandling), any(TilsagnException.class));
     }
 
@@ -99,8 +99,8 @@ public class TilsagnsbrevBehandlerTest {
         verify(tilsagnLoggRepository, atLeastOnce()).lagretIdHvisNyMelding(tub);
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(any(TilsagnUnderBehandling.class));
         verify(oppgaver, never()).opprettPdfDok(any(TilsagnUnderBehandling.class));
-        verify(oppgaver, never()).journalfoerTilsagnsbrev(any(TilsagnUnderBehandling.class), any());
-        verify(oppgaver, never()).sendTilAltinn(any(TilsagnUnderBehandling.class), any());
+        verify(oppgaver, never()).journalfoerTilsagnsbrev(any(TilsagnUnderBehandling.class));
+        verify(oppgaver, never()).sendTilAltinn(any(TilsagnUnderBehandling.class));
         verify(oppgaver, times(1)).oppdaterFeiletTilsagn(eq(tub), any(TilsagnException.class));
     }
 
@@ -118,8 +118,8 @@ public class TilsagnsbrevBehandlerTest {
 
         verify(tilsagnLoggRepository, atLeastOnce()).lagretIdHvisNyMelding(tub);
         verify(oppgaver, times(1)).opprettPdfDok(any(TilsagnUnderBehandling.class));
-        verify(oppgaver, never()).journalfoerTilsagnsbrev(any(TilsagnUnderBehandling.class), any());
-        verify(oppgaver, never()).sendTilAltinn(any(TilsagnUnderBehandling.class), any());
+        verify(oppgaver, never()).journalfoerTilsagnsbrev(any(TilsagnUnderBehandling.class));
+        verify(oppgaver, never()).sendTilAltinn(any(TilsagnUnderBehandling.class));
         verify(oppgaver, times(1)).oppdaterFeiletTilsagn(eq(tub), any(TilsagnException.class));
     }
 }
