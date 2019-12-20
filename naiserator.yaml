@@ -4,10 +4,10 @@ metadata:
   name: tiltak-tilsagnsbrev
   namespace: default
   labels:
-    team: {{team}}
+    team: teamtag
 spec:
-  image: {{version}}
-  team: {{team}}
+  image: navikt/tiltak-tilsagnsbrev:{{version}}
+  team: teamtag
   port: 8080
   replicas:
     min: 1
