@@ -6,7 +6,7 @@ orbs:
 executors:
   deployment-cli:
     docker:
-      - image: navikt/deployment-cli:latest
+      - image: "navikt/deployment-cli:latest"
     environment:
       TEAM: teamtag
       REGISTRY: docker.io
@@ -115,7 +115,7 @@ workflows:
             branches:
               ignore:
                 - master
-
+                -
       - deploy-til-dev:
           context: tag-ci
           requires:
