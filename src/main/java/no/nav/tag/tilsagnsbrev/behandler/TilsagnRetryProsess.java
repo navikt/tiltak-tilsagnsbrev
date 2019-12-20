@@ -23,7 +23,7 @@ public class TilsagnRetryProsess {
     @Autowired
     TilsagnJsonMapper tilsagnJsonMapper;
 
-    @Scheduled(cron = "${tilsagnsbrev.retry.cron}")
+//    @Scheduled(cron = "${tilsagnsbrev.retry.cron}")       //TODO Disablet ifbm. test av prodsetting
     public void finnOgRekjoerFeiletTilsagn() {
         log.info("Starter retry");
         feiletTilsagnBehandler.hentAlleTilRekjoring()
