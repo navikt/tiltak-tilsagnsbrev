@@ -6,7 +6,7 @@ orbs:
 executors:
   deployment-cli:
     docker:
-      - image: "navikt/deployment-cli:latest"
+      - image: "navikt/deployment-cli:v0.1.5"
     environment:
       TEAM: teamtag
       REGISTRY: docker.io
