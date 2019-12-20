@@ -23,13 +23,17 @@ public class TilsagnRetryProsess {
     @Autowired
     TilsagnJsonMapper tilsagnJsonMapper;
 
+    public TilsagnRetryProsess(){
+        log.info("STARTER OPP RETRY-PROSESS");
+    }
+
     @Scheduled(cron = "${tilsagnsbrev.retry.cron}")
     public void finnOgRekjoerFeiletTilsagn() {
         log.info("Starter retry");
         feiletTilsagnBehandler.hentAlleTilRekjoring()
                 .forEach(feiletTilsagnsbrev -> {
                     try {
-                        log.info("Tilsagnsbrev {} retry no. {}", feiletTilsagnsbrev.getTilsagnsbrevId(), feiletTilsagnsbrev.getRetry());
+                        log.info("Tilsagnsbrev {} retry no. {}", feiletTilsagnsbrev.getTilsagnsbrevId(), feiletTilsagnsbrev.getRetry()); //TODO ordne på telling av retries
                         rekjoerTilsagn(feiletTilsagnsbrev);
                         log.info("Fullført retry på tilsagnsbrev {}.", feiletTilsagnsbrev.getTilsagnsbrevId());
                     } catch (Exception e) {
