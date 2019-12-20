@@ -1,4 +1,4 @@
-version: 2.1
+version: 2
 orbs:
   nais: navikt/nais-deployment@dev:master
   env: christeredvartsen/persist-env@0.0.4
@@ -105,7 +105,7 @@ workflows:
       - docker-build:
           context: NAIS deployment
           requires:
-            - docker-build
+            - build
 
       - godkjenn-deploy-til-dev:
           type: approval
