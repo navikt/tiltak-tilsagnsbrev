@@ -97,7 +97,7 @@ commands:
 
 
 workflows:
-  version: 2
+  version: 2.1
   default:
     jobs:
       - build:
@@ -105,28 +105,35 @@ workflows:
       - docker-build:
           context: NAIS deployment
           requires:
+            - docker-build
+
+      - godkjenn-deploy-til-dev:
+          type: approval
+          requires:
             - build
           filters:
             branches:
-              only: prod-konfig
+              ignore:
+                - master
+
       - deploy-til-dev:
           context: tag-ci
           requires:
-            - docker-build
-          filters:
-            branches:
-              only: prod-konfig
+            - godkjenn-deploy-til-dev
+
       - godkjenn-deploy-til-prod:
           type: approval
           requires:
-            - docker-build
+            - build
           filters:
             branches:
-              only: prod-konfig
+              only:
+                - master
+
       - deploy-til-prod:
           context: tag-ci
           requires:
             - godkjenn-deploy-til-prod
           filters:
             branches:
-              only: prod-konfig
+              only: master
