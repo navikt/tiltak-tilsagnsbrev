@@ -1,4 +1,6 @@
 {
   "ingress": "https://arbeidsgiver.nais.adeo.no/tiltak-tilsagnsbrev/",
-  "spring-profil": "prod"
+  "spring-profil": "prod",
+  "vault-serviceuser-path": "serviceuser/data/prod/srvtiltak-tilsagns",
+  "vault-default-path": "kv/prod/fss/tiltak-tilsagnsbrev/default"
 }

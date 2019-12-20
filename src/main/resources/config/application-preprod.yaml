@@ -1,6 +1,14 @@
+
+logging:
+  level:
+    no.nav.tag.tilsagnsbrev: INFO
+
 spring:
   kafka:
+    #preprod
     bootstrap-servers: b27apvl00045.preprod.local:8443, b27apvl00046.preprod.local:8443, b27apvl00047.preprod.local:8443
+    #test
+#    bootstrap-servers: d26apvl00159.test.local:8443, d26apvl00160.test.local:8443, d26apvl00161.test.local:8443
     client-id: tiltak-tilsagnsbrev
     properties:
       security.protocol: SASL_SSL
@@ -10,8 +18,19 @@ spring:
       ssl.truststore:
         location: ${javax.net.ssl.trustStore}
         password: ${javax.net.ssl.trustStorePassword}
+    consumer:
+      group-id: ${tilsagnsbrev.consumer.group.id}
 
 tilsagnsbrev:
+  retry:
+    cron: ${tilsagnsbrev.process.cron}
+  database:
+    database-navn: tiltak-tilsagnsbrev-preprod
+    database-url: ${spring.datasource.url}
+    vault-sti: postgresql/preprod-fss
+    minimum-idle: 1
+    maximum-pool-size: 2
+    max-lifetime: 300000
   integrasjon:
     pdfgen:
       uri: ${tilsagnsbrev.pdfgen.url}
@@ -20,6 +39,10 @@ tilsagnsbrev:
     sts:
       uri: ${tilsagnsbrev.sts.url}
       ws-uri: ${tilsagnsbrev.sts.ws.url}
+      #test
+     # bruker: ${tilsagnsbrev.pp.srvuser}
+     # passord: ${tilsagnsbrev.pp.srvpwd}
+      #preprod
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:

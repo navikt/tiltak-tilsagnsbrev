@@ -62,7 +62,6 @@ public class STSClientConfigurer {
     }
 
     private void configureStsRequestSamlToken(Client client) {
-        // TODO: remove custom client when STS is updated to support the cxf client
         STSClient stsClient = new STSClientWSTrust13and14(client.getBus());
         configureStsWithPolicyForClient(stsClient, client);
     }
