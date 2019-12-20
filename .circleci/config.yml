@@ -6,7 +6,7 @@ orbs:
 executors:
   deployment-cli:
     docker:
-      - image: "navikt/deployment-cli:v0.1.5"
+      - image: navikt/deployment-cli:latest
     environment:
       TEAM: teamtag
       REGISTRY: docker.io
@@ -59,14 +59,16 @@ jobs:
           tag: $RELEASE_VERSION
 
   deploy-til-dev:
-    executor: deployment-cli
+    docker:
+      - image: "navikt/deployment-cli:v0.1.5"
     steps:
       - checkout
       - deploy:
           miljo: "dev-fss"
 
   deploy-til-prod:
-    executor: deployment-cli
+    docker:
+      - image: "navikt/deployment-cli:v0.1.5"
     steps:
       - checkout
       - deploy:
@@ -110,12 +112,12 @@ workflows:
       - godkjenn-deploy-til-dev:
           type: approval
           requires:
-            - build
+            - docker-build
           filters:
             branches:
               ignore:
                 - master
-                -
+
       - deploy-til-dev:
           context: tag-ci
           requires:
