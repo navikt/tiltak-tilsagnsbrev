@@ -43,7 +43,8 @@ jobs:
             - target/*.jar
 
   docker-build:
-    executor: deployment-cli
+    docker:
+      - image: "navikt/deployment-cli:v0.1.5"
     working_directory: ~/repo
     steps:
       - checkout
