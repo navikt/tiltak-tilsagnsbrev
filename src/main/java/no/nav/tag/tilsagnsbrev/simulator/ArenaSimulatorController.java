@@ -1,45 +1,65 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
-import no.nav.tag.tilsagnsbrev.Tilsagnsbehandler;
-import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
-import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.*;
+import no.nav.tag.tilsagnsbrev.behandler.CidManager;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnRetryProsess;
+import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
+import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
-import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
+import no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
-@Profile({"dev", "preprod"})
+import java.util.UUID;
+
 @RestController
+@Profile({"local", "preprod"})
 public class ArenaSimulatorController {
 
     @Autowired
-    private Tilsagnsbehandler tilsagnsbehandler;
+    private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     @Autowired
-    private AltInnService altInnService;
+    private TilsagnRetryProsess tilsagnRetryProsess;
 
     @Autowired
-    private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
+    private CidManager cidManager;
 
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @PostMapping(value = "kafka")
-    public void leggMeldingPaKafkaToppic(@RequestBody String json) throws Exception {
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().json(json).build();
-        tilsagnsbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+    public String leggMeldingPaKafkaTopic(@RequestBody String arenaJson) throws Exception {
+        try {
+            kafkaTemplate.send(ArenaConsumer.topic, "TODO", arenaJson);
+            return "OK";
+        } catch (Exception e){
+            throw new RuntimeException("Fungerer ikke i preprod", e);
+        }
+    }
+
+    @PostMapping(value = "behandler/{tilsagnNr}")
+    public String behandle(@PathVariable Integer tilsagnNr, @RequestBody String tilsagnJson) {
+        UUID cid = cidManager.opprettCorrelationId();
+        ArenaMelding arenaMelding = SimUtil.arenaMelding(tilsagnNr, tilsagnJson);
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).tilsagnsbrevId(tilsagnNr).cid(cid).build();
+        try {
+            tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
+            return "OK";
+        }finally {
+            cidManager.fjernCorrelationId();
+        }
+    }
+
+    @GetMapping(value = "retry")
+    public String kjoerRetry(@RequestBody String json) throws Exception {
+        tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
+        return "OK";
     }
 
     @GetMapping(value = "ping")
     public String ping() throws Exception {
-        return "OK";
-    }
-
-    @GetMapping("altinn/{tilsagnNr}")
-    public String sendTilAltinn(@PathVariable String tilsagnNr) throws Exception {
-        byte[] pdf = EncodedString.getEncAsBytes();
-        Tilsagn tilsagn = Testdata.tilsagnEnDeltaker();
-        altInnService.sendTilsagnsbrev(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, pdf));
         return "OK";
     }
 }

@@ -7,7 +7,7 @@
                 <a:LastChanged>0001-01-01T00:00:00</a:LastChanged>
                 <a:ParentReceiptId>0</a:ParentReceiptId>
                 <a:ReceiptHistory i:nil="true"/>
-                <a:ReceiptId>0</a:ReceiptId>
+                <a:ReceiptId>222</a:ReceiptId>
                 <a:ReceiptStatusCode>OK</a:ReceiptStatusCode>
                 <a:ReceiptText>Correspondence Saved Successfully</a:ReceiptText>
                 <a:ReceiptTypeName>Correspondence</a:ReceiptTypeName>

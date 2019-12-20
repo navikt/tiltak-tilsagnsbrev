@@ -14,24 +14,21 @@ spec:
     max: 1
   liveness:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
-    initialDelay: 30
+    initialDelay: 60
+    timeout: 10
   readiness:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
-    initialDelay: 30
+    initialDelay: 60
+    timeout: 10
   ingresses:
     - {{ingress}}
   vault:
     enabled: true
     paths:
-      - kvPath: "serviceuser/data/dev/srvtiltak-tilsagns"
+      - kvPath: {{vault-serviceuser-path}}
         mountPath: "/secrets/serviceuser/srvtiltak-tilsagns/"
-      - kvPath: "kv/preprod/fss/tiltak-tilsagnsbrev/default"
+      - kvPath: {{vault-default-path}}
         mountPath: "/var/run/secrets/nais.io/vault/"
-
-  # production:
-#      - kvPath: "serviceuser/data/prod/srvtiltak-tilsagns"
-#        mountPath: "/secrets/serviceuser/srvtiltak-tilsagns/"
-
   env:
   - name: SPRING_PROFILES_ACTIVE
     value: {{spring-profil}}

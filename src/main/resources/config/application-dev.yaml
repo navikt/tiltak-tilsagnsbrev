@@ -1,18 +1,33 @@
 server:
   port: 8082
 
+logging:
+  level:
+    no.nav.tag.tilsagnsbrev: INFO
+    org.apache.cxf.services.*: INFO
+
 spring:
   kafka:
     consumer:
+      group-id: group-id
       bootstrap-servers: ${spring.embedded.kafka.brokers}
+    producer:
+      bootstrap-servers: ${spring.embedded.kafka.brokers}
+  h2:
+    console:
+      enabled: true
+      path=/h2-console:
 
   main:
     banner-mode: "console"
 
 tilsagnsbrev:
+  retry:
+    cron: "5 * * * * *"
   integrasjon:
     pdfgen:
       uri: http://localhost:8090
+#      uri: http://localhost:5913
     joark:
       uri: http://localhost:8090
     sts:

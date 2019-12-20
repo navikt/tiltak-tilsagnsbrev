@@ -1,0 +1,66 @@
+{
+  "tilsagnNummer": {
+    "aar": 2019,
+    "loepenrSak": 511140,
+    "loepenrTilsagn": 2
+  },
+  "tilsagnDato": "2019-12-02",
+  "periode": {
+    "fraDato": "2019-12-15",
+    "tilDato": "2019-12-31"
+  },
+  "tiltakKode": "MIDLONTIL",
+  "tiltakNavn": "Midlertidig lønnstilskudd",
+  "administrasjonKode": "IND",
+  "refusjonfristDato": "2020-02-29",
+  "tiltakArrangor": {
+    "arbgiverNavn": "Tull med Tall Regnskap",
+    "landKode": "NO",
+    "postAdresse": null,
+    "postNummer": "7070",
+    "postSted": "Trondheim",
+    "orgNummerMorselskap": 999999999,
+    "orgNummer": 999999998,
+    "kontoNummer": "12345678912",
+    "maalform": "NO"
+  },
+  "totaltTilskuddbelop": 3200,
+  "valutaKode": "NOK",
+  "tilskuddListe": [
+    {
+      "tilskuddType": "Lønnstilskudd",
+      "tilskuddBelop": 3200,
+      "visTilskuddProsent": true,
+      "tilskuddProsent": 60
+    }
+  ],
+  "deltaker": {
+    "fodselsnr": "12529946056",
+    "fornavn": "DONALD",
+    "etternavn": "DUCK",
+    "landKode": "NO",
+    "postAdresse": "Andebyveien 1",
+    "postNummer": "0001",
+    "postSted": "Andeby"
+  },
+  "antallDeltakere": null,
+  "antallTimeverk": null,
+  "navEnhet": {
+    "navKontor": "0213",
+    "navKontorNavn": "NAV Andeby",
+    "postAdresse": "Andebygata 5",
+    "postNummer": "1333",
+    "postSted": "Andeby",
+    "telefon": "55553333",
+    "faks": "12345678"
+  },
+  "beslutter": {
+    "fornavn": "Hans",
+    "etternavn": "Nilsen"
+  },
+  "saksbehandler": {
+    "fornavn": "Nils",
+    "etternavn": "Hansen"
+  },
+  "kommentar": "safdaf"
+}

@@ -7,9 +7,9 @@ import static no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling.MA
 @Data
 public class DataException extends TilsagnException {
 
-    private int retry = MAX_RETRIES;
+    private final int retry = MAX_RETRIES;
 
     public DataException(String errMsg) {
-        super(errMsg);
+        super(errMsg, true);
     }
 }

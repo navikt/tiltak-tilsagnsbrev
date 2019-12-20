@@ -1,0 +1,59 @@
+{
+  "hepp": {
+    "aar": 2019
+    "loepenrSak": 366023,
+    "loepenrTilsagn": 1
+  },
+  "tilsagnDato": "2019-10-22",
+  "periode": {
+    "fraDato": "2019-10-01",
+    "tilDato": "2019-12-31"
+  },
+  "tiltakKode": "BIO",
+  "tiltakNavn": "Bedriftsintern opplæring (BIO)",
+  "administrasjonKode": "INST",
+  "tiltakArrangor": {
+    "arbgiverNavn": "Duck Shipping AS",
+    "landKode": "NO",
+    "postAdresse": "Andebyveien 1",
+    "postNummer": "1333",
+    "postSted": "Andeby",
+    "orgNummerMorselskap": 999999999,
+    "orgNummer": 999999998,
+    "kontoNummer": "32010501481",
+    "maalform": "NO"
+  },
+  "totaltTilskuddbelop": 284000,
+  "valutaKode": "NOK",
+  "tilskuddListe": [
+    {
+      "tilskuddType": "Opplæringstilskudd",
+      "tilskuddBelop": 142000
+    },
+    {
+      "tilskuddType": "Lønnstilskudd",
+      "tilskuddBelop": 142000
+    }
+  ],
+  "deltaker": null,
+  "antallDeltakere": 17,
+  "antallTimeverk": 2932,
+  "navEnhet": {
+    "navKontor": "1187",
+    "navKontorNavn": "NAV Tiltak Andeby",
+    "postAdresse": "Andebygata 5",
+    "postNummer": "1333",
+    "postSted": "Andeby",
+    "telefon": "55553333",
+    "faks": "12345678"
+  },
+  "beslutter": {
+    "fornavn": "Nils",
+    "etternavn": "Hansen"
+  },
+  "saksbehandler": {
+    "fornavn": "Hans",
+    "etternavn": "Nilsen"
+  },
+  "kommentar": null
+}

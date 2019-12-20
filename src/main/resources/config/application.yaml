@@ -1,19 +1,35 @@
 server.servlet.context-path: /tiltak-tilsagnsbrev
 
+#TODO Logge i json format
+
+logging:
+  pattern:
+    console: "${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %X{CID-} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"
+  level:
+    org.apache.cxf.services.*: WARN
+
 spring:
   application:
     name: tiltak-tilsagnsbrev
     main:
       banner-mode: "off"
+  jackson:
+    locale: "no"
 
   kafka:
     bootstrap-servers:
     consumer:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            value.default.type: no.nav.tag.tilsagnsbrev.dto.ArenaMelding
 
 tilsagnsbrev:
+  retry:
+    cron:
   integrasjon:
     pdfgen:
       uri: uri
