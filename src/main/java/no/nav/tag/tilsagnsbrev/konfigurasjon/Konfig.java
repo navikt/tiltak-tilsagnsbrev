@@ -13,10 +13,4 @@ public class Konfig {
         return new RestTemplate();
     }
 
-    @Bean
-    public TilsagnRetryProsess feiletTilsagnsBehandler() {
-        return new TilsagnRetryProsess();
-    }
-
-
 }

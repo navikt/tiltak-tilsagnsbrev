@@ -23,10 +23,6 @@ public class TilsagnRetryProsess {
     @Autowired
     TilsagnJsonMapper tilsagnJsonMapper;
 
-    public TilsagnRetryProsess(){
-        log.info("STARTER OPP RETRY-PROSESS");
-    }
-
     @Scheduled(cron = "${tilsagnsbrev.retry.cron}")
     public void finnOgRekjoerFeiletTilsagn() {
         log.info("Starter retry");
