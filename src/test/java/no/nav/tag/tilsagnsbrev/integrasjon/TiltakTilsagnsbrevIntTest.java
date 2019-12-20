@@ -27,6 +27,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+@Ignore("IFBM PROD-TEST")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles({"dev","kafka"})
