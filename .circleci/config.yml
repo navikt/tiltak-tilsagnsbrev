@@ -26,9 +26,9 @@ jobs:
       - run:
           name: Pusher Docker image
           command: |
-            echo $DOCKER_PASS | docker login --username $DOCKER_USER --password-stdin
+            echo $DOCKER_PASSWORD | docker login --username $DOCKER_LOGIN --password-stdin
             docker push "navikt/tiltak-tilsagnsbrev:$CIRCLE_SHA1"
-
+            echo "Docker image: $CIRCLE_SHA1"
   deploy-til-dev:
     docker:
       - image: "navikt/deployment-cli:v0.1.5"
@@ -60,8 +60,8 @@ workflows:
   version: 2.1
   bygg-og-deploy:
     jobs:
-      - bygg
-
+      - bygg:
+          context: NAIS deployment
       # På branch kreves det approval for å deploye til dev-fss
       - godkjenn-deploy-til-dev:
           type: approval
