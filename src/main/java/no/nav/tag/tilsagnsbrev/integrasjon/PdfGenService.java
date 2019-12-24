@@ -1,6 +1,7 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import lombok.extern.slf4j.Slf4j;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.SystemException;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.PdfGenKonfig;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -19,30 +19,23 @@ import java.nio.charset.Charset;
 @Service
 public class PdfGenService {
 
-    private static final String PATH_DELTAKER = "/template/tilsagnsbrev-deltaker/create-pdf";
-    private static final String PATH_GRUPPE = "/template/tilsagnsbrev-gruppe/create-pdf";
-
-    private final URI uriTilsagnGruppe;
-    private final URI uriTilsagnDeltaker;
     private HttpHeaders headers = new HttpHeaders();
 
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private PdfTemplateURI pdfTemplateURI;
+
     public PdfGenService(PdfGenKonfig pdfGenKonfig) {
-        uriTilsagnGruppe = UriComponentsBuilder.fromUri(URI.create(pdfGenKonfig.getUri())).path(PATH_GRUPPE).build().toUri();
-        uriTilsagnDeltaker = UriComponentsBuilder.fromUri(URI.create(pdfGenKonfig.getUri())).path(PATH_DELTAKER).build().toUri();
         headers.setContentType(new MediaType(MediaType.APPLICATION_JSON, Charset.defaultCharset()));
     }
 
     public void tilsagnsbrevTilPdfBytes(TilsagnUnderBehandling tilsagnUnderBehandling, String pdfJson) {
-        if (tilsagnUnderBehandling.getTilsagn().erGruppeTilsagn()) {
-            log.info("Oppretter pdf av tilsagnsbrev for gruppe for bedrift {}", tilsagnUnderBehandling.getTilsagn().getTiltakArrangor().getOrgNummer());
-            tilsagnUnderBehandling.setPdf(hentPdf(pdfJson, uriTilsagnGruppe));
-            return;
-        }
-        log.info("Oppretter pdf av tilsagnsbrev for enkel deltaker for bedrift {}", tilsagnUnderBehandling.getTilsagn().getTiltakArrangor().getOrgNummer());
-        tilsagnUnderBehandling.setPdf(hentPdf(pdfJson, uriTilsagnDeltaker));
+        Tilsagn tilsagn = tilsagnUnderBehandling.getTilsagn();
+        log.info("Oppretter pdf av tilsagnsbrev med tiltakskode {} for bedrift {}", tilsagn.getTiltakArrangor().getOrgNummer());
+        URI uri = pdfTemplateURI.getTemplateURI(tilsagn.getTiltakKode());
+        tilsagnUnderBehandling.setPdf(hentPdf(pdfJson, uri));
     }
 
     private byte[] hentPdf(String tilsagnJson, URI uri) {
