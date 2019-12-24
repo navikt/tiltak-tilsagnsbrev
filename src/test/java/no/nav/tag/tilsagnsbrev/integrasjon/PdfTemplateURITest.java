@@ -70,7 +70,7 @@ public class PdfTemplateURITest {
 
     @Test
     public void urlForTilrettelagtOrdinær(){
-        URI url = pdfTemplateURI.getTemplateURI("TILRORD");
+        URI url = pdfTemplateURI.getTemplateURI("VATIAROR");
         assertTrue(url.getPath().contains("-varig-tilrettelagt-ordinar"));
     }
 

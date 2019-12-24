@@ -32,7 +32,7 @@ public class PdfTemplateURI {
         final URI OPPLAR = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaeringstiltak").path(CREATE_PDF).build().toUri();
         final URI VARLONTIL = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-lonnstilskudd").path(CREATE_PDF).build().toUri();
         final URI TILRARB = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-tilrettelagt-arbeid").path(CREATE_PDF).build().toUri();
-        final URI TILRORD = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-tilrettelagt-ordinar").path(CREATE_PDF).build().toUri();
+        final URI VATIAROR = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-tilrettelagt-ordinar").path(CREATE_PDF).build().toUri();
 
         tiltaksKodeURI.put("ARBTREN", ARBTREN);
         tiltaksKodeURI.put("EKSPEBIST", EKSPEBIST);
@@ -43,11 +43,11 @@ public class PdfTemplateURI {
         tiltaksKodeURI.put("OPPLAR", OPPLAR);
         tiltaksKodeURI.put("VARLONTIL", VARLONTIL);
         tiltaksKodeURI.put("TILRARB", TILRARB);
-        tiltaksKodeURI.put("TILRORD", TILRORD);
+        tiltaksKodeURI.put("VATIAROR", VATIAROR);
     }
 
     URI getTemplateURI (String kode) {
         return Optional.ofNullable(tiltaksKodeURI.get(kode))
                 .orElseThrow(() -> new DataException("Ingen pdf template path oppgitt for tiltakskode " + kode));
     }
-}
+} //TODO Sjekk at alle tiltakskodene stemmer
