@@ -6,7 +6,6 @@ import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Slf4j
