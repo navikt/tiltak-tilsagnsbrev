@@ -23,10 +23,10 @@ import java.io.IOException;
 public class PdfgenServiceIntTest {
 
     @Autowired
-    TilsagnJsonMapper tilsagnJsonMapper;
+    private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Autowired
-    PdfGenService pdfGenService;
+    private PdfGenService pdfGenService;
 
     @Ignore("For manuell sjekk av pdf dokument")
     @Test

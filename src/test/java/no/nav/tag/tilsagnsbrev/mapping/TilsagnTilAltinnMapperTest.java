@@ -30,10 +30,10 @@ import static org.mockito.Mockito.when;
 public class TilsagnTilAltinnMapperTest {
 
     @Mock
-    AltinnProperties altinnProperties;
+    private AltinnProperties altinnProperties;
 
     @InjectMocks
-    TilsagnTilAltinnMapper tilsagnTilAltinnMapper = new TilsagnTilAltinnMapper();
+    private TilsagnTilAltinnMapper tilsagnTilAltinnMapper = new TilsagnTilAltinnMapper();
 
     @Test
     public void mapperTilAltinnMelding() {

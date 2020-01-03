@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -30,7 +29,7 @@ public class TilsagnJsonMapperTest {
     private TilsagnLoggRepository tilsagnLoggRepository;
 
     @InjectMocks
-    TilsagnJsonMapper tilsagnJsonMapper;
+    private TilsagnJsonMapper tilsagnJsonMapper;
 
     final Tilsagn tilsagn = Testdata.gruppeTilsagn();
 

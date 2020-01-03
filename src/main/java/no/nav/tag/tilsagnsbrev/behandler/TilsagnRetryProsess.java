@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 public class TilsagnRetryProsess {
 
     @Autowired
-    Oppgaver oppgaver;
+    private Oppgaver oppgaver;
 
     @Autowired
-    FeiletTilsagnBehandler feiletTilsagnBehandler;
+    private FeiletTilsagnBehandler feiletTilsagnBehandler;
 
     @Autowired
-    TilsagnJsonMapper tilsagnJsonMapper;
+    private TilsagnJsonMapper tilsagnJsonMapper;
 
 //    @Scheduled(cron = "${tilsagnsbrev.retry.cron}")       //TODO Disablet ifbm. test av prodsetting
     public void finnOgRekjoerFeiletTilsagn() {
