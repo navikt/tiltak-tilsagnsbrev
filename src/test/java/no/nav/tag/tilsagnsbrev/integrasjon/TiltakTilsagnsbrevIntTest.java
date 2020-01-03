@@ -4,7 +4,6 @@ import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLogg;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggCrudRepository;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
-import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -39,9 +38,6 @@ public class TiltakTilsagnsbrevIntTest {
 
     @Autowired
     private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
-
-    @Autowired
-    private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     @Autowired
     private FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
