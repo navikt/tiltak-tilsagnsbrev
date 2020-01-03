@@ -53,7 +53,7 @@ public class ArenaSimulatorController {
     }
 
     @GetMapping(value = "retry")
-    public String kjoerRetry(@RequestBody String json) throws Exception {
+    public String kjoerRetry() throws Exception {
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
         return "OK";
     }
