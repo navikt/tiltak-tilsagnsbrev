@@ -33,8 +33,9 @@ public class PdfGenService {
 
     public void tilsagnsbrevTilPdfBytes(TilsagnUnderBehandling tilsagnUnderBehandling, String pdfJson) {
         Tilsagn tilsagn = tilsagnUnderBehandling.getTilsagn();
-        log.info("Oppretter pdf av tilsagnsbrev med tiltakskode {} for bedrift {}", tilsagn.getTiltakArrangor().getOrgNummer());
-        URI uri = pdfTemplateURI.getTemplateURI(tilsagn.getTiltakKode());
+        String tiltakKode = tilsagn.getTiltakKode();
+        log.info("Oppretter pdf av tilsagnsbrev med tiltakskode {} for bedrift {}", tiltakKode, tilsagn.getTiltakArrangor().getOrgNummer());
+        URI uri = pdfTemplateURI.getTemplateURI(tiltakKode);
         tilsagnUnderBehandling.setPdf(hentPdf(pdfJson, uri));
     }
 
