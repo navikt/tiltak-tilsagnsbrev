@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository;
 @AllArgsConstructor
 public class TilsagnLoggRepository {
 
-   private static final String SQL_ID_FINNES = "select exists (select 1 from tilsagn_logg where tilsagnsbrev_id = ?)";
-   private static final String SQL_INSERT_LOGG = "insert into tilsagn_logg values(?, ?, ?)";
+    private static final String SQL_ID_FINNES = "select exists (select 1 from tilsagn_logg where tilsagnsbrev_id = ?)";
+    private static final String SQL_INSERT_LOGG = "insert into tilsagn_logg values(?, ?, ?)";
 
-   private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public boolean lagretIdHvisNyMelding(TilsagnUnderBehandling tilsagnUnderBehandling) {
         boolean erNyMelding = !tilsagnsbevIdFinnes(tilsagnUnderBehandling.getTilsagnsbrevId());
