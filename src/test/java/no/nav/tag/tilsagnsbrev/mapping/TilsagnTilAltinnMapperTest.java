@@ -14,13 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import java.io.File;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -51,17 +44,4 @@ public class TilsagnTilAltinnMapperTest {
         assertEquals(EncodedString.ENC_STR, new String(bytes));
     }
 
-
-    private void validateXml(String xml) {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
-
-        Schema schema = null;
-        try {
-            schema = schemaFactory.newSchema(new File(Testdata.hentFilString("xsd/CorrespondenceAgencyExternalBasic.wsdl")));
-            Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(new File(xml)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
