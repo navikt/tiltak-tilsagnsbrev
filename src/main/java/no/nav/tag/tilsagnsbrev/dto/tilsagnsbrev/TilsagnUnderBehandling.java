@@ -21,7 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TilsagnUnderBehandling {
 
-    public static final int MAX_RETRIES = 4;
+    public static final int MAX_RETRIES = 3;
 
     @Id
     private UUID cid;
@@ -69,9 +69,11 @@ public class TilsagnUnderBehandling {
     public void setRetry(TilsagnException te){
         if(te instanceof DataException){
             retry = MAX_RETRIES;
-            return;
         }
-        retry += 1;
+    }
+
+    public void increaseRetry(){
+        this.retry += 1;
     }
 
     public TilsagnUnderBehandling oppdater(TilsagnUnderBehandling ny){

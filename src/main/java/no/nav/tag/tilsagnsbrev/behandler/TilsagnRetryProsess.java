@@ -13,17 +13,19 @@ import org.springframework.stereotype.Component;
 public class TilsagnRetryProsess {
 
     @Autowired
-    Oppgaver oppgaver;
+    private Oppgaver oppgaver;
 
     @Autowired
     private TilsagnBehandler tilsagnBehandler;
 
-//    @Scheduled(cron = "${tilsagnsbrev.retry.cron}")       //TODO Disablet ifbm. test av prodsetting
+    @Scheduled(cron = "${tilsagnsbrev.retry.cron}")
     public void finnOgRekjoerFeiletTilsagn() {
+
         log.info("Starter retry");
         tilsagnBehandler.hentAlleTilRekjoring()
                 .forEach(feiletTilsagnsbrev -> {
-                    log.info("Tilsagnsbrev {} retry no. {}", feiletTilsagnsbrev.getTilsagnsbrevId(), feiletTilsagnsbrev.getRetry()); //TODO ordne på telling av retries
+                    feiletTilsagnsbrev.increaseRetry();
+                    log.info("Tilsagnsbrev {} retry no. {}", feiletTilsagnsbrev.getTilsagnsbrevId(), feiletTilsagnsbrev.getRetry());
                     oppgaver.utfoerOppgaver(feiletTilsagnsbrev);
                 });
     }

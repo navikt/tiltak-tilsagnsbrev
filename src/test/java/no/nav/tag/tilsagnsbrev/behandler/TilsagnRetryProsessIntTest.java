@@ -2,7 +2,6 @@ package no.nav.tag.tilsagnsbrev.behandler;
 
 import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.feilet.TilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import org.junit.After;
@@ -42,9 +41,6 @@ public class TilsagnRetryProsessIntTest {
 
     @Autowired
     private TilsagnRetryProsess tilsagnRetryProsess;
-
-    @Autowired
-    private TilsagnJsonMapper tilsagnJsonMapper;
 
     private final static String tilsagnData = Testdata.hentFilString("TILSAGN_DATA.json");
     private final static String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");

@@ -3,7 +3,6 @@ package no.nav.tag.tilsagnsbrev.behandler;
 import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.feilet.TilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import org.junit.After;
@@ -29,10 +28,7 @@ import static org.junit.Assert.*;
 public class TilsagnsbrevBehandlerIntTest {
 
     @Autowired
-    IntegrasjonerMockServer mockServer;
-
-    @Autowired
-    TilsagnJsonMapper tilsagnJsonMapper;
+    private IntegrasjonerMockServer mockServer;
 
     @Autowired
     private TilsagnsbrevBehandler tilsagnsbrevbehandler;
@@ -41,10 +37,10 @@ public class TilsagnsbrevBehandlerIntTest {
     private TilsagnsbrevRepository tilsagnsbrevRepository;
 
     @Autowired
-    TilsagnLoggRepository tilsagnLoggRepository;
+    private TilsagnLoggRepository tilsagnLoggRepository;
 
     @Autowired
-    TilsagnLoggCrudRepository loggCrudRepository;
+    private TilsagnLoggCrudRepository loggCrudRepository;
 
     private final static String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
     private static ArenaMelding arenaMelding = Testdata.arenaMelding();

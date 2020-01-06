@@ -15,7 +15,7 @@ public class PdfTemplateURI {
 
     private final static String PREFIX = "template/";
     private final static String CREATE_PDF = "/create-pdf";
-    private Map<String, URI> tiltaksKodeURI = new HashMap();
+    private Map<String, URI> tiltaksKodeURI = new HashMap<String, URI>();
 
     public PdfTemplateURI(PdfGenKonfig pdfGenKonfig) {
         final URI HOST = URI.create(pdfGenKonfig.getUri());
@@ -36,13 +36,13 @@ public class PdfTemplateURI {
 
         tiltaksKodeURI.put("ARBTREN", ARBTREN);
         tiltaksKodeURI.put("EKSPEBIST", EKSPEBIST);
-        tiltaksKodeURI.put("FUNKASS", FUNKASS);
+        tiltaksKodeURI.put("FUNKASS", FUNKASS); //TODO
         tiltaksKodeURI.put("INKLUTILS", INKLUTILS);
         tiltaksKodeURI.put("MENTOR", MENTOR);
         tiltaksKodeURI.put("MIDLONTIL", MIDLONTIL);
-        tiltaksKodeURI.put("OPPLAR", OPPLAR);
+        tiltaksKodeURI.put("OPPLAR", OPPLAR); //TODO
         tiltaksKodeURI.put("VARLONTIL", VARLONTIL);
-        tiltaksKodeURI.put("TILRARB", TILRARB);
+        tiltaksKodeURI.put("TILRARB", TILRARB); //TODO
         tiltaksKodeURI.put("VATIAROR", VATIAROR);
     }
 

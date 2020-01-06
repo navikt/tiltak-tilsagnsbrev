@@ -8,13 +8,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class Journalpost {
+
     private final static String JOURNALPOST_TYPE = "UTGAAENDE";
     private final static String KANAL = "ALTINN";
     private final static String TEMA = "TIL";
     private final static String JOURNALFOERENDE_ENHET = "9999";
 
-    public final static String TITTEL_MIDLERTIDIG = "Tilsagn om midlertidig lønnstilskudd";
-    public final static String TITTEL_VARIG = "Tilsagn om varig lønnstilskudd";
     public final static String TITTEL = "Tilsagnsbrev";
 
     private final String journalposttype = JOURNALPOST_TYPE;

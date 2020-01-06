@@ -7,7 +7,6 @@ import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.JournalpostResponse;
 import no.nav.tag.tilsagnsbrev.integrasjon.sts.StsService;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.JoarkKonfig;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,9 +21,6 @@ import java.util.Arrays;
 @Slf4j
 @Service
 public class JoarkService {
-
-    @Autowired
-    private TilsagnJournalpostMapper tilsagnJournalpostMapper;
 
     @Autowired
     private RestTemplate restTemplate;
