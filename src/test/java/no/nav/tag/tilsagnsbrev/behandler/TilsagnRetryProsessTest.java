@@ -29,7 +29,7 @@ public class TilsagnRetryProsessTest {
     private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Mock
-    FeiletTilsagnBehandler feiletTilsagnBehandler;
+    private FeiletTilsagnBehandler feiletTilsagnBehandler;
 
     @InjectMocks
     private TilsagnRetryProsess tilsagnRetryProsess;

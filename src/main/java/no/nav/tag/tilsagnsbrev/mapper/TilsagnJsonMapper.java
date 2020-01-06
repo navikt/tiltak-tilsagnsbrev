@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
@@ -17,9 +16,6 @@ import org.springframework.util.StringUtils;
 @Component
 @RequiredArgsConstructor
 public class TilsagnJsonMapper {
-
-    @Autowired
-    private TilsagnLoggRepository tilsagnLoggRepository;
 
     @Autowired
     private ObjectMapper objectMapper;

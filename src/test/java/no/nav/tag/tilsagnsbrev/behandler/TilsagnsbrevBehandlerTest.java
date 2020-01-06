@@ -51,7 +51,6 @@ public class TilsagnsbrevBehandlerTest {
     @Test
     public void senderTilAltinnSelvOmJournalforingFeiler() {
 
-        final byte[] pdf = "pdf".getBytes();
         String arenaMelding = Testdata.hentFilString("arenaMelding.json");
         Tilsagn tilsagn = Testdata.tilsagnEnDeltaker();
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().cid(UUID.randomUUID()).tilsagn(tilsagn).json(arenaMelding).build();
