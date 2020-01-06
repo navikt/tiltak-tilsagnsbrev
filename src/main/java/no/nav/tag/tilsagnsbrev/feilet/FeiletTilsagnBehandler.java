@@ -2,13 +2,11 @@ package no.nav.tag.tilsagnsbrev.feilet;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
-import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -16,7 +14,7 @@ import java.util.stream.Collectors;
 public class FeiletTilsagnBehandler {
 
     @Autowired
-    FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
+    private FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
 
     public List<TilsagnUnderBehandling> hentAlleTilRekjoring() {
         return feiletTilsagnsbrevRepository.findAll().stream().filter(tub -> !tub.isBehandlet()).filter(TilsagnUnderBehandling::skalRekjoeres).collect(Collectors.toList());
@@ -32,24 +30,17 @@ public class FeiletTilsagnBehandler {
         return false;
     }
 
-    public boolean oppdater(TilsagnUnderBehandling oppdatertTilsagn) {
-        return oppdaterFeilet(oppdatertTilsagn, Optional.empty());
-    }
-
-    private boolean oppdaterFeilet(TilsagnUnderBehandling oppdatertTilsagn, Optional<Exception> optEx) {
-        return feiletTilsagnsbrevRepository.findById(oppdatertTilsagn.getCid())
-                .map(hentet -> hentet.oppdater(oppdatertTilsagn))
-                .map(oppdatert -> lagreEllerOppdater(oppdatert))
-                .orElseThrow(() -> new RuntimeException("Fant ikke feilet tilsagnsbrev i database: " + oppdatertTilsagn.getCid()));
+    public boolean lagreStatus(TilsagnUnderBehandling oppdatertTilsagn) {
+        return lagreEllerOppdater(oppdatertTilsagn);
     }
 
     private boolean lagreEllerOppdater(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
-            TilsagnUnderBehandling oppdatert = feiletTilsagnsbrevRepository
+            TilsagnUnderBehandling oppdatertTilsagnUnderBehandling = feiletTilsagnsbrevRepository
                     .findById(tilsagnUnderBehandling.getCid())
                     .map(tub -> tub.oppdater(tilsagnUnderBehandling))
                     .orElse(tilsagnUnderBehandling);
-            feiletTilsagnsbrevRepository.save(oppdatert);
+            feiletTilsagnsbrevRepository.save(oppdatertTilsagnUnderBehandling);
             return true;
         } catch (Exception e) {
             log.error("Feil ved lagring av tilsagnsfeil! Tilsagn: {}", tilsagnUnderBehandling.getJson(), e);

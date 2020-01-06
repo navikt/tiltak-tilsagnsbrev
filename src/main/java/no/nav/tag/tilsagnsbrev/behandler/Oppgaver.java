@@ -41,12 +41,12 @@ public class Oppgaver {
     @Autowired
     private FeiletTilsagnBehandler feiletTilsagnBehandler;
 
-    public void opprettPdfDok(TilsagnUnderBehandling tilsagnUnderBehandling){
+    private void opprettPdfDok(TilsagnUnderBehandling tilsagnUnderBehandling){
         String pdfJson = tilsagnJsonMapper.opprettPdfJson(tilsagnUnderBehandling);
         pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJson);
     }
 
-    public void journalfoerTilsagnsbrev(TilsagnUnderBehandling tilsagnUnderBehandling) {
+    private void journalfoerTilsagnsbrev(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
             Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tilsagnUnderBehandling);
             tilsagnUnderBehandling.setJournalpostId(joarkService.sendJournalpost(journalpost));
@@ -58,7 +58,7 @@ public class Oppgaver {
         }
     }
 
-    public void sendTilAltinn(TilsagnUnderBehandling tilsagnUnderBehandling) {
+    private void sendTilAltinn(TilsagnUnderBehandling tilsagnUnderBehandling) {
         InsertCorrespondenceBasicV2 wsRequest = mapTilWebserviceRequest(tilsagnUnderBehandling);
         log.info("Sender tilsagnsbrev {} til Altinn. Ekstern-ref {}", tilsagnUnderBehandling.getTilsagnsbrevId(), wsRequest.getExternalShipmentReference());
         sentWsRequest(tilsagnUnderBehandling, wsRequest);
@@ -88,6 +88,29 @@ public class Oppgaver {
     public void oppdaterFeiletTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
         if (!feiletTilsagnBehandler.lagreEllerOppdaterFeil(tilsagnUnderBehandling, e)) {
             log.error("Feil ble ikke lagret! Melding: {}", tilsagnUnderBehandling.getJson(), e.getMessage());
+        }
+    }
+
+    public void utfoerOppgaver(TilsagnUnderBehandling tilsagnUnderBehandling) {
+        try {
+            tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
+
+            if(tilsagnUnderBehandling.manglerPdf()) {
+                opprettPdfDok(tilsagnUnderBehandling);
+            }
+
+            if (tilsagnUnderBehandling.skaljournalfoeres()) {
+                journalfoerTilsagnsbrev(tilsagnUnderBehandling);
+            }
+
+            if (tilsagnUnderBehandling.skalTilAltinn()) {
+                sendTilAltinn(tilsagnUnderBehandling);
+            }
+            tilsagnUnderBehandling.setBehandlet(true);
+            feiletTilsagnBehandler.lagreStatus(tilsagnUnderBehandling);
+            log.info("Fullført behandling av tilsagnsbrev {}.", tilsagnUnderBehandling.getTilsagnsbrevId());
+        } catch (Exception e) {
+            oppdaterFeiletTilsagn(tilsagnUnderBehandling, e);
         }
     }
 }
