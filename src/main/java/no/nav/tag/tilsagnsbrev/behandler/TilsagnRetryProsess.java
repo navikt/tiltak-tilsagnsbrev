@@ -1,7 +1,7 @@
 package no.nav.tag.tilsagnsbrev.behandler;
 
 import lombok.extern.slf4j.Slf4j;
-import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
+import no.nav.tag.tilsagnsbrev.feilet.TilsagnBehandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,12 +16,12 @@ public class TilsagnRetryProsess {
     Oppgaver oppgaver;
 
     @Autowired
-    FeiletTilsagnBehandler feiletTilsagnBehandler;
+    private TilsagnBehandler tilsagnBehandler;
 
 //    @Scheduled(cron = "${tilsagnsbrev.retry.cron}")       //TODO Disablet ifbm. test av prodsetting
     public void finnOgRekjoerFeiletTilsagn() {
         log.info("Starter retry");
-        feiletTilsagnBehandler.hentAlleTilRekjoring()
+        tilsagnBehandler.hentAlleTilRekjoring()
                 .forEach(feiletTilsagnsbrev -> {
                     log.info("Tilsagnsbrev {} retry no. {}", feiletTilsagnsbrev.getTilsagnsbrevId(), feiletTilsagnsbrev.getRetry()); //TODO ordne på telling av retries
                     oppgaver.utfoerOppgaver(feiletTilsagnsbrev);

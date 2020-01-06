@@ -17,7 +17,7 @@ import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
-import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
+import no.nav.tag.tilsagnsbrev.feilet.TilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
@@ -32,7 +32,7 @@ public class OppgaverTest {
     private TilsagnJsonMapper tilsagnJsonMapper;
 
     @Mock
-    private FeiletTilsagnBehandler feiletTilsagnBehandler;
+    private TilsagnBehandler tilsagnBehandler;
 
     @Mock
     private PdfGenService pdfService;
@@ -77,7 +77,7 @@ public class OppgaverTest {
         verifyPdfDokOpprettet();
         verifyJournalforing();
         verifySendTilAltinn();
-        verify(feiletTilsagnBehandler, times(1)).lagreStatus(any(TilsagnUnderBehandling.class));
+        verify(tilsagnBehandler, times(1)).lagreStatus(any(TilsagnUnderBehandling.class));
     }
 
     private void verifyPdfDokOpprettet() {
@@ -103,7 +103,7 @@ public class OppgaverTest {
 
         verifyJournalforing();
         verifyNoInteractions(pdfService, altInnService);
-        verify(feiletTilsagnBehandler, times(1)).lagreStatus(any(TilsagnUnderBehandling.class));
+        verify(tilsagnBehandler, times(1)).lagreStatus(any(TilsagnUnderBehandling.class));
     }
 
 
@@ -115,7 +115,7 @@ public class OppgaverTest {
         oppgaver.utfoerOppgaver(tub);
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(any(TilsagnUnderBehandling.class));
         verifySendTilAltinn();
-        verify(feiletTilsagnBehandler, times(1)).lagreStatus(any(TilsagnUnderBehandling.class));
+        verify(tilsagnBehandler, times(1)).lagreStatus(any(TilsagnUnderBehandling.class));
     }
     
     @Test
@@ -128,7 +128,7 @@ public class OppgaverTest {
 
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(any(TilsagnUnderBehandling.class));
         verifyNoInteractions(pdfService, altInnService, tilsagnJournalpostMapper, joarkService);
-        verify(feiletTilsagnBehandler, times(1)).lagreEllerOppdaterFeil(eq(tub), any(TilsagnException.class));
+        verify(tilsagnBehandler, times(1)).lagreEllerOppdaterFeil(eq(tub), any(TilsagnException.class));
     }
 
     @Test
@@ -142,7 +142,7 @@ public class OppgaverTest {
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(tub);
         verify(tilsagnJsonMapper, times(1)).opprettPdfJson(tub);
         verifyNoInteractions(pdfService, altInnService, tilsagnJournalpostMapper, joarkService);
-        verify(feiletTilsagnBehandler, times(1)).lagreEllerOppdaterFeil(eq(tub), any(TilsagnException.class));
+        verify(tilsagnBehandler, times(1)).lagreEllerOppdaterFeil(eq(tub), any(TilsagnException.class));
     }
 
 }

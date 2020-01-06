@@ -1,7 +1,7 @@
 package no.nav.tag.tilsagnsbrev.behandler;
 
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
-import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
+import no.nav.tag.tilsagnsbrev.feilet.TilsagnBehandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ public class TilsagnRetryProsessTest {
     private Oppgaver oppgaver;
 
     @Mock
-    private FeiletTilsagnBehandler feiletTilsagnBehandler;
+    private TilsagnBehandler tilsagnBehandler;
 
     @InjectMocks
     private TilsagnRetryProsess tilsagnRetryProsess;
@@ -27,7 +27,7 @@ public class TilsagnRetryProsessTest {
     @Test
     public void behandlerTilsagnPaNytt() {
         TilsagnUnderBehandling tilsagnUnderBehandling = new TilsagnUnderBehandling();
-        when(feiletTilsagnBehandler.hentAlleTilRekjoring()).thenReturn(Arrays.asList(tilsagnUnderBehandling));
+        when(tilsagnBehandler.hentAlleTilRekjoring()).thenReturn(Arrays.asList(tilsagnUnderBehandling));
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
         verify(oppgaver, times(1)).utfoerOppgaver(tilsagnUnderBehandling);

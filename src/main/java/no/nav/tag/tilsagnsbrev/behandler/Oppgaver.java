@@ -6,7 +6,7 @@ import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.SystemException;
-import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
+import no.nav.tag.tilsagnsbrev.feilet.TilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
@@ -39,7 +39,7 @@ public class Oppgaver {
     private TilsagnTilAltinnMapper tilsagnTilAltinnMapper;
 
     @Autowired
-    private FeiletTilsagnBehandler feiletTilsagnBehandler;
+    private TilsagnBehandler tilsagnBehandler;
 
     private void opprettPdfDok(TilsagnUnderBehandling tilsagnUnderBehandling){
         String pdfJson = tilsagnJsonMapper.opprettPdfJson(tilsagnUnderBehandling);
@@ -86,7 +86,7 @@ public class Oppgaver {
     }
 
     public void oppdaterFeiletTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
-        if (!feiletTilsagnBehandler.lagreEllerOppdaterFeil(tilsagnUnderBehandling, e)) {
+        if (!tilsagnBehandler.lagreEllerOppdaterFeil(tilsagnUnderBehandling, e)) {
             log.error("Feil ble ikke lagret! Melding: {}", tilsagnUnderBehandling.getJson(), e.getMessage());
         }
     }
@@ -107,7 +107,7 @@ public class Oppgaver {
                 sendTilAltinn(tilsagnUnderBehandling);
             }
             tilsagnUnderBehandling.setBehandlet(true);
-            feiletTilsagnBehandler.lagreStatus(tilsagnUnderBehandling);
+            tilsagnBehandler.lagreStatus(tilsagnUnderBehandling);
             log.info("Fullført behandling av tilsagnsbrev {}.", tilsagnUnderBehandling.getTilsagnsbrevId());
         } catch (Exception e) {
             oppdaterFeiletTilsagn(tilsagnUnderBehandling, e);

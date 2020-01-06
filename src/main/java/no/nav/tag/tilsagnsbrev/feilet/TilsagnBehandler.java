@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class FeiletTilsagnBehandler {
+public class TilsagnBehandler {
 
     @Autowired
-    private FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
+    private TilsagnsbrevRepository tilsagnsbrevRepository;
 
     public List<TilsagnUnderBehandling> hentAlleTilRekjoring() {
-        return feiletTilsagnsbrevRepository.findAll().stream().filter(tub -> !tub.isBehandlet()).filter(TilsagnUnderBehandling::skalRekjoeres).collect(Collectors.toList());
+        return tilsagnsbrevRepository.findAll().stream().filter(tub -> !tub.isBehandlet()).filter(TilsagnUnderBehandling::skalRekjoeres).collect(Collectors.toList());
     }
 
     public boolean lagreEllerOppdaterFeil(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
@@ -36,11 +36,11 @@ public class FeiletTilsagnBehandler {
 
     private boolean lagreEllerOppdater(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
-            TilsagnUnderBehandling oppdatertTilsagnUnderBehandling = feiletTilsagnsbrevRepository
+            TilsagnUnderBehandling oppdatertTilsagnUnderBehandling = tilsagnsbrevRepository
                     .findById(tilsagnUnderBehandling.getCid())
                     .map(tub -> tub.oppdater(tilsagnUnderBehandling))
                     .orElse(tilsagnUnderBehandling);
-            feiletTilsagnsbrevRepository.save(oppdatertTilsagnUnderBehandling);
+            tilsagnsbrevRepository.save(oppdatertTilsagnUnderBehandling);
             return true;
         } catch (Exception e) {
             log.error("Feil ved lagring av tilsagnsfeil! Tilsagn: {}", tilsagnUnderBehandling.getJson(), e);
@@ -50,7 +50,7 @@ public class FeiletTilsagnBehandler {
 
     public void slettTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
         log.info("Fjerner tilsagn fra database: {}", tilsagnUnderBehandling.getTilsagn());
-        feiletTilsagnsbrevRepository.delete(tilsagnUnderBehandling);
+        tilsagnsbrevRepository.delete(tilsagnUnderBehandling);
     }
 }
 
