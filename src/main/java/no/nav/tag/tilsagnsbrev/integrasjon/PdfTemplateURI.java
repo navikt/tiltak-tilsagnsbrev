@@ -36,13 +36,13 @@ public class PdfTemplateURI {
 
         tiltaksKodeURI.put("ARBTREN", ARBTREN);
         tiltaksKodeURI.put("EKSPEBIST", EKSPEBIST);
-        tiltaksKodeURI.put("FUNKASS", FUNKASS);
+        tiltaksKodeURI.put("FUNKASS", FUNKASS); //TODO
         tiltaksKodeURI.put("INKLUTILS", INKLUTILS);
         tiltaksKodeURI.put("MENTOR", MENTOR);
         tiltaksKodeURI.put("MIDLONTIL", MIDLONTIL);
-        tiltaksKodeURI.put("OPPLAR", OPPLAR);
+        tiltaksKodeURI.put("OPPLAR", OPPLAR); //TODO
         tiltaksKodeURI.put("VARLONTIL", VARLONTIL);
-        tiltaksKodeURI.put("TILRARB", TILRARB);
+        tiltaksKodeURI.put("TILRARB", TILRARB); //TODO
         tiltaksKodeURI.put("VATIAROR", VATIAROR);
     }
 

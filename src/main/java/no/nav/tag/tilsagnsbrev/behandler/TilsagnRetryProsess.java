@@ -6,6 +6,7 @@ import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnBehandler;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -22,13 +23,15 @@ public class TilsagnRetryProsess {
     @Autowired
     private TilsagnJsonMapper tilsagnJsonMapper;
 
-//    @Scheduled(cron = "${tilsagnsbrev.retry.cron}")       //TODO Disablet ifbm. test av prodsetting
+    @Scheduled(cron = "${tilsagnsbrev.retry.cron}")
     public void finnOgRekjoerFeiletTilsagn() {
+
         log.info("Starter retry");
         feiletTilsagnBehandler.hentAlleTilRekjoring()
                 .forEach(feiletTilsagnsbrev -> {
                     try {
-                        log.info("Tilsagnsbrev {} retry no. {}", feiletTilsagnsbrev.getTilsagnsbrevId(), feiletTilsagnsbrev.getRetry()); //TODO ordne på telling av retries
+                        feiletTilsagnsbrev.increaseRetry();
+                        log.info("Tilsagnsbrev {} retry no. {}", feiletTilsagnsbrev.getTilsagnsbrevId(), feiletTilsagnsbrev.getRetry());
                         rekjoerTilsagn(feiletTilsagnsbrev);
                         log.info("Fullført retry på tilsagnsbrev {}.", feiletTilsagnsbrev.getTilsagnsbrevId());
                     } catch (Exception e) {
