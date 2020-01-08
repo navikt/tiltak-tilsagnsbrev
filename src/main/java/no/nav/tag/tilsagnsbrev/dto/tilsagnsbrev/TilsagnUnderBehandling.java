@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
-import no.nav.tag.tilsagnsbrev.exception.DataException;
-import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TilsagnUnderBehandling {
 
-    public static final int MAX_RETRIES = 3;
+    static final int MAX_RETRIES = 3;
 
     @Id
     private UUID cid;
@@ -30,7 +28,7 @@ public class TilsagnUnderBehandling {
     @Builder.Default
     private int retry = 0;
     @Builder.Default
-    boolean datafeil = false;
+    private boolean datafeil = false;
     @Builder.Default
     private boolean behandlet = false; //Logisk sletting inntil videre
 
@@ -59,17 +57,11 @@ public class TilsagnUnderBehandling {
     }
 
     public boolean skalRekjoeres(){
-        return this.retry < MAX_RETRIES;
+        return !this.datafeil && this.retry < MAX_RETRIES;
     }
 
     public boolean manglerPdf(){
         return this.pdf == null;
-    }
-
-    public void setRetry(TilsagnException te){
-        if(te instanceof DataException){
-            retry = MAX_RETRIES;
-        }
     }
 
     public void increaseRetry(){

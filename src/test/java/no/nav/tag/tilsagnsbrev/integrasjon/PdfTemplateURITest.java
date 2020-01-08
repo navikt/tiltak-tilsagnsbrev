@@ -15,8 +15,8 @@ public class PdfTemplateURITest {
     PdfTemplateURI pdfTemplateURI = new PdfTemplateURI(pdfGenKonfig);
 
     @Test
-    public void urlForArbeidstrening(){
-        URI url = pdfTemplateURI.getTemplateURI("ARBTREN");
+    public void urlForArbeidsfeorberedende(){
+        URI url = pdfTemplateURI.getTemplateURI("UKJENT_4");
         assertEquals("http://localhost/template/tiltak-tilsagnsbrev-arbeidsforberedende-trening/create-pdf", url.toString());
     }
 
@@ -28,7 +28,7 @@ public class PdfTemplateURITest {
 
     @Test
     public void urlForFunksjonsassistanse(){
-        URI url = pdfTemplateURI.getTemplateURI("FUNKASS");
+        URI url = pdfTemplateURI.getTemplateURI("FUNKSJASS");
         assertTrue(url.getPath().contains("-funksjonsassistanse"));
     }
 
@@ -51,9 +51,27 @@ public class PdfTemplateURITest {
     }
 
     @Test
-    public void urlForOpplæring(){
-        URI url = pdfTemplateURI.getTemplateURI("OPPLAR");
-        assertTrue(url.getPath().contains("-opplaeringstiltak"));
+    public void urlForOpplæringAmo(){
+        URI url = pdfTemplateURI.getTemplateURI("AMOE");
+        assertTrue(url.getPath().contains("-opplaering-amo"));
+    }
+
+    @Test
+    public void urlForOpplaeringFagyrkeDeltaker(){
+        URI url = pdfTemplateURI.getTemplateURI("UKJENT_1");
+        assertTrue(url.getPath().contains("-opplaering-fagyrke-deltaker"));
+    }
+
+    @Test
+    public void urlForOpplaeringFagyrkeGruppe(){
+        URI url = pdfTemplateURI.getTemplateURI("UKJENT_2");
+        assertTrue(url.getPath().contains("-opplaering-fagyrke-gruppe"));
+    }
+
+    @Test
+    public void urlForOpplaeringHoyereUtdanning(){
+        URI url = pdfTemplateURI.getTemplateURI("UKJENT_3");
+        assertTrue(url.getPath().contains("-opplaering-hoyere-utd"));
     }
 
     @Test

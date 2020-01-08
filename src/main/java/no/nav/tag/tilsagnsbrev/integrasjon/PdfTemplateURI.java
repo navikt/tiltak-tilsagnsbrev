@@ -23,30 +23,36 @@ public class PdfTemplateURI {
     }
 
     private void initPdfTemplateURIs(URI host) {
-        final URI ARBTREN = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-arbeidsforberedende-trening").path(CREATE_PDF).build().toUri();
-        final URI EKSPEBIST = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-ekspertbistand").path(CREATE_PDF).build().toUri();
-        final URI FUNKASS = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-funksjonsassistanse").path(CREATE_PDF).build().toUri();
-        final URI INKLUTILS = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-inkluderingstilskudd").path(CREATE_PDF).build().toUri();
-        final URI MENTOR = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-mentortilskudd").path(CREATE_PDF).build().toUri();
-        final URI MIDLONTIL = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-midlertidig-lonnstilskudd").path(CREATE_PDF).build().toUri();
-        final URI OPPLAR = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaeringstiltak").path(CREATE_PDF).build().toUri();
-        final URI VARLONTIL = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-lonnstilskudd").path(CREATE_PDF).build().toUri();
-        final URI TILRARB = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-tilrettelagt-arbeid").path(CREATE_PDF).build().toUri();
-        final URI VATIAROR = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-tilrettelagt-ordinar").path(CREATE_PDF).build().toUri();
+        final URI arbeidsForberedendeTrening = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-arbeidsforberedende-trening").path(CREATE_PDF).build().toUri();
+        final URI ekspertbistand = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-ekspertbistand").path(CREATE_PDF).build().toUri();
+        final URI funksjonsassistanse = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-funksjonsassistanse").path(CREATE_PDF).build().toUri();
+        final URI inkluderingstilskudd = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-inkluderingstilskudd").path(CREATE_PDF).build().toUri();
+        final URI mentortilskudd = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-mentortilskudd").path(CREATE_PDF).build().toUri();
+        final URI midlertidigLonnstilskudd = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-midlertidig-lonnstilskudd").path(CREATE_PDF).build().toUri();
+        final URI opplaeringAmo = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaering-amo").path(CREATE_PDF).build().toUri();
+        final URI opplaeringFagyrkeDeltaker = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaering-fagyrke-deltaker").path(CREATE_PDF).build().toUri();
+        final URI opplaeringFagyrkeGruppe = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaering-fagyrke-gruppe").path(CREATE_PDF).build().toUri();
+        final URI opplaeringHoyereUtdanning = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaering-hoyere-utd").path(CREATE_PDF).build().toUri();
+        final URI varigLonnstilskudd = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-lonnstilskudd").path(CREATE_PDF).build().toUri();
+        final URI varigTilrettelagtArbeid = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-tilrettelagt-arbeid").path(CREATE_PDF).build().toUri();
+        final URI varigTilrettelagtOrdinar = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-tilrettelagt-ordinar").path(CREATE_PDF).build().toUri();
 
-        tiltaksKodeURI.put("ARBTREN", ARBTREN);
-        tiltaksKodeURI.put("EKSPEBIST", EKSPEBIST);
-        tiltaksKodeURI.put("FUNKASS", FUNKASS); //TODO
-        tiltaksKodeURI.put("INKLUTILS", INKLUTILS);
-        tiltaksKodeURI.put("MENTOR", MENTOR);
-        tiltaksKodeURI.put("MIDLONTIL", MIDLONTIL);
-        tiltaksKodeURI.put("OPPLAR", OPPLAR); //TODO
-        tiltaksKodeURI.put("VARLONTIL", VARLONTIL);
-        tiltaksKodeURI.put("TILRARB", TILRARB); //TODO
-        tiltaksKodeURI.put("VATIAROR", VATIAROR);
+        tiltaksKodeURI.put("UKJENT_4", arbeidsForberedendeTrening); //TODO Finn riktig tiltakskode
+        tiltaksKodeURI.put("EKSPEBIST", ekspertbistand);
+        tiltaksKodeURI.put("FUNKSJASS", funksjonsassistanse);
+        tiltaksKodeURI.put("INKLUTILS", inkluderingstilskudd);
+        tiltaksKodeURI.put("MENTOR", mentortilskudd);
+        tiltaksKodeURI.put("MIDLONTIL", midlertidigLonnstilskudd);
+        tiltaksKodeURI.put("AMOE", opplaeringAmo);
+        tiltaksKodeURI.put("UKJENT_1", opplaeringFagyrkeDeltaker);//TODO
+        tiltaksKodeURI.put("UKJENT_2", opplaeringFagyrkeGruppe);//TODO
+        tiltaksKodeURI.put("UKJENT_3", opplaeringHoyereUtdanning);//TODO
+        tiltaksKodeURI.put("VARLONTIL", varigLonnstilskudd);
+        tiltaksKodeURI.put("TILRARB", varigTilrettelagtArbeid); //TODO
+        tiltaksKodeURI.put("VATIAROR", varigTilrettelagtOrdinar);
     }
 
-    URI getTemplateURI (String kode) {
+    URI getTemplateURI(String kode) {
         return Optional.ofNullable(tiltaksKodeURI.get(kode))
                 .orElseThrow(() -> new DataException("Ingen pdf template path oppgitt for tiltakskode " + kode));
     }

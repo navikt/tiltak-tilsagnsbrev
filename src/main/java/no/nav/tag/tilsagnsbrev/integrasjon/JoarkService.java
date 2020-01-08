@@ -45,7 +45,6 @@ public class JoarkService {
 
     public String sendJournalpost(final Journalpost journalpost) {
         debugLogJournalpost(journalpost);
-        JournalpostResponse response = null;
         try {
             log.info("Forsøker å journalføre tilsagnsbrev");
             return restTemplate.postForObject(uri, entityMedStsToken(journalpost), JournalpostResponse.class).getJournalpostId();
@@ -55,7 +54,7 @@ public class JoarkService {
             try {
                 return restTemplate.postForObject(uri, entityMedStsToken(journalpost), JournalpostResponse.class).getJournalpostId();
             } catch (Exception e2) {
-                log.error("Kall til Joark feilet: {}", response != null ? response : "", e2);
+                log.error("Kall til Joark feilet", e2);
                 throw new RuntimeException("Kall til Joark feilet: " + e2);
             }
         }
