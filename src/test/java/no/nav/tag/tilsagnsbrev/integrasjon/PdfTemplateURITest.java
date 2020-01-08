@@ -52,25 +52,25 @@ public class PdfTemplateURITest {
 
     @Test
     public void urlForOpplæringAmo(){
-        URI url = pdfTemplateURI.getTemplateURI("AMOE");
+        URI url = pdfTemplateURI.getTemplateURI("ENKELAMO");
         assertTrue(url.getPath().contains("-opplaering-amo"));
     }
 
     @Test
     public void urlForOpplaeringFagyrkeDeltaker(){
-        URI url = pdfTemplateURI.getTemplateURI("UKJENT_1");
+        URI url = pdfTemplateURI.getTemplateURI("ENKFAGYRKE");
         assertTrue(url.getPath().contains("-opplaering-fagyrke-deltaker"));
     }
 
     @Test
     public void urlForOpplaeringFagyrkeGruppe(){
-        URI url = pdfTemplateURI.getTemplateURI("UKJENT_2");
+        URI url = pdfTemplateURI.getTemplateURI("GRUFAGYRKE");
         assertTrue(url.getPath().contains("-opplaering-fagyrke-gruppe"));
     }
 
     @Test
     public void urlForOpplaeringHoyereUtdanning(){
-        URI url = pdfTemplateURI.getTemplateURI("UKJENT_3");
+        URI url = pdfTemplateURI.getTemplateURI("HOYEREUTD");
         assertTrue(url.getPath().contains("-opplaering-hoyere-utd"));
     }
 

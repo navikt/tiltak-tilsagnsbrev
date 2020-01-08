@@ -20,6 +20,11 @@ import java.io.IOException;
 @SpringBootTest
 @ActiveProfiles("dev")
 @DirtiesContext
+
+/*
+    Sjekk ut og kjør dockerimg til tag-dogGen. Kjør testene mot http://localhost:5913 i stedet for mockserver.
+ */
+
 public class PdfgenServiceIntTest {
 
     @Autowired
@@ -30,15 +35,29 @@ public class PdfgenServiceIntTest {
 
     @Ignore("For manuell sjekk av pdf dokument")
     @Test
-    public void oppretterRiktigPdf() throws IOException {
-//        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(Testdata.tilsagnEnDeltaker()).build();
+    public void oppretterRiktigPdfForGruppe() throws IOException {
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(Testdata.gruppeTilsagn()).build();
         String pdfJson = tilsagnJsonMapper.opprettPdfJson(tub);
         System.out.println(pdfJson);
         pdfGenService.tilsagnsbrevTilPdfBytes(tub, pdfJson);
 
         PDDocument pdf = PDDocument.load(new ByteArrayInputStream(tub.getPdf()));
-        pdf.save("src/test/resources/Resultat.pdf");
+        pdf.save("src/test/resources/ResultatGrp.pdf");
+        pdf.close();
+    }
+
+    @Ignore("For manuell sjekk av pdf dokument.")
+    @Test
+    public void oppretterRiktigPdfForDeltaker() throws IOException {
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(Testdata.tilsagnEnDeltaker()).build();
+        tub.getTilsagn().setTiltakNavn("Ekspertbistand");
+        tub.getTilsagn().setTiltakKode("EKSPEBIST");
+        String pdfJson = tilsagnJsonMapper.opprettPdfJson(tub);
+        System.out.println(pdfJson);
+        pdfGenService.tilsagnsbrevTilPdfBytes(tub, pdfJson);
+
+        PDDocument pdf = PDDocument.load(new ByteArrayInputStream(tub.getPdf()));
+        pdf.save("src/test/resources/ResultatDelt.pdf");
         pdf.close();
     }
 }

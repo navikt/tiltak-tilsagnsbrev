@@ -43,12 +43,12 @@ public class PdfTemplateURI {
         tiltaksKodeURI.put("INKLUTILS", inkluderingstilskudd);
         tiltaksKodeURI.put("MENTOR", mentortilskudd);
         tiltaksKodeURI.put("MIDLONTIL", midlertidigLonnstilskudd);
-        tiltaksKodeURI.put("AMOE", opplaeringAmo);
-        tiltaksKodeURI.put("UKJENT_1", opplaeringFagyrkeDeltaker);//TODO
-        tiltaksKodeURI.put("UKJENT_2", opplaeringFagyrkeGruppe);//TODO
-        tiltaksKodeURI.put("UKJENT_3", opplaeringHoyereUtdanning);//TODO
+        tiltaksKodeURI.put("ENKELAMO", opplaeringAmo);
+        tiltaksKodeURI.put("ENKFAGYRKE", opplaeringFagyrkeDeltaker);
+        tiltaksKodeURI.put("GRUFAGYRKE", opplaeringFagyrkeGruppe);
+        tiltaksKodeURI.put("HOYEREUTD", opplaeringHoyereUtdanning);
         tiltaksKodeURI.put("VARLONTIL", varigLonnstilskudd);
-        tiltaksKodeURI.put("TILRARB", varigTilrettelagtArbeid); //TODO
+        tiltaksKodeURI.put("TILRARB", varigTilrettelagtArbeid);
         tiltaksKodeURI.put("VATIAROR", varigTilrettelagtOrdinar);
     }
 
@@ -56,4 +56,4 @@ public class PdfTemplateURI {
         return Optional.ofNullable(tiltaksKodeURI.get(kode))
                 .orElseThrow(() -> new DataException("Ingen pdf template path oppgitt for tiltakskode " + kode));
     }
-} //TODO Sjekk at alle tiltakskodene stemmer
+}
