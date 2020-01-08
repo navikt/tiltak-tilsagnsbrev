@@ -23,9 +23,7 @@ public class FeiletTilsagnBehandler {
 
     public boolean lagreEllerOppdaterFeil(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
         if (e instanceof TilsagnException) {
-            TilsagnException te = (TilsagnException) e;
-            tilsagnUnderBehandling.setRetry(te);
-            tilsagnUnderBehandling.setDatafeil(te.isDatafeil());
+            tilsagnUnderBehandling.setDatafeil(((TilsagnException) e).isDatafeil());
             return lagreEllerOppdater(tilsagnUnderBehandling);
         }
         return false;
