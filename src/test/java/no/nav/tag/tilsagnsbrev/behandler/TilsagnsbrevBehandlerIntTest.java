@@ -3,8 +3,7 @@ package no.nav.tag.tilsagnsbrev.behandler;
 import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
-import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.feilet.TilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import org.junit.After;
 import org.junit.Before;
@@ -29,22 +28,19 @@ import static org.junit.Assert.*;
 public class TilsagnsbrevBehandlerIntTest {
 
     @Autowired
-    IntegrasjonerMockServer mockServer;
-
-    @Autowired
-    TilsagnJsonMapper tilsagnJsonMapper;
+    private IntegrasjonerMockServer mockServer;
 
     @Autowired
     private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
     @Autowired
-    FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
+    private TilsagnsbrevRepository tilsagnsbrevRepository;
 
     @Autowired
-    TilsagnLoggRepository tilsagnLoggRepository;
+    private TilsagnLoggRepository tilsagnLoggRepository;
 
     @Autowired
-    TilsagnLoggCrudRepository loggCrudRepository;
+    private TilsagnLoggCrudRepository loggCrudRepository;
 
     private final static String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
     private static ArenaMelding arenaMelding = Testdata.arenaMelding();
@@ -52,7 +48,7 @@ public class TilsagnsbrevBehandlerIntTest {
     @After
     public void tearDown() {
         mockServer.getServer().resetAll();
-        feiletTilsagnsbrevRepository.deleteAll();
+        tilsagnsbrevRepository.deleteAll();
         loggCrudRepository.deleteAll();
     }
 
@@ -86,7 +82,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
-        Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
+        Optional<TilsagnUnderBehandling> feilet = tilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
             assertFalse(tub.skalRekjoeres());
@@ -100,13 +96,13 @@ public class TilsagnsbrevBehandlerIntTest {
 
     @Test
     public void pdfGenFeil() {
-        mockServer.getServer().stubFor(post("/template/tilsagnsbrev-deltaker/create-pdf").willReturn(serverError()));
+        mockServer.getServer().stubFor(post("/template/tiltak-tilsagnsbrev-midlertidig-lonnstilskudd/create-pdf").willReturn(serverError()));
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
-        Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
+        Optional<TilsagnUnderBehandling> feilet = tilsagnsbrevRepository.findById(CID);
 
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
@@ -128,7 +124,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
-        Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
+        Optional<TilsagnUnderBehandling> feilet = tilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
@@ -148,7 +144,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
-        Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
+        Optional<TilsagnUnderBehandling> feilet = tilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
@@ -169,7 +165,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
-        Optional<TilsagnUnderBehandling> feilet = feiletTilsagnsbrevRepository.findById(CID);
+        Optional<TilsagnUnderBehandling> feilet = tilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
