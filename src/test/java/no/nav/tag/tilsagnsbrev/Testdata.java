@@ -28,7 +28,10 @@ public class Testdata {
 
     public static Tilsagn gruppeTilsagn() {
         return tilsagnsBuilder().antallDeltakere("17")
-                .antallTimeverk("2932").build();
+                .antallTimeverk("2932")
+                .tiltakNavn("Varig tilrettelagt arbeid")
+                .tiltakKode("TILRARB")
+                .build();
     }
 
     public static Tilsagn tilsagnEnDeltaker() {
@@ -40,8 +43,10 @@ public class Testdata {
                 .postAdresse("Waldemar Thranesgt 89")
                 .postNummer("0223")
                 .postSted("Oslo")
-                .build()
-        ).build();
+                .build())
+                .tiltakKode("EKSPEBIST")
+                .tiltakNavn("Ekspertbistand")
+                .build();
     }
 
     private static Tilsagn.TilsagnBuilder tilsagnsBuilder() {

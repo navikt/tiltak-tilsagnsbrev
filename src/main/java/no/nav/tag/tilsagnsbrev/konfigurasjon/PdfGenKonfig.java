@@ -20,7 +20,7 @@ import java.util.Locale;
 public class PdfGenKonfig {
     private String uri;
 
-    private static final String PDF_DATOFORMAT = "dd. MMMM yyyy";
+    private static final String PDF_DATOFORMAT = "d. MMMM yyyy";
     private static final Locale LOCALE_NO = Locale.forLanguageTag("no");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(PDF_DATOFORMAT, LOCALE_NO);
 
