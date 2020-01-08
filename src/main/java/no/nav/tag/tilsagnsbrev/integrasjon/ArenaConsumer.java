@@ -29,7 +29,7 @@ public class ArenaConsumer {
     @Autowired
     private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
-//    @KafkaListener(topics = topic)                                            //TODO Disablet ifbm. test av prodsetting
+    @KafkaListener(topics = topic)
     public void lyttPaArenaTilsagn(ArenaMelding arenaMelding){
         final UUID cid = cidManager.opprettCorrelationId();
         log.debug("Ny melding hentet fra topic {}", arenaMelding);

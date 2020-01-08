@@ -26,7 +26,6 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-@Ignore("IFBM PROD-TEST")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles({"dev","kafka"})
@@ -90,7 +89,10 @@ public class TiltakTilsagnsbrevIntTest {
 
         assertTrue(tilsagnLoggRepository.tilsagnsbevIdFinnes(111));
         TilsagnLogg tilsagnLogg = loggCrudRepository.findAll().iterator().next();
-        assertFalse(tilsagnsbrevRepository.existsById(tilsagnLogg.getId()));
+        assertTrue(tilsagnsbrevRepository.existsById(tilsagnLogg.getId()));
+        assertEquals(1, tilsagnsbrevRepository.findAll().stream().filter(tub -> tub.getTilsagnsbrevId() == 111).count());
+        assertTrue(tilsagnsbrevRepository.findAll().stream().filter(tub -> tub.getTilsagnsbrevId() == 111).allMatch(tub -> tub.isBehandlet()));
+
     }
 
     @Test
@@ -119,7 +121,8 @@ public class TiltakTilsagnsbrevIntTest {
         kafkaTemplate.send(ArenaConsumer.topic, "", arenameldingOk);
         Thread.sleep(SLEEP_LENGTH);
 
-        assertTrue("feil-database",tilsagnsbrevRepository.findAll().isEmpty());
+        assertEquals(1, tilsagnsbrevRepository.findAll().stream().filter(tub -> tub.getTilsagnsbrevId() == 111).count());
+        assertTrue(tilsagnsbrevRepository.findAll().stream().filter(tub -> tub.getTilsagnsbrevId() == 111).allMatch(tub -> tub.isBehandlet()));
 
         TilsagnLogg tilsagnLogg = loggCrudRepository.findAll().get(0);
         assertEquals(111 , tilsagnLogg.getTilsagnsbrevId().intValue());
