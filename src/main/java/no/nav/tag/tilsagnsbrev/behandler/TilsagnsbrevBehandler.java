@@ -34,16 +34,7 @@ public class TilsagnsbrevBehandler {
         if(!lagreNyMeldingILogg(tilsagnUnderBehandling)) {
             return;
         }
-
-        tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
-        oppgaver.opprettPdfDok(tilsagnUnderBehandling);
-
-        try {
-            oppgaver.journalfoerTilsagnsbrev(tilsagnUnderBehandling);
-        } catch (Exception e) {
-            oppgaver.oppdaterFeiletTilsagn(tilsagnUnderBehandling, e);
-        }
-        oppgaver.sendTilAltinn(tilsagnUnderBehandling);
+        oppgaver.utfoerOppgaver(tilsagnUnderBehandling);
     }
 
     private boolean lagreNyMeldingILogg(TilsagnUnderBehandling tilsagnUnderBehandling){

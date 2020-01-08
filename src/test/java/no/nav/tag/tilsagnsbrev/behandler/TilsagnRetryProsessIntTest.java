@@ -2,8 +2,7 @@ package no.nav.tag.tilsagnsbrev.behandler;
 
 import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
-import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.feilet.TilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import org.junit.After;
 import org.junit.Before;
@@ -35,16 +34,13 @@ public class TilsagnRetryProsessIntTest {
     private IntegrasjonerMockServer mockServer;
 
     @Autowired
-    private FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
+    private TilsagnsbrevRepository tilsagnsbrevRepository;
 
     @Autowired
     private TilsagnLoggRepository tilsagnLoggRepository;
 
     @Autowired
     private TilsagnRetryProsess tilsagnRetryProsess;
-
-    @Autowired
-    private TilsagnJsonMapper tilsagnJsonMapper;
 
     private final static String tilsagnData = Testdata.hentFilString("TILSAGN_DATA.json");
     private final static String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
@@ -57,7 +53,7 @@ public class TilsagnRetryProsessIntTest {
     @After
     public void tearDown() {
         mockServer.getServer().resetAll();
-        feiletTilsagnsbrevRepository.deleteAll();
+        tilsagnsbrevRepository.deleteAll();
     }
 
     @Test
@@ -67,11 +63,11 @@ public class TilsagnRetryProsessIntTest {
         TilsagnUnderBehandling tub1 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(false).cid(CID1).tilsagnsbrevId(1).opprettet(LocalDateTime.now()).build();
         TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).pdf("pdf".getBytes()).altinnReferanse(1).cid(CID2).opprettet(LocalDateTime.now()).tilsagnsbrevId(2).build();
 
-        feiletTilsagnsbrevRepository.saveAll(Arrays.asList(tub1, tub2));
+        tilsagnsbrevRepository.saveAll(Arrays.asList(tub1, tub2));
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
-        List<TilsagnUnderBehandling> tubList = feiletTilsagnsbrevRepository.findAll();
+        List<TilsagnUnderBehandling> tubList = tilsagnsbrevRepository.findAll();
 
         assertEquals(2, tubList.size());
         assertTrue(tubList.stream().anyMatch(tub -> tub.getCid().equals(CID1)));
@@ -90,11 +86,11 @@ public class TilsagnRetryProsessIntTest {
     public void behandlerTilsagnEtterFeiletJournalforing() {
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdf("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).altinnReferanse(002).build();
-        feiletTilsagnsbrevRepository.save(feilet);
+        tilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
-        Optional<TilsagnUnderBehandling> opt = feiletTilsagnsbrevRepository.findById(CID);
+        Optional<TilsagnUnderBehandling> opt = tilsagnsbrevRepository.findById(CID);
         assertTrue("Tilsagn ikke i database", opt.isPresent());
 
         TilsagnUnderBehandling tub = opt.get();
@@ -110,11 +106,11 @@ public class TilsagnRetryProsessIntTest {
     public void behandlerTilsagnEtterFeiletAltinnSending() {
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdf("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
-        feiletTilsagnsbrevRepository.save(feilet);
+        tilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
-        Optional<TilsagnUnderBehandling> opt = feiletTilsagnsbrevRepository.findById(CID);
+        Optional<TilsagnUnderBehandling> opt = tilsagnsbrevRepository.findById(CID);
         assertTrue("Tilsagn ikke i database", opt.isPresent());
 
         TilsagnUnderBehandling tub = opt.get();
@@ -132,10 +128,10 @@ public class TilsagnRetryProsessIntTest {
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling feilet = Testdata.tubBuilder().retry(1).cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
 
-        feiletTilsagnsbrevRepository.save(feilet);
+        tilsagnsbrevRepository.save(feilet);
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
-        Optional<TilsagnUnderBehandling> opt = feiletTilsagnsbrevRepository.findById(CID);
+        Optional<TilsagnUnderBehandling> opt = tilsagnsbrevRepository.findById(CID);
         assertTrue("Tilsagn ikke i database", opt.isPresent());
 
         TilsagnUnderBehandling tub = opt.get();
