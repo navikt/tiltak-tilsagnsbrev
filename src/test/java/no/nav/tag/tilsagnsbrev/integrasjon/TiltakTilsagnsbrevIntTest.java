@@ -4,7 +4,7 @@ import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLogg;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggCrudRepository;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
-import no.nav.tag.tilsagnsbrev.feilet.FeiletTilsagnsbrevRepository;
+import no.nav.tag.tilsagnsbrev.feilet.TilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -40,7 +40,7 @@ public class TiltakTilsagnsbrevIntTest {
     private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
     @Autowired
-    private FeiletTilsagnsbrevRepository feiletTilsagnsbrevRepository;
+    private TilsagnsbrevRepository tilsagnsbrevRepository;
 
     @Autowired
     private TilsagnLoggCrudRepository loggCrudRepository;
@@ -77,7 +77,7 @@ public class TiltakTilsagnsbrevIntTest {
     @After
     public void tearDown() {
         mockServer.getServer().resetAll();
-        feiletTilsagnsbrevRepository.deleteAll();
+        tilsagnsbrevRepository.deleteAll();
         loggCrudRepository.deleteAll();
     }
 
@@ -90,27 +90,27 @@ public class TiltakTilsagnsbrevIntTest {
 
         assertTrue(tilsagnLoggRepository.tilsagnsbevIdFinnes(111));
         TilsagnLogg tilsagnLogg = loggCrudRepository.findAll().iterator().next();
-        assertFalse(feiletTilsagnsbrevRepository.existsById(tilsagnLogg.getId()));
+        assertFalse(tilsagnsbrevRepository.existsById(tilsagnLogg.getId()));
     }
 
     @Test
     public void feilVedUtpakkingAvArenaMelding() throws InterruptedException {
 
-        assertTrue(feiletTilsagnsbrevRepository.findAll().isEmpty());
+        assertTrue(tilsagnsbrevRepository.findAll().isEmpty());
         assertFalse(loggCrudRepository.findAll().iterator().hasNext());
 
         final String arenameldingMedFeil = Testdata.hentFilString("arenaMelding_som_feiler.json");
         kafkaTemplate.send(ArenaConsumer.topic, "", arenameldingMedFeil);
         Thread.sleep(SLEEP_LENGTH);
 
-        assertTrue("feil-database",feiletTilsagnsbrevRepository.findAll().isEmpty());
+        assertTrue("feil-database",tilsagnsbrevRepository.findAll().isEmpty());
         assertTrue("logg-database", loggCrudRepository.findAll().isEmpty());
     }
 
     @Test
     public void enFeilOgEnOkArenaMelding() throws InterruptedException {
 
-        assertTrue(feiletTilsagnsbrevRepository.findAll().isEmpty());
+        assertTrue(tilsagnsbrevRepository.findAll().isEmpty());
         assertTrue(loggCrudRepository.findAll().isEmpty());
 
         final String arenameldingMedFeil = Testdata.hentFilString("arenaMelding_som_feiler.json");
@@ -119,7 +119,7 @@ public class TiltakTilsagnsbrevIntTest {
         kafkaTemplate.send(ArenaConsumer.topic, "", arenameldingOk);
         Thread.sleep(SLEEP_LENGTH);
 
-        assertTrue("feil-database",feiletTilsagnsbrevRepository.findAll().isEmpty());
+        assertTrue("feil-database",tilsagnsbrevRepository.findAll().isEmpty());
 
         TilsagnLogg tilsagnLogg = loggCrudRepository.findAll().get(0);
         assertEquals(111 , tilsagnLogg.getTilsagnsbrevId().intValue());
