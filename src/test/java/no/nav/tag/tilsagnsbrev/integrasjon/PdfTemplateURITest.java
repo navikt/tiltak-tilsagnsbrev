@@ -16,7 +16,7 @@ public class PdfTemplateURITest {
 
     @Test
     public void urlForArbeidsfeorberedende(){
-        URI url = pdfTemplateURI.getTemplateURI("UKJENT_4");
+        URI url = pdfTemplateURI.getTemplateURI("ARBFORB");
         assertEquals("http://localhost/template/tiltak-tilsagnsbrev-arbeidsforberedende-trening/create-pdf", url.toString());
     }
 
