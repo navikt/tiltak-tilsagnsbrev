@@ -31,7 +31,7 @@ public class PdfTemplateURI {
         final URI midlertidigLonnstilskudd = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-midlertidig-lonnstilskudd").path(CREATE_PDF).build().toUri();
         final URI opplaeringAmo = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaering-amo").path(CREATE_PDF).build().toUri();
         final URI opplaeringFagyrkeDeltaker = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaering-fagyrke-deltaker").path(CREATE_PDF).build().toUri();
-        final URI opplaeringFagyrkeGruppe = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaering-fagyrke-gruppe").path(CREATE_PDF).build().toUri();
+        final URI opplaeringFagyrkeGruppe = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaering-fagyrke-grp").path(CREATE_PDF).build().toUri();
         final URI opplaeringHoyereUtdanning = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-opplaering-hoyere-utd").path(CREATE_PDF).build().toUri();
         final URI varigLonnstilskudd = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-lonnstilskudd").path(CREATE_PDF).build().toUri();
         final URI varigTilrettelagtArbeid = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-tilrettelagt-arbeid").path(CREATE_PDF).build().toUri();
@@ -48,7 +48,7 @@ public class PdfTemplateURI {
         tiltaksKodeURI.put("GRUFAGYRKE", opplaeringFagyrkeGruppe);
         tiltaksKodeURI.put("HOYEREUTD", opplaeringHoyereUtdanning);
         tiltaksKodeURI.put("VARLONTIL", varigLonnstilskudd);
-        tiltaksKodeURI.put("TILRARB", varigTilrettelagtArbeid);
+        tiltaksKodeURI.put("VASV", varigTilrettelagtArbeid);
         tiltaksKodeURI.put("VATIAROR", varigTilrettelagtOrdinar);
     }
 
