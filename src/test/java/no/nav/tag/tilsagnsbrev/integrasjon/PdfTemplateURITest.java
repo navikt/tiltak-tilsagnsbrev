@@ -65,7 +65,7 @@ public class PdfTemplateURITest {
     @Test
     public void urlForOpplaeringFagyrkeGruppe(){
         URI url = pdfTemplateURI.getTemplateURI("GRUFAGYRKE");
-        assertTrue(url.getPath().contains("-opplaering-fagyrke-gruppe"));
+        assertTrue(url.getPath().contains("-opplaering-fagyrke-grp"));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class PdfTemplateURITest {
 
     @Test
     public void urlForTilrettelagtArb(){
-        URI url = pdfTemplateURI.getTemplateURI("TILRARB");
+        URI url = pdfTemplateURI.getTemplateURI("VASV");
         assertTrue(url.getPath().contains("-varig-tilrettelagt-arbeid"));
     }
 
