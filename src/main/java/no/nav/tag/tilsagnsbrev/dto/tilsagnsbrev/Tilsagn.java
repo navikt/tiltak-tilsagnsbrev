@@ -54,9 +54,18 @@ public class Tilsagn {
         return this.deltaker == null;
     }
 
-    public String getTilskuddsProsent() {
-        if (!this.erGruppeTilsagn()) {
-            return tilskuddListe.stream().findFirst()
+    public boolean getPdfVisTilskuddProsent(){
+        if (this.tilskuddListe != null) {
+            return this.tilskuddListe.stream().findFirst() //Tilskudslisten har aldri mer enn ett element
+                    .map(Tilskudd::getVisTilskuddProsent)
+                    .orElse(false);
+        }
+        return false;
+    }
+
+    public String getPdfTilskuddsProsent() {
+        if (this.tilskuddListe != null) {
+            return this.tilskuddListe.stream().findFirst() //Tilskudslisten har aldri mer enn ett element
                     .map(tilskudd -> {
                         if (tilskudd.getVisTilskuddProsent()) {
                             return tilskudd.getTilskuddProsent();
