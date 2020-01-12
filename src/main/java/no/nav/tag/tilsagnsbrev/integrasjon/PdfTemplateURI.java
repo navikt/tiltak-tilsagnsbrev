@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
+import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.PdfGenKonfig;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class PdfTemplateURI {
 
@@ -53,7 +55,11 @@ public class PdfTemplateURI {
     }
 
     URI getTemplateURI(String kode) {
-        return Optional.ofNullable(tiltaksKodeURI.get(kode))
-                .orElseThrow(() -> new DataException("Ingen pdf template path oppgitt for tiltakskode " + kode));
+        Optional<URI> optURI = Optional.ofNullable (tiltaksKodeURI.get(kode));
+        if(optURI.isEmpty()){
+            log.error("Ingen pdf template path oppgitt for tiltakskode " + kode);
+            throw new DataException("Ukjent tiltakskode: " + kode);
+        }
+        return optURI.get();
     }
 }

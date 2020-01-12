@@ -30,7 +30,7 @@ public class TilsagnJsonMapper {
         try {
             return objectMapper.writeValueAsString(tilsagnUnderBehandling.getTilsagn());
         } catch (Exception e) {
-            log.error("Feil v/mapping fra Tilsagn-dto til pdf-tilsagn ", e);
+            log.error("Feil v/mapping til pdf-request. TilsagnbrevId={}", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
             throw new DataException(e.getMessage());
         }
     }
