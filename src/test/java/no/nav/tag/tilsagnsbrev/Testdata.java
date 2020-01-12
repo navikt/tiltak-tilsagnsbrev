@@ -30,7 +30,7 @@ public class Testdata {
         return tilsagnsBuilder().antallDeltakere("17")
                 .antallTimeverk("2932")
                 .tiltakNavn("Varig tilrettelagt arbeid")
-                .tiltakKode("TILRARB")
+                .tiltakKode("VASV")
                 .build();
     }
 
@@ -44,8 +44,8 @@ public class Testdata {
                 .postNummer("0223")
                 .postSted("Oslo")
                 .build())
-                .tiltakKode("EKSPEBIST")
-                .tiltakNavn("Ekspertbistand")
+                .tiltakKode("VARLONTIL")
+                .tiltakNavn("Varig lønnstilskudd")
                 .build();
     }
 
