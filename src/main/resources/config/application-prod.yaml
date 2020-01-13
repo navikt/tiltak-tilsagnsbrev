@@ -15,6 +15,8 @@ spring:
         password: ${javax.net.ssl.trustStorePassword}
 
 tilsagnsbrev:
+  retry:
+    cron: ${tilsagnsbrev.process.cron}
   database:
     database-navn: tiltak-tilsagnsbrev-prod
     database-url: ${spring.datasource.url}
