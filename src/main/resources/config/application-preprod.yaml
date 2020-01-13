@@ -29,7 +29,7 @@ tilsagnsbrev:
     database-url: ${spring.datasource.url}
     vault-sti: postgresql/preprod-fss
     minimum-idle: 1
-    maximum-pool-size: 2
+    maximum-pool-size: 1
     max-lifetime: 300000
   integrasjon:
     pdfgen:
