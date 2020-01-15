@@ -21,6 +21,7 @@ public class Testdata {
     public static LocalDate TILSAGNSDATO = LocalDate.parse("2019-10-22");
     public static LocalDate FRA_DATO = LocalDate.parse("2019-10-01");
     public static LocalDate TIL_DATO = LocalDate.parse("2019-12-31");
+    public static LocalDate REFUSJONSFRIST_DATO = LocalDate.parse("2020-01-31");
 
     private static ObjectMapper objectMapper = new ObjectMapper();
     private static String tilsagnDataStr = Testdata.hentFilString("TILSAGN_DATA.json");
@@ -66,6 +67,7 @@ public class Testdata {
                 .periode(new Periode(FRA_DATO, TIL_DATO))
                 .saksbehandler(new Person("Åsberg", "Kristina"))
                 .tilsagnDato(TILSAGNSDATO)
+                .refusjonfristDato(REFUSJONSFRIST_DATO)
                 .tilsagnNummer(new TilsagnNummer("2019", "366023", "1"))
                 .tilskuddListe(Arrays.asList(
                         new Tilskudd("28000", "Lønnstilskudd", "60", true)))
