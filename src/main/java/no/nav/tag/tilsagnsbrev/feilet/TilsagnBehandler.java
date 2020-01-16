@@ -41,7 +41,11 @@ public class TilsagnBehandler {
             tilsagnsbrevRepository.save(oppdatertTilsagnUnderBehandling);
             return true;
         } catch (Exception e) {
-            log.error("Feil ved lagring av tilsagnsfeil! Tilsagn: {}", tilsagnUnderBehandling.getJson(), e);
+            log.error("Feil ved lagring av tilsagnsfeil! Tilsagn: id={}, journalpostId={}, Sendt til Arena: {}",
+                    tilsagnUnderBehandling.getTilsagnsbrevId(),
+                    tilsagnUnderBehandling.getJournalpostId(),
+                    (!tilsagnUnderBehandling.skalTilAltinn()),
+                    e);
             throw new RuntimeException(e);
         }
     }

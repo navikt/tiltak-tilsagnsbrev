@@ -3,7 +3,7 @@ server:
 
 logging:
   level:
-    no.nav.tag.tilsagnsbrev: INFO
+    no.nav.tag.tilsagnsbrev: DEBUG
     org.apache.cxf.services.*: INFO
 
 spring:
