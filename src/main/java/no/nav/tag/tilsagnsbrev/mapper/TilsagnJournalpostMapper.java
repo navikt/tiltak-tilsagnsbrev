@@ -40,7 +40,7 @@ public class TilsagnJournalpostMapper {
     }
 
     private String opprettArkivsaknr(TilsagnNummer tilsagnNr){
-        return new StringBuilder(tilsagnNr.getAar()).append(tilsagnNr.getLoepenrSak()).append(tilsagnNr.getLoepenrTilsagn()).toString();
+        return new StringBuilder(tilsagnNr.getAar()).append(tilsagnNr.getLoepenrSak()).toString();
     }
 
     private void initJournalpostTittel() {
