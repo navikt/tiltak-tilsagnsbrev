@@ -83,6 +83,24 @@ public class TilsagnRetryProsessIntTest {
     }
 
     @Test
+    public void behandlerEnAvToTilsagn() {
+        final UUID CID1 = UUID.randomUUID();
+        final UUID CID2 = UUID.randomUUID();
+        TilsagnUnderBehandling ok = Testdata.tubBuilder().behandlet(true).cid(CID1).retry(0).build();
+        TilsagnUnderBehandling feil = Testdata.tubBuilder().json(tilsagnData).pdf("pdf".getBytes()).cid(CID2).retry(0).build();
+
+        tilsagnsbrevRepository.saveAll(Arrays.asList(ok, feil));
+
+        tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
+
+        List<TilsagnUnderBehandling> tubList = tilsagnsbrevRepository.findAll();
+
+        assertEquals(2, tubList.size());
+        assertTrue(tubList.stream().anyMatch(tub -> tub.getCid().equals(CID1) && tub.getRetry() == 0));
+        assertTrue(tubList.stream().anyMatch(tub -> tub.getCid().equals(CID2) && tub.getRetry() == 1));
+    }
+
+    @Test
     public void behandlerTilsagnEtterFeiletJournalforing() {
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdf("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).altinnReferanse(002).build();

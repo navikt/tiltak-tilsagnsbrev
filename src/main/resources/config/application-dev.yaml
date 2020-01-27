@@ -3,8 +3,8 @@ server:
 
 logging:
   level:
-    no.nav.tag.tilsagnsbrev: DEBUG
-    org.apache.cxf.services.*: INFO
+    no.nav.tag.tilsagnsbrev: INFO
+    org.apache.cxf.services.*: OFF
 
 spring:
   kafka:
