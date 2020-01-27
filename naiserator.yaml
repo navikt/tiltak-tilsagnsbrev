@@ -36,4 +36,6 @@ spec:
   prometheus:
     enabled: false
     path: /tiltak-tilsagnsbrev/internal/actuator/prometheus
-
+  resources:
+    limits:
+      memory: 1024Mi
