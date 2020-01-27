@@ -17,7 +17,7 @@ public class TilsagnBehandler {
     private TilsagnsbrevRepository tilsagnsbrevRepository;
 
     public List<TilsagnUnderBehandling> hentAlleTilRekjoring() {
-        return tilsagnsbrevRepository.findAll().stream().filter(tub -> !tub.isBehandlet()).filter(TilsagnUnderBehandling::skalRekjoeres).collect(Collectors.toList());
+        return tilsagnsbrevRepository.findFailed().stream().filter(TilsagnUnderBehandling::skalRekjoeres).collect(Collectors.toList());
     }
 
     public boolean lagreEllerOppdaterFeil(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
