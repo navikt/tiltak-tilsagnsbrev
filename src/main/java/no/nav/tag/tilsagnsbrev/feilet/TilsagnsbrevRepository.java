@@ -1,6 +1,7 @@
 package no.nav.tag.tilsagnsbrev.feilet;
 
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -10,5 +11,7 @@ public interface TilsagnsbrevRepository extends CrudRepository<TilsagnUnderBehan
 
     @Override
     List<TilsagnUnderBehandling> findAll();
-}
 
+    @Query(value = "select tub from TilsagnUnderBehandling tub where tub.behandlet = false")
+    List<TilsagnUnderBehandling> findFailed();
+}
