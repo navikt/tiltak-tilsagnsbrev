@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
@@ -43,7 +44,7 @@ public class ArenaSimulatorController {
     public String behandle(@PathVariable Integer tilsagnNr, @RequestBody String tilsagnJson) {
         UUID cid = cidManager.opprettCorrelationId();
         ArenaMelding arenaMelding = SimUtil.arenaMelding(tilsagnNr, tilsagnJson);
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).tilsagnsbrevId(tilsagnNr).cid(cid).build();
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).tilsagnsbrevId(tilsagnNr).cid(cid).opprettet(LocalDateTime.now()).build();
         try {
             tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
             return "OK";
