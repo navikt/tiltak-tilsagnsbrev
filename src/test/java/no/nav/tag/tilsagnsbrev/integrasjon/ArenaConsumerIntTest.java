@@ -50,7 +50,7 @@ public class ArenaConsumerIntTest {
     @Autowired
     private IntegrasjonerMockServer mockServer;
 
-    private static final long SLEEP_LENGTH = 500L;
+    private static final long SLEEP_LENGTH = 1000L;
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @AfterClass
