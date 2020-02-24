@@ -9,7 +9,7 @@ public class LokalTilsagnsbrevApplication {
 
 	public static void main(String[] args) {
 		SpringApplication application = new SpringApplicationBuilder(LokalTilsagnsbrevApplication.class)
-				.profiles("dev", "local")
+				.profiles("dev", "local", "testdata")
 				.build();
 		application.run(args);
 	}

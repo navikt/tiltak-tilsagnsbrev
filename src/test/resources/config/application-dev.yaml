@@ -5,7 +5,7 @@ logging:
   level:
     no.nav.tag.tilsagnsbrev: INFO
     org.apache.cxf.services.*: OFF
-    #org.springframework.kafka.listener.LoggingErrorHandler: OFF
+    org.springframework.kafka.listener.LoggingErrorHandler: OFF
 
 spring:
   kafka:
