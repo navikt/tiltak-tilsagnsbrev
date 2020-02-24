@@ -18,7 +18,6 @@ import java.util.UUID;
 @Data
 @Slf4j
 @Component
-@Profile("kafka")
 @AllArgsConstructor
 public class ArenaConsumer {
 

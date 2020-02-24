@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 @SpringBootTest
 @ActiveProfiles({"dev"})
 @DirtiesContext
-public class TiltakTilsagnsbrevIntTest {
+public class ArenaConsumerIntTest {
 
     @ClassRule
     public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true, ArenaConsumer.topic);

@@ -5,9 +5,11 @@ logging:
   level:
     no.nav.tag.tilsagnsbrev: INFO
     org.apache.cxf.services.*: OFF
+    #org.springframework.kafka.listener.LoggingErrorHandler: OFF
 
 spring:
   kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
     consumer:
       group-id: group-id
       bootstrap-servers: ${spring.embedded.kafka.brokers}
