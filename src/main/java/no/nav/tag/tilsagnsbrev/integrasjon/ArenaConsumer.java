@@ -8,7 +8,6 @@ import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,7 @@ public class ArenaConsumer {
     @Autowired
     private TilsagnsbrevBehandler tilsagnsbrevbehandler;
 
-    @KafkaListener(topics = topic)
+    @KafkaListener(topics = topic, errorHandler = "customKafkaErrLogger")
     public void lyttPaArenaTilsagn(ArenaMelding arenaMelding){
         final UUID cid = cidManager.opprettCorrelationId();
         log.debug("Ny melding hentet fra topic {}", arenaMelding);

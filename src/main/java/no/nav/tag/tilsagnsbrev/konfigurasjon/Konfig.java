@@ -11,5 +11,4 @@ public class Konfig {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
 }
