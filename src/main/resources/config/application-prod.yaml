@@ -1,6 +1,7 @@
 logging:
   level:
     no.nav.tag.tilsagnsbrev: INFO
+    org.springframework.kafka.listener.LoggingErrorHandler: OFF
 
 spring:
   kafka:

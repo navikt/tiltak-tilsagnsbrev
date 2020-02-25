@@ -28,9 +28,9 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"dev","kafka"})
+@ActiveProfiles({"dev"})
 @DirtiesContext
-public class TiltakTilsagnsbrevIntTest {
+public class ArenaConsumerIntTest {
 
     @ClassRule
     public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true, ArenaConsumer.topic);
@@ -50,7 +50,7 @@ public class TiltakTilsagnsbrevIntTest {
     @Autowired
     private IntegrasjonerMockServer mockServer;
 
-    private static final long SLEEP_LENGTH = 500L;
+    private static final long SLEEP_LENGTH = 1000L;
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @AfterClass
