@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body>
+        <InsertCorrespondenceBasicV2Response xmlns="http://www.altinn.no/services/ServiceEngine/Correspondence/2009/10">
+            <InsertCorrespondenceBasicV2Result xmlns:i="http://www.w3.org/2001/XMLSchema-instance"
+                                               xmlns:a="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
+                <a:LastChanged>0001-01-01T00:00:00</a:LastChanged>
+                <a:ParentReceiptId>0</a:ParentReceiptId>
+                <a:ReceiptHistory i:nil="true"/>
+                <a:ReceiptId>0</a:ReceiptId>
+                <a:ReceiptStatusCode>OK</a:ReceiptStatusCode>
+                <a:ReceiptText>Correspondence Saved Successfully</a:ReceiptText>
+                <a:ReceiptTypeName>Correspondence</a:ReceiptTypeName>
+                <a:References>
+                    <a:Reference>
+                        <a:ReferenceTypeName>ExternalShipmentReference</a:ReferenceTypeName>
+                        <a:ReferenceValue>ESR_NAV5.9843534164179E8</a:ReferenceValue>
+                    </a:Reference>
+                </a:References>
+                <a:SubReceipts/>
+            </InsertCorrespondenceBasicV2Result>
+        </InsertCorrespondenceBasicV2Response>
+    </s:Body>
+</s:Envelope>

@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("dev")
+@ActiveProfiles({"dev", "local"})
 @DirtiesContext
 public class TilsagnsbrevBehandlerIntTest {
 
