@@ -16,5 +16,4 @@ public class TilsagnsbrevApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
 }
