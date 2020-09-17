@@ -72,12 +72,15 @@ public class TilsagnTilAltinnMapper {
         return new Notification()
                 .withLanguageCode(LANGUAGE_CODE)
                 .withShipmentDateTime(fromLocalDate(LocalDateTime.now()))
-                .withFromAddress("bjarte.tynning@nav.no")
+                .withFromAddress(FRA_EPOST_ALTINN)
                 .withTextTokens(new TextTokenSubstitutionBEList()
                         .withTextToken(new TextToken().withTokenValue(VARSLING_PREFIX + tiltak)))
                 .withReceiverEndPoints(new ReceiverEndPointBEList()
                         .withReceiverEndPoint(new ReceiverEndPoint()
                                 .withTransportType(TransportType.EMAIL)
+
+                                //TODO Ta vekk
+                                .withReceiverAddress("bjarte.tynning@nav.no")
                         ));
     }
 
