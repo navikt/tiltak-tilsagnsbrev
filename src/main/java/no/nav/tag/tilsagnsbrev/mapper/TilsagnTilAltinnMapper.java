@@ -1,8 +1,10 @@
 package no.nav.tag.tilsagnsbrev.mapper;
 
+import no.altinn.schemas.serviceengine.formsengine._2009._10.TransportType;
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.AttachmentsV2;
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.ExternalContentV2;
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.InsertCorrespondenceV2;
+import no.altinn.schemas.services.serviceengine.notification._2009._10.*;
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List;
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2;
@@ -28,12 +30,12 @@ public class TilsagnTilAltinnMapper {
     private static final String FIL_EXT = ".pdf";
     private static final String SYSTEM_USERCODE = "TAG_TILSAGN";
     private static final String EXT_REF = "ESR_NAV";
-
-
     private static final String SERVICE_CODE = "5278";
     private static final String SERVICE_EDITION = "1";
     private static final String LANGUAGE_CODE = "1044";
     private static final String MSG_SENDER = "NAV";
+    private static final String FRA_EPOST_ALTINN = "noreply@altinn.no";
+    private static final String VARSLING_PREFIX = "Nytt tilskuddsbrev er sendt. Tiltak: ";
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(final Tilsagn tilsagn, final byte[] pdf) {
         return new InsertCorrespondenceBasicV2()
@@ -50,6 +52,7 @@ public class TilsagnTilAltinnMapper {
                         .withAllowForwarding(false)
                         .withMessageSender(MSG_SENDER)
                         .withReportee(tilsagn.getTiltakArrangor().getOrgNummer())
+                        .withNotifications(new NotificationBEList().withNotification(notification(tilsagn.getTiltakNavn())))
                         .withContent(new ExternalContentV2()
                                 .withLanguageCode(LANGUAGE_CODE)
                                 .withMessageTitle(vedleggNavn(tilsagn))
@@ -63,6 +66,19 @@ public class TilsagnTilAltinnMapper {
                                                                 .append(FIL_EXT)
                                                                 .toString())
                                                         .withName(vedleggNavn(tilsagn)))))));
+    }
+
+    private Notification notification(String tiltak) {
+        return new Notification()
+                .withLanguageCode(LANGUAGE_CODE)
+                .withShipmentDateTime(fromLocalDate(LocalDateTime.now()))
+                .withFromAddress("bjarte.tynning@nav.no")
+                .withTextTokens(new TextTokenSubstitutionBEList()
+                        .withTextToken(new TextToken().withTokenValue(VARSLING_PREFIX + tiltak)))
+                .withReceiverEndPoints(new ReceiverEndPointBEList()
+                        .withReceiverEndPoint(new ReceiverEndPoint()
+                                .withTransportType(TransportType.EMAIL)
+                        ));
     }
 
     private String vedleggNavn(Tilsagn tilsagn){
