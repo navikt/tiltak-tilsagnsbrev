@@ -36,7 +36,7 @@ public class TilsagnTilAltinnMapper {
     private static final String MSG_SENDER = "NAV";
     private static final String FRA_EPOST_ALTINN = "noreply@altinn.no";
     private static final String VARSLING_TYPE = "TokenTextOnly";
-    private static final String VARSLING_PREFIX = "Nytt tilskuddsbrev er sendt. Tiltak: ";
+    private static final String VARSLING_PREFIX = "Dere har mottat tilskuddsbrev. Tiltak: ";
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(final Tilsagn tilsagn, final byte[] pdf) {
         return new InsertCorrespondenceBasicV2()
@@ -75,9 +75,10 @@ public class TilsagnTilAltinnMapper {
                 .withShipmentDateTime(fromLocalDate(LocalDateTime.now()))
                 .withReceiverEndPoints(new ReceiverEndPointBEList()
                         .withReceiverEndPoint(new ReceiverEndPoint()
-                                .withTransportType(TransportType.EMAIL)))
+                                .withTransportType(TransportType.EMAIL).withReceiverAddress("bjarte.tynning@nav.no")))
 
                 .withFromAddress(FRA_EPOST_ALTINN)
+
                 .withNotificationType(VARSLING_TYPE)
                 .withTextTokens(new TextTokenSubstitutionBEList()
                         .withTextToken(new TextToken().withTokenNum(0).withTokenValue(VARSLING_PREFIX + tiltak)));
