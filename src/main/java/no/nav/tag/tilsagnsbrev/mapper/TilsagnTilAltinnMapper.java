@@ -75,12 +75,12 @@ public class TilsagnTilAltinnMapper {
                 .withShipmentDateTime(fromLocalDate(LocalDateTime.now()))
                 .withReceiverEndPoints(new ReceiverEndPointBEList()
                         .withReceiverEndPoint(new ReceiverEndPoint()
-                                .withTransportType(TransportType.EMAIL)));
+                                .withTransportType(TransportType.EMAIL)))
 
-               // .withFromAddress(FRA_EPOST_ALTINN)
-//                .withNotificationType(VARSLING_TYPE)
-//                .withTextTokens(new TextTokenSubstitutionBEList()
-//                        .withTextToken(new TextToken().withTokenValue(VARSLING_PREFIX + tiltak)))
+                .withFromAddress(FRA_EPOST_ALTINN)
+                .withNotificationType(VARSLING_TYPE)
+                .withTextTokens(new TextTokenSubstitutionBEList()
+                        .withTextToken(new TextToken().withTokenNum(0).withTokenValue(VARSLING_PREFIX + tiltak)));
 //
 //
 //                        ));
