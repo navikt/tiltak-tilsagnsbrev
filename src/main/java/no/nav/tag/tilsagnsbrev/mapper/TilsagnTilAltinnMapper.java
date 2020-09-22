@@ -35,6 +35,7 @@ public class TilsagnTilAltinnMapper {
     private static final String LANGUAGE_CODE = "1044";
     private static final String MSG_SENDER = "NAV";
     private static final String FRA_EPOST_ALTINN = "noreply@altinn.no";
+    private static final String VARSLING_TYPE = "TokenTextOnly";
     private static final String VARSLING_PREFIX = "Nytt tilskuddsbrev er sendt. Tiltak: ";
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(final Tilsagn tilsagn, final byte[] pdf) {
@@ -72,16 +73,17 @@ public class TilsagnTilAltinnMapper {
         return new Notification()
                 .withLanguageCode(LANGUAGE_CODE)
                 .withShipmentDateTime(fromLocalDate(LocalDateTime.now()))
-                .withFromAddress(FRA_EPOST_ALTINN)
-//                .withTextTokens(new TextTokenSubstitutionBEList()
-//                        .withTextToken(new TextToken().withTokenValue(VARSLING_PREFIX + tiltak)))
                 .withReceiverEndPoints(new ReceiverEndPointBEList()
                         .withReceiverEndPoint(new ReceiverEndPoint()
-                                .withTransportType(TransportType.EMAIL)
+                                .withTransportType(TransportType.EMAIL)));
 
-                                //TODO Ta vekk
-                                .withReceiverAddress("bjarte.tynning@nav.no")
-                        ));
+               // .withFromAddress(FRA_EPOST_ALTINN)
+//                .withNotificationType(VARSLING_TYPE)
+//                .withTextTokens(new TextTokenSubstitutionBEList()
+//                        .withTextToken(new TextToken().withTokenValue(VARSLING_PREFIX + tiltak)))
+//
+//
+//                        ));
     }
 
     private String vedleggNavn(Tilsagn tilsagn){
