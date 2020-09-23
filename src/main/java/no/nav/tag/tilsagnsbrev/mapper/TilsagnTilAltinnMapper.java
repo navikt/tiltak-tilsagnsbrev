@@ -36,7 +36,8 @@ public class TilsagnTilAltinnMapper {
     private static final String MSG_SENDER = "NAV";
     private static final String FRA_EPOST_ALTINN = "noreply@altinn.no";
     private static final String VARSLING_TYPE = "TokenTextOnly";
-    private static final String VARSLING_PREFIX = "Dere har mottat tilskuddsbrev. Tiltak: ";
+    private static final String VARSLING_EMNE = "Tilskuddsbrev for ";
+    private static final String VARSLING_INFIX = " har mottat tilskuddsbrev. Tiltak: ";
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(final Tilsagn tilsagn, final byte[] pdf) {
         return new InsertCorrespondenceBasicV2()
@@ -53,7 +54,7 @@ public class TilsagnTilAltinnMapper {
                         .withAllowForwarding(false)
                         .withMessageSender(MSG_SENDER)
                         .withReportee(tilsagn.getTiltakArrangor().getOrgNummer())
-                        .withNotifications(new NotificationBEList().withNotification(notification(tilsagn.getTiltakNavn())))
+                        .withNotifications(new NotificationBEList().withNotification(notification(tilsagn.getTiltakArrangor().getArbgiverNavn(), tilsagn.getTiltakNavn())))
                         .withContent(new ExternalContentV2()
                                 .withLanguageCode(LANGUAGE_CODE)
                                 .withMessageTitle(vedleggNavn(tilsagn))
@@ -69,13 +70,13 @@ public class TilsagnTilAltinnMapper {
                                                         .withName(vedleggNavn(tilsagn)))))));
     }
 
-    private Notification notification(String tiltak) {
+    private Notification notification(String bedrift, String tiltak) {
         return new Notification()
                 .withLanguageCode(LANGUAGE_CODE)
                 .withShipmentDateTime(fromLocalDate(LocalDateTime.now()))
                 .withReceiverEndPoints(new ReceiverEndPointBEList()
                         .withReceiverEndPoint(new ReceiverEndPoint()
-                                .withTransportType(TransportType.EMAIL).withReceiverAddress("bjarte.tynning@nav.no")))
+                                .withTransportType(TransportType.EMAIL)))
 
                 .withFromAddress(FRA_EPOST_ALTINN)
 
@@ -87,7 +88,7 @@ public class TilsagnTilAltinnMapper {
                                         .withTokenValue("Nytt tilskuddsbrev"),
                                 new TextToken()
                                         .withTokenNum(1)
-                                        .withTokenValue(VARSLING_PREFIX + tiltak)));
+                                        .withTokenValue(VARSLING_INFIX + tiltak)));
 //
 //
 //                        ));
