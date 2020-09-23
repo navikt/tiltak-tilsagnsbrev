@@ -59,7 +59,7 @@ public class TilsagnTilAltinnMapper {
                         .withAllowForwarding(false)
                         .withMessageSender(MSG_SENDER)
                         .withReportee(tilsagn.getTiltakArrangor().getOrgNummer())
-                        .withNotifications(new NotificationBEList().withNotification(notification(tilsagn.getTiltakArrangor(), tilsagn.getTiltakNavn())))
+                        .withNotifications(new NotificationBEList().withNotification(notification(tilsagn.getTiltakArrangor())))
                         .withContent(new ExternalContentV2()
                                 .withLanguageCode(LANGUAGE_CODE)
                                 .withMessageTitle(vedleggNavn(tilsagn))
@@ -75,7 +75,7 @@ public class TilsagnTilAltinnMapper {
                                                         .withName(vedleggNavn(tilsagn)))))));
     }
 
-    private Notification notification(TiltakArrangor tiltakArrangor, String tiltak) {
+    private Notification notification(TiltakArrangor tiltakArrangor) {
 
         final String GEN_TEXT = new StringBuilder(4)
                 .append(VARSLING_EMNE_PREFIX)
