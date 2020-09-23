@@ -75,9 +75,6 @@ public class TilsagnTilAltinnMapper {
                                                         .withName(vedleggNavn(tilsagn)))))));
     }
 
-//    <p>NAV mangler opplysninger fra&nbsp;virksomheten $reporteeName$ for &aring; kunne utbetale&nbsp;ytelser&nbsp;til&nbsp;deres&nbsp;ansatte.&nbsp;</p><p>Logg inn p&aring;&nbsp;Altinn&nbsp;for &aring; lese mer&nbsp;om hva du m&aring;&nbsp;gj&oslash;re.&nbsp;</p><p>Vennlig hilsen NAV</p>
-
-
     private Notification notification(TiltakArrangor tiltakArrangor, String tiltak) {
 
         final String GEN_TEXT = new StringBuilder(4)
