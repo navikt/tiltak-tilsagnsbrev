@@ -81,7 +81,11 @@ public class TilsagnTilAltinnMapper {
 
                 .withNotificationType(VARSLING_TYPE)
                 .withTextTokens(new TextTokenSubstitutionBEList()
-                        .withTextToken(new TextToken().withTokenNum(0).withTokenValue(VARSLING_PREFIX + tiltak)));
+                        .withTextToken(new TextToken()
+                                .withTokenNum(0)
+                                .withTokenValue("Nytt tilskuddsbrev")
+                                .withTokenNum(1)
+                                .withTokenValue(VARSLING_PREFIX + tiltak)));
 //
 //
 //                        ));
