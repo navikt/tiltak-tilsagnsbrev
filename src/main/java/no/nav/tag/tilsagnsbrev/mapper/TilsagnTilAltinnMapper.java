@@ -81,24 +81,26 @@ public class TilsagnTilAltinnMapper {
 
                 .withNotificationType(VARSLING_TYPE)
                 .withTextTokens(new TextTokenSubstitutionBEList()
-                        .withTextToken(new TextToken()
-                                .withTokenNum(0)
-                                .withTokenValue("Nytt tilskuddsbrev")
-                                .withTokenNum(1)
-                                .withTokenValue(VARSLING_PREFIX + tiltak)));
+                        .withTextToken(
+                                new TextToken()
+                                        .withTokenNum(0)
+                                        .withTokenValue("Nytt tilskuddsbrev"),
+                                new TextToken()
+                                        .withTokenNum(1)
+                                        .withTokenValue(VARSLING_PREFIX + tiltak)));
 //
 //
 //                        ));
     }
 
-    private String vedleggNavn(Tilsagn tilsagn){
+    private String vedleggNavn(Tilsagn tilsagn) {
         StringBuilder sb = new StringBuilder()
                 .append(ATTACHMENT_NAME_PREFIX)
                 .append(" ")
                 .append(tilsagn.getTiltakNavn())
                 .append(" ");
 
-        if (tilsagn.erGruppeTilsagn()){
+        if (tilsagn.erGruppeTilsagn()) {
             return sb.append(tilsagn.getPeriode().getFraDato()).append(" til ").append(tilsagn.getPeriode().getTilDato()).toString();
         }
         return sb.append(tilsagn.getDeltaker().getEtternavn()).toString();
@@ -112,7 +114,7 @@ public class TilsagnTilAltinnMapper {
         }
     }
 
-    private String extShipmentRef(){
-        return  EXT_REF + Double.valueOf(Math.random() * 1000000000);
+    private String extShipmentRef() {
+        return EXT_REF + Double.valueOf(Math.random() * 1000000000);
     }
 }
