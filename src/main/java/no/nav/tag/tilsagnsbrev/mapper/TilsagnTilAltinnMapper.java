@@ -9,6 +9,7 @@ import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespon
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List;
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TiltakArrangor;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.altinn.AltinnProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,8 +37,9 @@ public class TilsagnTilAltinnMapper {
     private static final String MSG_SENDER = "NAV";
     private static final String FRA_EPOST_ALTINN = "noreply@altinn.no";
     private static final String VARSLING_TYPE = "TokenTextOnly";
-    private static final String VARSLING_EMNE = "Tilskuddsbrev for ";
-    private static final String VARSLING_INFIX = " har mottat tilskuddsbrev. Tiltak: ";
+    private static final String VARSLING_EMNE_PREFIX = "Tilskuddsbrev for ";
+    private static final String VARSLING_EMNE_SUFFIX = " er tilgjengelig i Altinn";
+    private static final String VARSLING_TEKST_SUFFIX = " er tilgjengelig. Logg inn i Altinn for å se innholdet.";
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(final Tilsagn tilsagn, final byte[] pdf) {
         return new InsertCorrespondenceBasicV2()
@@ -49,12 +51,12 @@ public class TilsagnTilAltinnMapper {
                         .withServiceCode(SERVICE_CODE)
                         .withServiceEdition(SERVICE_EDITION)
                         .withVisibleDateTime(fromLocalDate(LocalDateTime.now()))
-                        .withAllowSystemDeleteDateTime(fromLocalDate(LocalDateTime.now().plusYears(10))) //TODO Sjekk
+                        .withAllowSystemDeleteDateTime(fromLocalDate(LocalDateTime.now().plusYears(10)))
                         .withDueDateTime(fromLocalDate(tilsagn.getRefusjonfristDato().atTime(LocalTime.MIDNIGHT).plusNanos(1)))
                         .withAllowForwarding(false)
                         .withMessageSender(MSG_SENDER)
                         .withReportee(tilsagn.getTiltakArrangor().getOrgNummer())
-                        .withNotifications(new NotificationBEList().withNotification(notification(tilsagn.getTiltakArrangor().getArbgiverNavn(), tilsagn.getTiltakNavn())))
+                        .withNotifications(new NotificationBEList().withNotification(notification(tilsagn.getTiltakArrangor(), tilsagn.getTiltakNavn())))
                         .withContent(new ExternalContentV2()
                                 .withLanguageCode(LANGUAGE_CODE)
                                 .withMessageTitle(vedleggNavn(tilsagn))
@@ -70,28 +72,45 @@ public class TilsagnTilAltinnMapper {
                                                         .withName(vedleggNavn(tilsagn)))))));
     }
 
-    private Notification notification(String bedrift, String tiltak) {
+//    <p>NAV mangler opplysninger fra&nbsp;virksomheten $reporteeName$ for &aring; kunne utbetale&nbsp;ytelser&nbsp;til&nbsp;deres&nbsp;ansatte.&nbsp;</p><p>Logg inn p&aring;&nbsp;Altinn&nbsp;for &aring; lese mer&nbsp;om hva du m&aring;&nbsp;gj&oslash;re.&nbsp;</p><p>Vennlig hilsen NAV</p>
+
+
+    private Notification notification(TiltakArrangor tiltakArrangor, String tiltak) {
+        final String GEN_TEXT = new StringBuilder(4)
+                .append(VARSLING_EMNE_PREFIX)
+                .append(tiltakArrangor.getOrgNummer())
+                .append(" ")
+                .append(tiltakArrangor.getArbgiverNavn())
+                .toString();
+
+        String melding =
+                "<p>Tilskuddsbrev for $" + tiltakArrangor.getOrgNummer() + "$ &nbsp; $" + tiltakArrangor.getArbgiverNavn() + "$ er tilgjengelig.</p>"
+                        + "<p> Logg inn i Altinn for å se innholdet.</p>"
+                        + "<p></p>"
+                        + "<p>Vennlig hilsen NAV</p>";
+
         return new Notification()
                 .withLanguageCode(LANGUAGE_CODE)
                 .withShipmentDateTime(fromLocalDate(LocalDateTime.now()))
                 .withReceiverEndPoints(new ReceiverEndPointBEList()
                         .withReceiverEndPoint(new ReceiverEndPoint()
                                 .withTransportType(TransportType.EMAIL)))
-
                 .withFromAddress(FRA_EPOST_ALTINN)
-
                 .withNotificationType(VARSLING_TYPE)
                 .withTextTokens(new TextTokenSubstitutionBEList()
                         .withTextToken(
                                 new TextToken()
                                         .withTokenNum(0)
-                                        .withTokenValue("Nytt tilskuddsbrev"),
+                                        .withTokenValue(new StringBuilder(3)
+                                                .append(GEN_TEXT)
+                                                .append(VARSLING_EMNE_SUFFIX).toString()),
                                 new TextToken()
                                         .withTokenNum(1)
-                                        .withTokenValue(VARSLING_INFIX + tiltak)));
-//
-//
-//                        ));
+                                        .withTokenValue(melding)
+//                                        .withTokenValue(new StringBuilder()
+//                                                .append(GEN_TEXT)
+//                                                .append(VARSLING_TEKST_SUFFIX).toString())
+                        ));
     }
 
     private String vedleggNavn(Tilsagn tilsagn) {
