@@ -40,6 +40,9 @@ public class TilsagnTilAltinnMapper {
     private static final String VARSLING_EMNE_PREFIX = "Tilskuddsbrev for ";
     private static final String VARSLING_EMNE_SUFFIX = " er tilgjengelig i Altinn";
     private static final String VARSLING_TEKST_SUFFIX = " er tilgjengelig. Logg inn i Altinn for å se innholdet.";
+    private static final String VARSLING_TEKST_FOOTER = "Vennlig hilsen NAV";
+    private static final String START_AVSNITT = "<p>";
+    private static final String SLUTT_AVSNITT = "</p>";
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(final Tilsagn tilsagn, final byte[] pdf) {
         return new InsertCorrespondenceBasicV2()
@@ -76,6 +79,7 @@ public class TilsagnTilAltinnMapper {
 
 
     private Notification notification(TiltakArrangor tiltakArrangor, String tiltak) {
+
         final String GEN_TEXT = new StringBuilder(4)
                 .append(VARSLING_EMNE_PREFIX)
                 .append(tiltakArrangor.getOrgNummer())
@@ -83,11 +87,15 @@ public class TilsagnTilAltinnMapper {
                 .append(tiltakArrangor.getArbgiverNavn())
                 .toString();
 
-        String melding =
-                "<p>Tilskuddsbrev for $" + tiltakArrangor.getOrgNummer() + "$ &nbsp; $" + tiltakArrangor.getArbgiverNavn() + "$ er tilgjengelig.</p>"
-                        + "<p> Logg inn i Altinn for å se innholdet.</p>"
-                        + "<p></p>"
-                        + "<p>Vennlig hilsen NAV</p>";
+        final String VARSLING_TEKST = new StringBuilder(7)
+                .append(START_AVSNITT)
+                .append(GEN_TEXT)
+                .append(VARSLING_TEKST_SUFFIX)
+                .append(SLUTT_AVSNITT)
+                .append(START_AVSNITT)
+                .append(VARSLING_TEKST_FOOTER)
+                .append(SLUTT_AVSNITT)
+                .toString();
 
         return new Notification()
                 .withLanguageCode(LANGUAGE_CODE)
@@ -106,10 +114,7 @@ public class TilsagnTilAltinnMapper {
                                                 .append(VARSLING_EMNE_SUFFIX).toString()),
                                 new TextToken()
                                         .withTokenNum(1)
-                                        .withTokenValue(melding)
-//                                        .withTokenValue(new StringBuilder()
-//                                                .append(GEN_TEXT)
-//                                                .append(VARSLING_TEKST_SUFFIX).toString())
+                                        .withTokenValue(VARSLING_TEKST)
                         ));
     }
 
