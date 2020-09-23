@@ -1,6 +1,7 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.behandler.CidManager;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
 @Slf4j
 @Component
 @AllArgsConstructor
