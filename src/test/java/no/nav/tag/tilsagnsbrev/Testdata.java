@@ -37,8 +37,8 @@ public class Testdata {
 
     public static Tilsagn tilsagnEnDeltaker() {
         return tilsagnsBuilder().deltaker(Deltaker.builder()
-                .etternavn("Nilsen")
-                .fornavn("Kurt")
+                .etternavn("Duck")
+                .fornavn("Donald")
                 .fodselsnr("05055599999")
                 .landKode("NO")
                 .postAdresse("Waldemar Thranesgt 89")
@@ -53,7 +53,7 @@ public class Testdata {
     private static Tilsagn.TilsagnBuilder tilsagnsBuilder() {
         return Tilsagn.builder()
                 .administrasjonKode("INST")
-                .beslutter(new Person("Strømmen", "Evy"))
+                .beslutter(new Person("Hansen", "Nils"))
                 .kommentar("Ingen kommentar")
                 .navEnhet(NavEnhet.builder()
                         .navKontor("1187")
@@ -65,7 +65,7 @@ public class Testdata {
                         .faks("52048361")
                         .build())
                 .periode(new Periode(FRA_DATO, TIL_DATO))
-                .saksbehandler(new Person("Åsberg", "Kristina"))
+                .saksbehandler(new Person("Hans", "Nilsen"))
                 .tilsagnDato(TILSAGNSDATO)
                 .refusjonfristDato(REFUSJONSFRIST_DATO)
                 .tilsagnNummer(new TilsagnNummer("2019", "366023", "1"))
