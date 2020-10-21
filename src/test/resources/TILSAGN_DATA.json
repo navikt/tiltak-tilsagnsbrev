@@ -36,8 +36,8 @@
   ],
   "deltaker": {
     "fodselsnr": "16047844235",
-    "fornavn": "MARTE STRAND",
-    "etternavn": "KVALØ",
+    "fornavn": "DONALD",
+    "etternavn": "DUCK",
     "landKode": "NO",
     "postAdresse": "Nedre Toppenhaug 186",
     "postNummer": "1353",
@@ -55,12 +55,12 @@
     "faks": "67257601"
   },
   "beslutter": {
-    "fornavn": "Kristina",
-    "etternavn": "Åsberg"
+    "fornavn": "Hans",
+    "etternavn": "Nilsen"
   },
   "saksbehandler": {
-    "fornavn": "Kristina",
-    "etternavn": "Åsberg"
+    "fornavn": "Nils",
+    "etternavn": "Hansen"
   },
   "kommentar": "safdaf"
 }
