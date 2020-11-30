@@ -15,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Finn REPOSITORY_NAME
-        run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
+        run: echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')" >> $GITHUB_ENV
 
       - name: Sett IMAGE_BASE
-        run: echo ::set-env name=IMAGE_BASE::$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$REPOSITORY_NAME")
+        run: echo "IMAGE_BASE=$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$REPOSITORY_NAME")" >> $GITHUB_ENV
 
       - name: Sett IMAGE
-        run: echo ::set-env name=IMAGE::$(echo "$IMAGE_BASE:${{ github.sha }}")
+        run: echo "IMAGE=$(echo "$IMAGE_BASE:${{ github.sha }}")" >> $GITHUB_ENV
 
       - name: Lukk deployment-issues
         uses: actions/github-script@0.5.0
@@ -75,13 +75,13 @@ jobs:
     needs: bygg
     steps:
       - name: Finn REPOSITORY_NAME
-        run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
+        run: echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')" >> $GITHUB_ENV
 
       - name: Sett IMAGE_BASE
-        run: echo ::set-env name=IMAGE_BASE::$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$REPOSITORY_NAME")
+        run: echo "IMAGE_BASE=$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$REPOSITORY_NAME")" >> $GITHUB_ENV
 
       - name: Sett IMAGE
-        run: echo ::set-env name=IMAGE::$(echo "$IMAGE_BASE:${{ github.sha }}")
+        run: echo "IMAGE=$(echo "$IMAGE_BASE:${{ github.sha }}")" >> $GITHUB_ENV
 
       - name: Sjekk ut kode
         uses: actions/checkout@v2
@@ -101,13 +101,13 @@ jobs:
     needs: deploy-dev
     steps:
       - name: Finn REPOSITORY_NAME
-        run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
+        run: echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')" >> $GITHUB_ENV
 
       - name: Sett IMAGE_BASE
-        run: echo ::set-env name=IMAGE_BASE::$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$REPOSITORY_NAME")
+        run: echo "IMAGE_BASE=$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$REPOSITORY_NAME")" >> $GITHUB_ENV
 
       - name: Sett IMAGE
-        run: echo ::set-env name=IMAGE::$(echo "$IMAGE_BASE:${{ github.sha }}")
+        run: echo "IMAGE=$(echo "$IMAGE_BASE:${{ github.sha }}")" >> $GITHUB_ENV
 
       - name: Sjekk ut kode
         uses: actions/checkout@v2
