@@ -1,0 +1,41 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: tiltak-tilsagnsbrev
+  namespace: default
+  labels:
+    team: arbeidsgiver
+spec:
+  image: {{image}}
+  team: arbeidsgiver
+  port: 8080
+  replicas:
+    min: 1
+    max: 1
+  liveness:
+    path: /tiltak-tilsagnsbrev/internal/healthcheck
+    initialDelay: 60
+    timeout: 10
+  readiness:
+    path: /tiltak-tilsagnsbrev/internal/healthcheck
+    initialDelay: 60
+    timeout: 10
+  ingresses:
+    - {{ingress}}
+  vault:
+    enabled: true
+    paths:
+      - kvPath: {{vault-serviceuser-path}}
+        mountPath: "/secrets/serviceuser/srvtiltak-tilsagns/"
+      - kvPath: {{vault-default-path}}
+        mountPath: "/var/run/secrets/nais.io/vault/"
+  env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: {{spring-profil}}
+  webproxy: true
+  prometheus:
+    enabled: false
+    path: /tiltak-tilsagnsbrev/internal/actuator/prometheus
+  resources:
+    limits:
+      memory: 1024Mi

@@ -1,0 +1,23 @@
+apiVersion: "nais.io/v1"
+kind: "Alert"
+metadata:
+  name: tiltak-tilsagnsbrev-alert
+  namespace: default
+  labels:
+    team: teamtag
+spec:
+  receivers:
+    slack:
+      channel: 'arbeidsgiver-notifications'
+      prependText: '<!here> | '
+  alerts:
+    - alert: applikasjon nede
+      expr: up{app="tiltak-tilsagnsbrev", job="kubernetes-pods"} == 0
+      for: 5m
+      description: "tiltak-tilsagnsbrev er nede"
+      action: "`kubectl describe pod for events, og `kubectl logs` for logger"
+    - alert: tilsagnsbrev-feilet
+      expr: up{app="tiltak-tilsagnsbrev", job="kubernetes-pods"} == 0
+      for: 3m
+      description: "tiltak-tilsagnsbrev er nede"
+      action: "`kubectl describe pod -l app=tiltak-tilsagnsbrev` for events, og `kubectl logs -l app=tiltak-tilsagnsbrev` for logger"
