@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1"
 kind: "Alert"
 metadata:
   name: tiltak-tilsagnsbrev-alert
-  namespace: default
+  namespace: {{namespace}}
   labels:
     team: teamtag
 spec:
