@@ -2,6 +2,8 @@ logging:
   level:
     no.nav.tag.tilsagnsbrev: INFO
     org.springframework.kafka.listener.LoggingErrorHandler: OFF
+    org.apache.cxf.services.*: WARN
+    org.apache.cxf.ws.*: ERROR
 
 spring:
   kafka:
