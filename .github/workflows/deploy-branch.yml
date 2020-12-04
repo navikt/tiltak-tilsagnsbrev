@@ -2,9 +2,9 @@ name: Deploy til dev
 on:
   repository_dispatch:
     types: [deploy-command]
-
 env:
-  GITHUB_REPOSITORY: ${{ github.repository }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/tiltak-tilsagnsbrev
  
 jobs:
   deploy-branch:
@@ -12,12 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Finn REPOSITORY_NAME
-        run: echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}" >> $GITHUB_ENV
-
-      - name: Sett IMAGE_BASE
-        run: echo "IMAGE_BASE=$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$REPOSITORY_NAME")" >> $GITHUB_ENV
-
       - name: Kommenterer med link til action
         uses: actions/github-script@0.5.0
         with:
@@ -27,7 +21,7 @@ jobs:
               issue_number: ${{ github.event.client_payload.github.payload.issue.number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Deploy satt i gang: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+              body: 'Deploy satt i gang: https://github.com/navikt/tiltak-tilsagnsbrev/actions/runs/${{ github.run_id }}'
             })
 
       - name: Sjekk ut kode
@@ -55,7 +49,7 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: nais/naiserator.yaml
           PRINT_PAYLOAD: true
-          VARS: nais/dev-fss.json
+          VARS: nais/dev-fss.json,namespace=arbeidsgiver
           REF: ${{ env.COMMIT }}
           IMAGE: ${{ env.IMAGE }}
           
