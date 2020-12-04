@@ -7,22 +7,14 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  GITHUB_REPOSITORY: ${{ github.repository }}
+  IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/tiltak-tilsagnsbrev
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/tiltak-tilsagnsbrev:${{ github.sha }}
  
 jobs:
   bygg:
     name: Bygg
     runs-on: ubuntu-latest
     steps:
-      - name: Finn REPOSITORY_NAME
-        run: echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')" >> $GITHUB_ENV
-
-      - name: Sett IMAGE_BASE
-        run: echo "IMAGE_BASE=$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$REPOSITORY_NAME")" >> $GITHUB_ENV
-
-      - name: Sett IMAGE
-        run: echo "IMAGE=$(echo "$IMAGE_BASE:${{ github.sha }}")" >> $GITHUB_ENV
-
       - name: Lukk deployment-issues
         uses: actions/github-script@0.5.0
         with:
@@ -74,15 +66,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: bygg
     steps:
-      - name: Finn REPOSITORY_NAME
-        run: echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')" >> $GITHUB_ENV
-
-      - name: Sett IMAGE_BASE
-        run: echo "IMAGE_BASE=$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$REPOSITORY_NAME")" >> $GITHUB_ENV
-
-      - name: Sett IMAGE
-        run: echo "IMAGE=$(echo "$IMAGE_BASE:${{ github.sha }}")" >> $GITHUB_ENV
-
       - name: Sjekk ut kode
         uses: actions/checkout@v2
 
@@ -93,22 +76,13 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: nais/naiserator.yaml
           PRINT_PAYLOAD: true
-          VARS: nais/dev-fss.json,app=tiltak-tilsagnsbrev,namespace=arbeidsgiver
+          VARS: nais/dev-fss.json,namespace=arbeidsgiver
 
   deploy-prod:
     name: Deploy til prod
     runs-on: ubuntu-latest
     needs: deploy-dev
     steps:
-      - name: Finn REPOSITORY_NAME
-        run: echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')" >> $GITHUB_ENV
-
-      - name: Sett IMAGE_BASE
-        run: echo "IMAGE_BASE=$(echo "docker.pkg.github.com/$GITHUB_REPOSITORY/$REPOSITORY_NAME")" >> $GITHUB_ENV
-
-      - name: Sett IMAGE
-        run: echo "IMAGE=$(echo "$IMAGE_BASE:${{ github.sha }}")" >> $GITHUB_ENV
-
       - name: Sjekk ut kode
         uses: actions/checkout@v2
 
