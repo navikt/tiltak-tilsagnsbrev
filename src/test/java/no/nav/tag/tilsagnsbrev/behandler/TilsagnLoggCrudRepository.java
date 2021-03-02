@@ -6,7 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 import java.util.UUID;
 
-@ActiveProfiles("dev")
+@ActiveProfiles("local")
 public interface TilsagnLoggCrudRepository extends CrudRepository<TilsagnLogg, UUID> {
 
     @Override

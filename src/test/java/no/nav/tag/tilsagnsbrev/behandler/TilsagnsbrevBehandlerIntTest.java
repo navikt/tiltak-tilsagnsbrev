@@ -5,26 +5,24 @@ import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.TilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer.topic;
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"dev", "local"})
-@DirtiesContext
+@ActiveProfiles("local")
+@EmbeddedKafka(partitions = 1, topics = topic)
 public class TilsagnsbrevBehandlerIntTest {
 
     @Autowired
@@ -45,14 +43,14 @@ public class TilsagnsbrevBehandlerIntTest {
     private final static String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
     private static ArenaMelding arenaMelding = Testdata.arenaMelding();
 
-    @After
+    @AfterEach
     public void tearDown() {
         mockServer.getServer().resetAll();
         tilsagnsbrevRepository.deleteAll();
         loggCrudRepository.deleteAll();
     }
 
-    @Before
+    @BeforeEach
     public void setUp(){
         mockServer.stubForAltOk();
     }
@@ -116,7 +114,6 @@ public class TilsagnsbrevBehandlerIntTest {
 
     @Test
     public void feilFraJoark() {
-
         mockServer.getServer().stubFor(post("/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true").willReturn(unauthorized()));
 
         final UUID CID = UUID.randomUUID();

@@ -1,16 +1,5 @@
 package no.nav.tag.tilsagnsbrev.behandler;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
@@ -24,8 +13,18 @@ import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 public class OppgaverTest {
 
     @Mock
@@ -58,12 +57,11 @@ public class OppgaverTest {
     private static final Journalpost JOURNALPOST = mock(Journalpost.class);
     private static final InsertCorrespondenceBasicV2 ALTINN_WS_REQUEST = mock(InsertCorrespondenceBasicV2.class);
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        
-        when(tilsagnJsonMapper.opprettPdfJson(any(TilsagnUnderBehandling.class))).thenReturn(PDF_JSON);
-        when(tilsagnJournalpostMapper.tilsagnTilJournalpost(any(TilsagnUnderBehandling.class))).thenReturn(JOURNALPOST);
-        
+//
+
+
     }
     
     @Test
@@ -72,17 +70,14 @@ public class OppgaverTest {
         when(tilsagnTilAltinnMapper.tilAltinnMelding(null, null)).thenReturn(ALTINN_WS_REQUEST);
 
         oppgaver.utfoerOppgaver(tub);
-        
+
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(eq(tub));
-        verifyPdfDokOpprettet();
-        verifyJournalforing();
+        verify(tilsagnJsonMapper, times(1)).opprettPdfJson(any(TilsagnUnderBehandling.class));
+        verify(pdfService, times(1)).tilsagnsbrevTilPdfBytes(any(TilsagnUnderBehandling.class), any());
+        verify(tilsagnJournalpostMapper, times(1)).tilsagnTilJournalpost(any(TilsagnUnderBehandling.class));
+        verify(joarkService, times(1)).sendJournalpost(any());
         verifySendTilAltinn();
         verify(tilsagnBehandler, times(1)).lagreStatus(any(TilsagnUnderBehandling.class));
-    }
-
-    private void verifyPdfDokOpprettet() {
-        verify(tilsagnJsonMapper, times(1)).opprettPdfJson(any(TilsagnUnderBehandling.class));
-        verify(pdfService, times(1)).tilsagnsbrevTilPdfBytes(any(TilsagnUnderBehandling.class), eq(PDF_JSON));
     }
     
     private void verifyJournalforing() {
@@ -97,6 +92,7 @@ public class OppgaverTest {
     @Test
     public void behandlerTilsagnEtterFeiletJournalforing() {
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().json(TILSAGN_DATA).pdf(PDF_BYTEARRAY).tilsagnsbrevId(1).mappetFraArena(true).altinnReferanse(002).build();
+        when(tilsagnJournalpostMapper.tilsagnTilJournalpost(any(TilsagnUnderBehandling.class))).thenReturn(JOURNALPOST);
 
         oppgaver.utfoerOppgaver(tub);
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(any(TilsagnUnderBehandling.class));

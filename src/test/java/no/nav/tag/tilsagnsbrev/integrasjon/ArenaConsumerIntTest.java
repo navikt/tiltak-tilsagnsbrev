@@ -6,37 +6,22 @@ import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggCrudRepository;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
 import no.nav.tag.tilsagnsbrev.feilet.TilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringSerializer;
-import org.junit.*;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.test.rule.EmbeddedKafkaRule;
-import org.springframework.kafka.test.utils.ContainerTestUtils;
-import org.springframework.kafka.test.utils.KafkaTestUtils;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Map;
-
+import static no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer.topic;
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
+@ActiveProfiles("local")
 @SpringBootTest
-@ActiveProfiles({"dev"})
-@DirtiesContext
+@EmbeddedKafka(partitions = 1, topics = topic)
 public class ArenaConsumerIntTest {
-
-    @ClassRule
-    public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true, ArenaConsumer.topic);
-
-    @Autowired
-    private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
     @Autowired
     private TilsagnsbrevRepository tilsagnsbrevRepository;
@@ -51,29 +36,15 @@ public class ArenaConsumerIntTest {
     private IntegrasjonerMockServer mockServer;
 
     private static final long SLEEP_LENGTH = 1000L;
+    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    @AfterClass
-    public static void tearDownAfterClass(){
-        embeddedKafkaRule.getEmbeddedKafka().destroy();
-    }
-
-    @Before
+    @BeforeEach
     public void setUp(){
         mockServer.stubForAltOk();
-
-        Map<String, Object> senderProps = KafkaTestUtils.senderProps(embeddedKafkaRule.getEmbeddedKafka().getBrokersAsString());
-        senderProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        senderProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        DefaultKafkaProducerFactory producerFactory = new DefaultKafkaProducerFactory(senderProps);
-        kafkaTemplate = new KafkaTemplate<>(producerFactory);
-        kafkaTemplate.setDefaultTopic(ArenaConsumer.topic);
-        kafkaListenerEndpointRegistry.getListenerContainers()
-                .forEach(messageListenerContainer ->
-                        ContainerTestUtils.waitForAssignment(messageListenerContainer, embeddedKafkaRule.getEmbeddedKafka().getPartitionsPerTopic()));
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         mockServer.getServer().resetAll();
         tilsagnsbrevRepository.deleteAll();
@@ -84,7 +55,7 @@ public class ArenaConsumerIntTest {
     public void behandlerTilsagnsbrev() throws InterruptedException {
         final String arenamelding = Testdata.hentFilString("arenaMelding.json");
 
-        kafkaTemplate.send(ArenaConsumer.topic, "", arenamelding);
+        kafkaTemplate.send(topic, "", arenamelding);
         Thread.sleep(SLEEP_LENGTH);
 
         assertTrue(tilsagnLoggRepository.tilsagnsbevIdFinnes(111));
@@ -102,7 +73,7 @@ public class ArenaConsumerIntTest {
         assertFalse(loggCrudRepository.findAll().iterator().hasNext());
 
         final String arenameldingMedFeil = Testdata.hentFilString("arenaMelding_som_feiler.json");
-        kafkaTemplate.send(ArenaConsumer.topic, "", arenameldingMedFeil);
+        kafkaTemplate.send(topic, "", arenameldingMedFeil);
         Thread.sleep(SLEEP_LENGTH);
 
         assertTrue("feil-database",tilsagnsbrevRepository.findAll().isEmpty());
@@ -117,15 +88,15 @@ public class ArenaConsumerIntTest {
 
         final String arenameldingMedFeil = Testdata.hentFilString("arenaMelding_som_feiler.json");
         final String arenameldingOk = Testdata.hentFilString("arenaMelding.json");
-        kafkaTemplate.send(ArenaConsumer.topic, "", arenameldingMedFeil);
-        kafkaTemplate.send(ArenaConsumer.topic, "", arenameldingOk);
+        kafkaTemplate.send(topic, "", arenameldingMedFeil);
+        kafkaTemplate.send(topic, "", arenameldingOk);
         Thread.sleep(SLEEP_LENGTH);
 
         assertEquals(1, tilsagnsbrevRepository.findAll().stream().filter(tub -> tub.getTilsagnsbrevId() == 111).count());
         assertTrue(tilsagnsbrevRepository.findAll().stream().filter(tub -> tub.getTilsagnsbrevId() == 111).allMatch(tub -> tub.isBehandlet()));
 
         TilsagnLogg tilsagnLogg = loggCrudRepository.findAll().get(0);
-        assertEquals(111 , tilsagnLogg.getTilsagnsbrevId().intValue());
+        assertEquals(111, tilsagnLogg.getTilsagnsbrevId().intValue());
         assertNotNull(tilsagnLogg.getTidspunktLest());
     }
 }

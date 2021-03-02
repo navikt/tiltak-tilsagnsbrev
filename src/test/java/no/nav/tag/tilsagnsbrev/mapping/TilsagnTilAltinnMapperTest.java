@@ -2,24 +2,24 @@ package no.nav.tag.tilsagnsbrev.mapping;
 
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2;
+import no.nav.tag.tilsagnsbrev.Testdata;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.altinn.AltinnProperties;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.simulator.EncodedString;
-import no.nav.tag.tilsagnsbrev.Testdata;
-import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-@Ignore("Sjekk nytteverdi")
-@RunWith(MockitoJUnitRunner.class)
+@Disabled("Sjekk nytteverdi")
+@ExtendWith(MockitoExtension.class)
 public class TilsagnTilAltinnMapperTest {
 
     @Mock
