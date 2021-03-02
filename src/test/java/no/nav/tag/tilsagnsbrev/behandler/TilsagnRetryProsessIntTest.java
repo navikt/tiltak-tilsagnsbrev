@@ -4,15 +4,14 @@ import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.TilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -22,11 +21,12 @@ import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
+import static no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer.topic;
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles({"dev", "local"})
+@ActiveProfiles("local")
+@EmbeddedKafka(partitions = 1, topics = topic)
 @DirtiesContext
 public class TilsagnRetryProsessIntTest {
 
@@ -45,12 +45,12 @@ public class TilsagnRetryProsessIntTest {
     private final static String tilsagnData = Testdata.hentFilString("TILSAGN_DATA.json");
     private final static String altinnFeilRespons = Testdata.hentFilString("altinn500Resp.xml");
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockServer.stubForAltOk();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         mockServer.getServer().resetAll();
         tilsagnsbrevRepository.deleteAll();

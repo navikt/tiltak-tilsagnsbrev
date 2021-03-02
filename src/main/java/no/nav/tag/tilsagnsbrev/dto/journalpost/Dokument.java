@@ -7,5 +7,6 @@ import java.util.List;
 @Data
 public class Dokument {
     private final String tittel;
+    private final String brevkode;
     private final List<DokumentVariant> dokumentVarianter;
 }
