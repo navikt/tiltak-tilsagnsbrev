@@ -8,22 +8,27 @@ import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import static no.nav.tag.tilsagnsbrev.mapper.TiltakType.*;
 
 @Slf4j
 @Component
 public class TilsagnJournalpostMapper {
 
-    private Map<String, String> tiltaksKodeJPTittel = new HashMap<String, String>();
+    private Map<String, TiltakType> tiltakType = new HashMap();
 
     public TilsagnJournalpostMapper() {
-        initJournalpostTittel();
+        initTiltakTyper();
     }
 
-    public Journalpost tilsagnTilJournalpost(TilsagnUnderBehandling tilsagnUnderBehandling){
+    public Journalpost tilsagnTilJournalpost(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
             return opprettJournalpost(tilsagnUnderBehandling.getTilsagn(), tilsagnUnderBehandling.getPdf());
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("Feil ved mapping til Journalpost", e);
             throw new DataException(e.getMessage());
         }
@@ -34,38 +39,37 @@ public class TilsagnJournalpostMapper {
         Bruker bruker = new Bruker(tilsagnsbrev.getTiltakArrangor().getOrgNummer());
         Mottaker mottaker = new Mottaker(tilsagnsbrev.getTiltakArrangor().getOrgNummer(), tilsagnsbrev.getTiltakArrangor().getArbgiverNavn());
         final String base64EncodetPdf = Base64.getEncoder().encodeToString(pdfBytes);
-        Dokument dokument = new Dokument(getJournalpostTittel(tilsagnsbrev.getTiltakKode()), Collections.singletonList(new DokumentVariant(base64EncodetPdf)));
-        Journalpost journalpost = new Journalpost(getJournalpostTittel(tilsagnsbrev.getTiltakKode()), bruker, mottaker, sak, Collections.singletonList(dokument));
+        TiltakType tiltakType = getTiltakType(tilsagnsbrev.getTiltakKode());
+        Dokument dokument = new Dokument(tiltakType.getTittel(), tiltakType.getBrevkode(), Collections.singletonList(new DokumentVariant(base64EncodetPdf)));
+        Journalpost journalpost = new Journalpost(tiltakType.getTittel(), bruker, mottaker, sak, Collections.singletonList(dokument));
         return journalpost;
     }
 
-    private String opprettArkivsaknr(TilsagnNummer tilsagnNr){
+    private String opprettArkivsaknr(TilsagnNummer tilsagnNr) {
         return new StringBuilder(tilsagnNr.getAar()).append(tilsagnNr.getLoepenrSak()).toString();
     }
 
-    private void initJournalpostTittel() {
-        tiltaksKodeJPTittel.put("ARBFORB", "Tilsagnsbrev Arbeidsforberedende trening");
-        tiltaksKodeJPTittel.put("EKSPEBIST", "Tilsagnsbrev Ekspertbistand");
-        tiltaksKodeJPTittel.put("FUNKSJASS", "Tilsagnsbrev funksjonsassistanse");
-        tiltaksKodeJPTittel.put("INKLUTILS", "Tilsagnsbrev Inkluderingstilskudd");
-        tiltaksKodeJPTittel.put("MENTOR", "Tilsagnsbrev Mentor");
-        tiltaksKodeJPTittel.put("MIDLONTIL", "Tilsagnsbrev Midlertidig lønnstilskudd");
-        tiltaksKodeJPTittel.put("ENKELAMO", "Tilsagnsbrev Opplæring AMO");
-        tiltaksKodeJPTittel.put("ENKFAGYRKE", "Tilsagnsbrev Enkeltplass fag og yrkesopplæring");
-        tiltaksKodeJPTittel.put("GRUFAGYRKE", "Tilsagnsbrev Gruppe fag og yrkesopplæring");
-        tiltaksKodeJPTittel.put("HOYEREUTD", "Tilsagnsbrev Opplæring høyere utdanning");
-        tiltaksKodeJPTittel.put("VARLONTIL", "Tilsagnsbrev Varig lønnstilskudd");
-        tiltaksKodeJPTittel.put("VASV", "Tilsagnsbrev Varig tilrettelagt arbeid");
-        tiltaksKodeJPTittel.put("VATIAROR", "Tilsagnsbrev Varig tilrettelagt arbeid i ordinær virksomhet");
+    private void initTiltakTyper() {
+        tiltakType.put(ARBFORB.getTiltakskode(), ARBFORB);
+        tiltakType.put(EKSPEBIST.getTiltakskode(), EKSPEBIST);
+        tiltakType.put(FUNKSJASS.getTiltakskode(), FUNKSJASS);
+        tiltakType.put(INKLUTILS.getTiltakskode(), INKLUTILS);
+        tiltakType.put(MENTOR.getTiltakskode(), MENTOR);
+        tiltakType.put(MIDLONTIL.getTiltakskode(), MIDLONTIL);
+        tiltakType.put(ENKELAMO.getTiltakskode(), ENKELAMO);
+        tiltakType.put(ENKFAGYRKE.getTiltakskode(), ENKFAGYRKE);
+        tiltakType.put(GRUFAGYRKE.getTiltakskode(), GRUFAGYRKE);
+        tiltakType.put(HOYEREUTD.getTiltakskode(), HOYEREUTD);
+        tiltakType.put(VARLONTIL.getTiltakskode(), VARLONTIL);
+        tiltakType.put(VASV.getTiltakskode(), VASV);
+        tiltakType.put(VATIAROR.getTiltakskode(), VATIAROR);
     }
 
-    private String getJournalpostTittel(String kode) {
-        Optional<String> optTittel = Optional.ofNullable (tiltaksKodeJPTittel.get(kode));
-        if(optTittel.isEmpty()){
-            final String alternativTittel = "Tilsagnsbrev " + kode;
-            log.error("Ingen journalpost-tittel funnet for tiltakskode " + kode + ". Erstatter tittel med: " + alternativTittel);
-            return alternativTittel;
+    private TiltakType getTiltakType(String tiltakKode) {
+        TiltakType tiltakType = this.tiltakType.get(tiltakKode);
+        if (tiltakType == null) {
+            throw new DataException("Ukjent tiltak-kode: " + tiltakKode);
         }
-        return optTittel.get();
+        return tiltakType;
     }
 }

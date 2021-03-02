@@ -1,18 +1,19 @@
 package no.nav.tag.tilsagnsbrev.behandler;
 
+import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
-import no.nav.tag.tilsagnsbrev.Testdata;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TilsagnsbrevBehandlerTest {
 
     @Mock
@@ -38,20 +39,22 @@ public class TilsagnsbrevBehandlerTest {
         verify(oppgaver, times(1)).utfoerOppgaver(tub);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void parserIkkeArenaMeldingOgAvbryter() {
-        ArenaMelding feiler = Testdata.arenaMeldingMedFeil();
-        TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(feiler).build();
 
-        doThrow(RuntimeException.class).when(tilsagnJsonMapper).pakkUtArenaMelding(tilsagnUnderBehandling);
-        try {
-            tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
-        } finally {
-            verify(tilsagnLoggRepository, never()).lagretIdHvisNyMelding(tilsagnUnderBehandling);
-            verify(tilsagnJsonMapper, never()).opprettTilsagn(any(TilsagnUnderBehandling.class));
-            verify(oppgaver, never()).utfoerOppgaver(any(TilsagnUnderBehandling.class));
-        }
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            ArenaMelding feiler = Testdata.arenaMeldingMedFeil();
+            TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder().arenaMelding(feiler).build();
 
+            doThrow(RuntimeException.class).when(tilsagnJsonMapper).pakkUtArenaMelding(tilsagnUnderBehandling);
+            try {
+                tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
+            } finally {
+                verify(tilsagnLoggRepository, never()).lagretIdHvisNyMelding(tilsagnUnderBehandling);
+                verify(tilsagnJsonMapper, never()).opprettTilsagn(any(TilsagnUnderBehandling.class));
+                verify(oppgaver, never()).utfoerOppgaver(any(TilsagnUnderBehandling.class));
+            }
+        });
     }
 
 }

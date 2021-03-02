@@ -11,7 +11,7 @@ import org.springframework.kafka.test.EmbeddedKafkaBroker;
 
 @Slf4j
 @Configuration
-@Profile("local")
+@Profile("local-app")
 public class KafkaKonfig {
 
     @Autowired
@@ -27,5 +27,4 @@ public class KafkaKonfig {
     public KafkaListenerEndpointRegistry getKafkaListenerEndpointRegistry(){
         return new KafkaListenerEndpointRegistry();
     }
-
 }

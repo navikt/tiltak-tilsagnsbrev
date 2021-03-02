@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-@Profile("dev")
-@Slf4j
 @Component
+@Profile("local")
+@Slf4j
 @Getter
 public class IntegrasjonerMockServer implements DisposableBean {
     private final WireMockServer server;
