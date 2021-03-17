@@ -143,6 +143,29 @@ public class PdfgenServiceIntTest {
         opprettPdf(VATIAROR, tub);
     }
 
+    @Test
+    public void FORSAMOENK() {
+        tilsagnDeltaker.setTiltakNavn("Forsøk AMO enkeltplass");
+        tilsagnDeltaker.setTiltakKode(FORSAMOENK.getTiltakskode());
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
+        opprettPdf(FORSAMOENK, tub);
+    }
+    @Test
+    public void FORSFAGGRU() {
+        tilsagnGruppe.setTiltakNavn("Forsøk fag- og yrkesopplæring gruppe");
+        tilsagnGruppe.setTiltakKode(FORSFAGGRU.getTiltakskode());
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnGruppe).build();
+        opprettPdf(FORSFAGGRU, tub);
+    }
+    @Test
+    public void FORSFAGENK() {
+        tilsagnDeltaker.setTiltakNavn("Forsøk fag- og yrkesopplæring enkeltplass");
+        tilsagnDeltaker.setTiltakKode(FORSFAGENK.getTiltakskode());
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
+        opprettPdf(FORSFAGENK, tub);
+    }
+
+
     private void opprettPdf(TiltakType tiltakType, TilsagnUnderBehandling tub) {
         String pdfJson = tilsagnJsonMapper.opprettPdfJson(tub);
         System.out.println(pdfJson);
