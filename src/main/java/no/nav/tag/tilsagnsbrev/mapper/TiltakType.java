@@ -17,9 +17,9 @@ public enum TiltakType {
     HOYEREUTD("HOYEREUTD", "Tilsagnsbrev Opplæring høyere utdanning", "arena-tilskudd-oppl-høyutd"),
     VASV("VASV", "Tilsagnsbrev Varig tilrettelagt arbeid", "arena-tilskudd-vartil-arb"),
     VATIAROR("VATIAROR", "Tilsagnsbrev Varig tilrettelagt arbeid i ordinær virksomhet", "arena-tilskudd-vartil_ordvirk"),
-    FORSAMOENK("FORSAMOENK", "Forsøk AMO enkeltplass", "arena-tilskudd-forsok-enk-amo"),
-    FORSFAGGRU("FORSFAGGRU", "Forsøk fag- og yrkesopplæring gruppe", "arena-tilskudd-forsok-grp-fagyrk"),
-    FORSFAGENK("FORSFAGENK", "Forsøk fag- og yrkesopplæring enkeltplass", "arena-tilskudd-enk-fagyrk");
+    FORSAMOENK("FORSAMOENK", "Tilsagnsbrev Forsøk AMO enkeltplass", "arena-tilskudd-forsok-enk-amo"),
+    FORSFAGGRU("FORSFAGGRU", "Tilsagnsbrev Forsøk fag- og yrkesopplæring gruppe", "arena-tilskudd-forsok-grp-fagyrk"),
+    FORSFAGENK("FORSFAGENK", "Tilsagnsbrev Forsøk fag- og yrkesopplæring enkeltplass", "arena-tilskudd-enk-fagyrk");
 
 
     private final String tiltakskode;
