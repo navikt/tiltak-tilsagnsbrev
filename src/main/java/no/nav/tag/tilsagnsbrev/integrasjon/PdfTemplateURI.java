@@ -40,6 +40,7 @@ public class PdfTemplateURI {
         final URI varigTilrettelagtOrdinar = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-varig-tilrettelagt-ordinar").path(CREATE_PDF).build().toUri();
 
         final URI forsokKompetansetiltak = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-kompetansetiltak").path(CREATE_PDF).build().toUri();
+        final URI forsokKompetansetiltakGruppe = UriComponentsBuilder.fromUri(host).path(PREFIX).path("tiltak-tilsagnsbrev-kompetansetiltak-grp").path(CREATE_PDF).build().toUri();
 
         tiltaksKodeURI.put("ARBFORB", arbeidsForberedendeTrening);
         tiltaksKodeURI.put("EKSPEBIST", ekspertbistand);
@@ -56,7 +57,7 @@ public class PdfTemplateURI {
         tiltaksKodeURI.put("VATIAROR", varigTilrettelagtOrdinar);
 
         tiltaksKodeURI.put("FORSAMOENK", forsokKompetansetiltak);
-        tiltaksKodeURI.put("FORSFAGGRU", forsokKompetansetiltak);
+        tiltaksKodeURI.put("FORSFAGGRU", forsokKompetansetiltakGruppe);
         tiltaksKodeURI.put("FORSFAGENK", forsokKompetansetiltak);
 
     }
