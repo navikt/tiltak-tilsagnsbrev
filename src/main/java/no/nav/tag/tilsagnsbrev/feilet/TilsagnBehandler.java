@@ -41,7 +41,7 @@ public class TilsagnBehandler {
             tilsagnsbrevRepository.save(oppdatertTilsagnUnderBehandling);
             return true;
         } catch (Exception e) {
-            log.error("Feil ved lagring av tilsagnsfeil! Tilsagn: id={}, journalpostId={}, Sendt til Arena: {}",
+            log.error("Feil ved lagring av tilsagn! Tilsagn: id={}, journalpostId={}, Sendt til Altinn: {}",
                     tilsagnUnderBehandling.getTilsagnsbrevId(),
                     tilsagnUnderBehandling.getJournalpostId(),
                     (!tilsagnUnderBehandling.skalTilAltinn()),

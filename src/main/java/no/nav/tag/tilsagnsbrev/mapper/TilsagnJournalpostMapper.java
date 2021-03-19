@@ -63,6 +63,9 @@ public class TilsagnJournalpostMapper {
         tiltakType.put(VARLONTIL.getTiltakskode(), VARLONTIL);
         tiltakType.put(VASV.getTiltakskode(), VASV);
         tiltakType.put(VATIAROR.getTiltakskode(), VATIAROR);
+        tiltakType.put(FORSAMOENK.getTiltakskode(), FORSAMOENK);
+        tiltakType.put(FORSFAGGRU.getTiltakskode(), FORSFAGGRU);
+        tiltakType.put(FORSFAGENK.getTiltakskode(), FORSFAGENK);
     }
 
     private TiltakType getTiltakType(String tiltakKode) {
