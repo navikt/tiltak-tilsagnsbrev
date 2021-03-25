@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: tiltak-tilsagnsbrev
-  namespace: {{namespace}}
+  namespace: arbeidsgiver
   labels:
     team: arbeidsgiver
 spec:
