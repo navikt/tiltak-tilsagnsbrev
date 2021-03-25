@@ -28,8 +28,6 @@ tilsagnsbrev:
     maximum-pool-size: 1
     max-lifetime: 300000
   integrasjon:
-    pdfgen:
-      uri: ${tilsagnsbrev.pdfgen.url}
     joark:
       uri: ${tilsagnsbrev.joark.url}
     sts:
