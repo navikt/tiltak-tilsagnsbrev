@@ -28,8 +28,6 @@ tilsagnsbrev:
     maximum-pool-size: 1
     max-lifetime: 300000
   integrasjon:
-    pdfgen:
-      uri: http://tiltak-dokgen.arbeidsgiver.svc.nais.local
     joark:
       uri: ${tilsagnsbrev.joark.url}
     sts:
