@@ -19,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TilsagnUnderBehandling {
 
-    static final int MAX_RETRIES = 3;
+    public static final int MAX_RETRIES = 3;
 
     @Id
     private UUID cid;
