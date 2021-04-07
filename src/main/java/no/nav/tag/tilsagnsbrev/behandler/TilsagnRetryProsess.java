@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.behandler;
 
+import io.micrometer.core.annotation.Counted;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.TilsagnBehandler;
@@ -34,15 +35,18 @@ public class TilsagnRetryProsess {
                 });
     }
 
+
     private void evaluerRekjørtTilsagn(TilsagnUnderBehandling feiletTilsagnsbrev) {
         if (MAX_RETRIES == feiletTilsagnsbrev.getRetry() && !feiletTilsagnsbrev.isBehandlet()) {
-            log.error("Tilsagnsbrev må behandlers manuelt: OrgNummer={}, JournalpostId={}, tiltak={}"
-                    , feiletTilsagnsbrev.getTilsagn().getTiltakArrangor().getOrgNummer()
+            varsleProsessfeil(feiletTilsagnsbrev.getTilsagn().getTiltakArrangor().getOrgNummer()
                     , feiletTilsagnsbrev.getJournalpostId()
                     , feiletTilsagnsbrev.getTilsagn().getTiltakNavn());
-
-
         }
+    }
+
+    @Counted("Til manuell")
+    private void varsleProsessfeil(String orgNr, String journalpostId, String tiltak) {
+        log.error("Tilsagnsbrev må behandlers manuelt: OrgNummer={}, JournalpostId={}, tiltak={}", orgNr, journalpostId, tiltak);
     }
 
 }

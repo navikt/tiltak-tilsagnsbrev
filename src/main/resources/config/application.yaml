@@ -45,3 +45,7 @@ tilsagnsbrev:
       uri: uri
       user: ${tilsagnsbrev_srvuser}
       password: ${tilsagnsbrev_srvpwd}
+
+management.endpoints.web:
+  exposure.include: info, health, metrics, prometheus
+  base-path: /internal/actuator

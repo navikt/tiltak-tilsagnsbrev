@@ -34,7 +34,7 @@ spec:
     value: {{spring-profil}}
   webproxy: true
   prometheus:
-    enabled: false
+    enabled: true
     path: /tiltak-tilsagnsbrev/internal/actuator/prometheus
   resources:
     limits:
