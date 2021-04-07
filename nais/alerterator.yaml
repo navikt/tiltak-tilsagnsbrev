@@ -21,3 +21,8 @@ spec:
       for: 10m
       description: "tiltak-tilsagnsbrev feiler mye, ns: arbeidsgiver"
       action: "Sjekk loggene til app tiltak-tilsagnsbrev i namespace arbeidsgiver, for å se hvorfor det er så mye feil"
+    - alert: tilsagnsbrev feilet
+      expr: retry_fail_total{class="no.nav.tag.tilsagnsbrev.behandler.FeilRapport",exception="none",method="varsleProsessfeil",result="success",} > 0
+      for: 1m
+      description: "Tilsagnsbrev feilet v/behandling"
+      action: "Sjekk loggene til app tiltak-tilsagnsbrev i namespace arbeidsgiver, for info til manuell behandling"
