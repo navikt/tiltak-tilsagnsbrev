@@ -25,7 +25,7 @@ spring:
 
 tilsagnsbrev:
   retry:
-    cron: "5 * * * * *"
+    cron: "* * * * * *"
   integrasjon:
     pdfgen:
       uri: http://localhost:8090

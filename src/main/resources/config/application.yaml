@@ -47,5 +47,5 @@ tilsagnsbrev:
       password: ${tilsagnsbrev_srvpwd}
 
 management.endpoints.web:
-  exposure.include: info, health, metrics, prometheus
+  exposure.include: prometheus
   base-path: /internal/actuator
