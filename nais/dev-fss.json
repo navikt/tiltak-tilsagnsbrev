@@ -2,5 +2,6 @@
   "ingress": "https://arbeidsgiver.nais.preprod.local/tiltak-tilsagnsbrev/",
   "spring-profil": "preprod",
   "vault-serviceuser-path": "serviceuser/data/dev/srvtiltak-tilsagns",
-  "vault-default-path": "kv/preprod/fss/tiltak-tilsagnsbrev/default"
+  "vault-default-path": "kv/preprod/fss/tiltak-tilsagnsbrev/default",
+  "slack_alert_channel": "arbeidsgiver-notifications-test"
 }
