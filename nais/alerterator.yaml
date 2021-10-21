@@ -14,12 +14,12 @@ spec:
     - alert: applikasjon nede
       expr: up{app="tiltak-tilsagnsbrev", job="kubernetes-pods"} == 0
       for: 30m
-      description: "tiltak-tilsagnsbrev er nede i arbeidsgiver"
+      description: "tiltak-tilsagnsbrev er nede"
       action: "`kubectl describe pod for events, og `kubectl logs` for logger"
     - alert: høy feilrate i logger
       expr: (sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="tiltak-tilsagnsbrev",log_level=~"Error"}[3m]))) > 3
       for: 10m
-      description: "tiltak-tilsagnsbrev feiler mye, ns: arbeidsgiver"
+      description: "tiltak-tilsagnsbrev feiler mye"
       action: "Sjekk loggene til app tiltak-tilsagnsbrev i namespace arbeidsgiver, for å se hvorfor det er så mye feil"
     - alert: tilsagnsbrev feilet
       expr: sum(increase(retry_fail_total{app="tiltak-tilsagnsbrev"} [5m])) > 0
