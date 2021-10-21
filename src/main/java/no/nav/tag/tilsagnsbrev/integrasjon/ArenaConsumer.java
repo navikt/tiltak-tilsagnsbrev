@@ -8,6 +8,7 @@ import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.event.ContainerStoppedEvent;
@@ -43,11 +44,5 @@ public class ArenaConsumer {
         } finally {
             cidManager.fjernCorrelationId();
         }
-    }
-
-    @EventListener
-    public void restartVedFeil(ContainerStoppedEvent event) {
-        log.error("Restarter pod, fordi Spring har kastet ContainerStoppedEvent (melding {}). Dette kan skyldes autoriseringsproblemer.", event.toString());
-        System.exit(1);
     }
 }
