@@ -3,6 +3,7 @@ package no.nav.tag.tilsagnsbrev.integrasjon;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import no.nav.tag.tilsagnsbrev.DatoUtils;
 import no.nav.tag.tilsagnsbrev.behandler.CidManager;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
 import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
@@ -36,7 +37,7 @@ public class ArenaConsumer {
         log.debug("Ny melding hentet fra topic {}", arenaMelding);
 
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder()
-                .opprettet(LocalDateTime.now())
+                .opprettet(DatoUtils.getNow())
                 .arenaMelding(arenaMelding)
                 .cid(cid).build();
         try {
