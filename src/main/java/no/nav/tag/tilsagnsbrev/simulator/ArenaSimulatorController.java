@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
+import no.nav.tag.tilsagnsbrev.DatoUtils;
 import no.nav.tag.tilsagnsbrev.behandler.CidManager;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnRetryProsess;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnsbrevBehandler;
@@ -44,7 +45,7 @@ public class ArenaSimulatorController {
     public String behandle(@PathVariable Integer tilsagnNr, @RequestBody String tilsagnJson) {
         UUID cid = cidManager.opprettCorrelationId();
         ArenaMelding arenaMelding = SimUtil.arenaMelding(tilsagnNr, tilsagnJson);
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).tilsagnsbrevId(tilsagnNr).cid(cid).opprettet(LocalDateTime.now()).build();
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).tilsagnsbrevId(tilsagnNr).cid(cid).opprettet(DatoUtils.getNow()).build();
         try {
             tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
             return "OK";
