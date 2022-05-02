@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
 
 public class Testdata {
@@ -103,7 +105,7 @@ public class Testdata {
     }
 
     public static TilsagnUnderBehandling.TilsagnUnderBehandlingBuilder tubBuilder(){
-        return TilsagnUnderBehandling.builder().opprettet(LocalDateTime.now());
+        return TilsagnUnderBehandling.builder().opprettet(DatoUtils.getNow());
     }
 
     public static ArenaMelding arenaMelding() {

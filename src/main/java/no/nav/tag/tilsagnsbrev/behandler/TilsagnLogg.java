@@ -3,6 +3,7 @@ package no.nav.tag.tilsagnsbrev.behandler;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import no.nav.tag.tilsagnsbrev.DatoUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,7 +18,7 @@ public class TilsagnLogg {
     @Id
     private UUID id;
     private Integer tilsagnsbrevId;
-    private LocalDateTime tidspunktLest = LocalDateTime.now();
+    private LocalDateTime tidspunktLest = DatoUtils.getNow();
 
     public TilsagnLogg(UUID cid, Integer tilsagnsbrevId) {
         this.id = cid;

@@ -4,9 +4,8 @@ import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 @Configuration
-public class SwaggerConfig {
+public class OpenApiConfig {
 
     @Bean
     public GroupedOpenApi api() {

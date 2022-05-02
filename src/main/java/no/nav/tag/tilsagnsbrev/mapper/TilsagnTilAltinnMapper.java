@@ -8,6 +8,7 @@ import no.altinn.schemas.services.serviceengine.notification._2009._10.*;
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List;
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2;
+import no.nav.tag.tilsagnsbrev.DatoUtils;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TiltakArrangor;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.altinn.AltinnProperties;
@@ -53,8 +54,8 @@ public class TilsagnTilAltinnMapper {
                 .withCorrespondence(new InsertCorrespondenceV2()
                         .withServiceCode(SERVICE_CODE)
                         .withServiceEdition(SERVICE_EDITION)
-                        .withVisibleDateTime(fromLocalDate(LocalDateTime.now()))
-                        .withAllowSystemDeleteDateTime(fromLocalDate(LocalDateTime.now().plusYears(10)))
+                        .withVisibleDateTime(fromLocalDate(DatoUtils.getNow()))
+                        .withAllowSystemDeleteDateTime(fromLocalDate(DatoUtils.getNow().plusYears(10)))
                         .withDueDateTime(fromLocalDate(tilsagn.getRefusjonfristDato().atTime(LocalTime.MIDNIGHT).plusNanos(1)))
                         .withAllowForwarding(false)
                         .withMessageSender(MSG_SENDER)
@@ -96,7 +97,7 @@ public class TilsagnTilAltinnMapper {
 
         return new Notification()
                 .withLanguageCode(LANGUAGE_CODE)
-                .withShipmentDateTime(fromLocalDate(LocalDateTime.now()))
+                .withShipmentDateTime(fromLocalDate(DatoUtils.getNow()))
                 .withReceiverEndPoints(new ReceiverEndPointBEList()
                         .withReceiverEndPoint(new ReceiverEndPoint()
                                 .withTransportType(TransportType.EMAIL)))

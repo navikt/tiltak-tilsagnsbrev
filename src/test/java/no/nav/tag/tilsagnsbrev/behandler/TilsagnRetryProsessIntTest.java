@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.behandler;
 
+import no.nav.tag.tilsagnsbrev.DatoUtils;
 import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.TilsagnsbrevRepository;
@@ -60,8 +61,8 @@ public class TilsagnRetryProsessIntTest {
     public void behandlerToFeiledeTilsagn() {
         final UUID CID1 = UUID.randomUUID();
         final UUID CID2 = UUID.randomUUID();
-        TilsagnUnderBehandling tub1 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(false).cid(CID1).tilsagnsbrevId(1).opprettet(LocalDateTime.now()).build();
-        TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).pdf("pdf".getBytes()).altinnReferanse(1).cid(CID2).opprettet(LocalDateTime.now()).tilsagnsbrevId(2).build();
+        TilsagnUnderBehandling tub1 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(false).cid(CID1).tilsagnsbrevId(1).opprettet(DatoUtils.getNow()).build();
+        TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).pdf("pdf".getBytes()).altinnReferanse(1).cid(CID2).opprettet(DatoUtils.getNow()).tilsagnsbrevId(2).build();
 
         tilsagnsbrevRepository.saveAll(Arrays.asList(tub1, tub2));
 
