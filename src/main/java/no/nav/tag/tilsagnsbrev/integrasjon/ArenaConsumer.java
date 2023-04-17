@@ -35,7 +35,7 @@ public class ArenaConsumer {
     @KafkaListener(topics = topic, errorHandler = "customKafkaErrLogger")
     public void lyttPaArenaTilsagn(ArenaMelding arenaMelding){
         final UUID cid = cidManager.opprettCorrelationId();
-        log.debug("Ny melding hentet fra topic {}", arenaMelding);
+        log.debug("Ny tilsagnsbrevmelding fra Arena hentet. Topic: {} Melding: {}", topic, arenaMelding);
 
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder()
                 .opprettet(DatoUtils.getNow())
