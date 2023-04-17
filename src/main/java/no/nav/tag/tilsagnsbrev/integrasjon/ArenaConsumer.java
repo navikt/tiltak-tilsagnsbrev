@@ -24,7 +24,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ArenaConsumer {
 
-    public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
+    //public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
+    public static final String topic = "teamarenanais.aapen-arena-tilsagnsbrevgodkjent-v1";
 
     private CidManager cidManager;
 

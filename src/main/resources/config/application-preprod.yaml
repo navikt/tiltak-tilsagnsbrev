@@ -4,18 +4,34 @@ logging:
 
 spring:
   kafka:
-    bootstrap-servers: b27apvl00045.preprod.local:8443, b27apvl00046.preprod.local:8443, b27apvl00047.preprod.local:8443
+    bootstrap-servers: ${KAFKA_BROKERS}
     client-id: tiltak-tilsagnsbrev
     properties:
-      security.protocol: SASL_SSL
-      sasl:
-        mechanism: PLAIN
-        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tilsagnsbrev_srvuser}" password="${tilsagnsbrev_srvpwd}";
-      ssl.truststore:
-        location: ${javax.net.ssl.trustStore}
-        password: ${javax.net.ssl.trustStorePassword}
+      security.protocol: SSL
+      ssl:
+        keystore:
+          type: PKCS12
+          location: ${KAFKA_KEYSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+        truststore:
+          location: ${KAFKA_TRUSTSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       group-id: ${tilsagnsbrev.consumer.group.id}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+
+
+
+
+
+
+
+
 
 tilsagnsbrev:
   retry:
