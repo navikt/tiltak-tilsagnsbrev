@@ -36,6 +36,8 @@ public class ArenaConsumer {
     public void lyttPaArenaTilsagn(ArenaMelding arenaMelding){
         final UUID cid = cidManager.opprettCorrelationId();
         log.debug("Ny tilsagnsbrevmelding fra Arena hentet. Topic: {} Melding: {}", topic, arenaMelding);
+        // TODO: Midlertidig logging:
+        log.info("Ny tilsagnsbrevmelding fra Arena hentet. Topic: {} Melding: {}", topic, arenaMelding);
 
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder()
                 .opprettet(DatoUtils.getNow())
