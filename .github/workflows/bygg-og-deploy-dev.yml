@@ -46,5 +46,6 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
-          RESOURCE: nais/dev-fss.yaml
+          RESOURCE: nais/naiserator.yaml
           PRINT_PAYLOAD: true
+          VARS: nais/dev-fss.json
