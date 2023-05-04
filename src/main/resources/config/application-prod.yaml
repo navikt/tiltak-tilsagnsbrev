@@ -7,16 +7,18 @@ logging:
 
 spring:
   kafka:
-    bootstrap-servers: a01apvl00145.adeo.no:8443, a01apvl00146.adeo.no:8443, a01apvl00147.adeo.no:8443, a01apvl00148.adeo.no:8443, a01apvl00149.adeo.no:8443, a01apvl00150.adeo.no:8443
+    bootstrap-servers: ${KAFKA_BROKERS}
     client-id: tiltak-tilsagnsbrev
     properties:
-      security.protocol: SASL_SSL
-      sasl:
-        mechanism: PLAIN
-        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tilsagnsbrev_srvuser}" password="${tilsagnsbrev_srvpwd}";
-      ssl.truststore:
-        location: ${javax.net.ssl.trustStore}
-        password: ${javax.net.ssl.trustStorePassword}
+      security.protocol: SSL
+      ssl:
+        keystore:
+          type: PKCS12
+          location: ${KAFKA_KEYSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+        truststore:
+          location: ${KAFKA_TRUSTSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
     consumer:
       group-id: ${tilsagnsbrev.consumer.group.id}
 

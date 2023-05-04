@@ -24,7 +24,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ArenaConsumer {
 
-    public static final String topic = "aapen-tiltak-tilsagnsbrevGodkjent-v1";
+    public static final String topic = "teamarenanais.aapen-arena-tilsagnsbrevgodkjent-v1";
 
     private CidManager cidManager;
 
@@ -35,6 +35,7 @@ public class ArenaConsumer {
     public void lyttPaArenaTilsagn(ArenaMelding arenaMelding){
         final UUID cid = cidManager.opprettCorrelationId();
         log.debug("Ny melding hentet fra topic {}", arenaMelding);
+        log.info("Ny tilsagnsbrevmelding fra Arena hentet. Topic: {}", topic);
 
         TilsagnUnderBehandling tilsagnUnderBehandling = TilsagnUnderBehandling.builder()
                 .opprettet(DatoUtils.getNow())

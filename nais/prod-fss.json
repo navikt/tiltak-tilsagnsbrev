@@ -3,5 +3,6 @@
   "spring-profil": "prod",
   "vault-serviceuser-path": "serviceuser/data/prod/srvtiltak-tilsagns",
   "vault-default-path": "kv/prod/fss/tiltak-tilsagnsbrev/default",
-  "slack_alert_channel": "arbeidsgiver-tiltak-alerts"
+  "slack_alert_channel": "arbeidsgiver-tiltak-alerts",
+  "kafka-pool": "nav-prod"
 }
