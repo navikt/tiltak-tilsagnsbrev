@@ -1,28 +1,41 @@
-apiVersion: nais.io/v1
-kind: Alert
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
 metadata:
-  name: tiltak-tilsagnsbrev-alert
+  name: tiltak-tilsagnsbrev
   namespace: arbeidsgiver
   labels:
-    team: arbeidsgiver
+    team: team-tiltak
 spec:
-  receivers:
-    slack:
-      channel: '#{{ slack_alert_channel }}'
-      prependText: '<!here> | '
-  alerts:
-    - alert: applikasjon nede
-      expr: up{app="tiltak-tilsagnsbrev", job="kubernetes-pods"} == 0
-      for: 30m
-      description: "tiltak-tilsagnsbrev er nede"
-      action: "`kubectl describe pod for events, og `kubectl logs` for logger"
-    - alert: høy feilrate i logger
-      expr: (sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="tiltak-tilsagnsbrev",log_level=~"Error"}[3m]))) > 3
-      for: 10m
-      description: "tiltak-tilsagnsbrev feiler mye"
-      action: "Sjekk loggene til app tiltak-tilsagnsbrev i namespace arbeidsgiver, for å se hvorfor det er så mye feil"
-    - alert: tilsagnsbrev feilet
-      expr: sum(increase(retry_fail_total{app="tiltak-tilsagnsbrev"} [5m])) > 0
-      for: 1m
-      description: "Tilsagnsbrev feilet v/behandling"
-      action: "Sjekk loggene til app tiltak-tilsagnsbrev i namespace arbeidsgiver, for info til manuell behandling"
+  groups:
+    - name: tiltak-tilsagnsbrev-alert
+      rules:
+        - alert: applikasjon nede
+          expr: sum(up{app="tiltak-tilsagnsbrev", job="nais-system/monitoring-apps-tenant"}) == 0
+          for: 1s
+          annotations:
+            summary: tiltak-tilsagnsbrev er nede
+            action: "`kubectl describe pod {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for logger"
+          labels:
+            namespace: team-tiltak
+            severity: critical
+
+        - alert: høy feilrate i logger
+          expr: (sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="tiltak-tilsagnsbrev",log_level=~"Error"}[3m]))) > 3
+          for: 1s
+          annotations:
+            summary: tiltak-tilsagnsbrev feiler mye
+            action: "`kubectl describe pod {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for logger"
+          labels:
+            namespace: team-tiltak
+            severity: critical
+
+        - alert: tilsagnsbrev feilet!
+          expr: sum(increase(retry_fail_total{app="tiltak-tilsagnsbrev"} [5m])) > 0
+          for: 1m
+          annotations:
+            summary: |-
+              Tilsagnsbrev feilet v/behandling :this-is-fine-fire: Sjekk loggene om noe bør gjøres!
+            action: "Sjekk logs.adeo.no for logger: https://logs.adeo.no/app/r/s/HT3Nd"
+          labels:
+            namespace: team-tiltak
+            severity: critical
