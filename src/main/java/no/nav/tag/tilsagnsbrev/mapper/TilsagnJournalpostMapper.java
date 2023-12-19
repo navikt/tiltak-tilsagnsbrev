@@ -41,7 +41,7 @@ public class TilsagnJournalpostMapper {
         final String base64EncodetPdf = Base64.getEncoder().encodeToString(pdfBytes);
         TiltakType tiltakType = getTiltakType(tilsagnsbrev.getTiltakKode());
         Dokument dokument = new Dokument(tiltakType.getTittel(), tiltakType.getBrevkode(), Collections.singletonList(new DokumentVariant(base64EncodetPdf)));
-        Journalpost journalpost = new Journalpost(tiltakType.getTittel(), bruker, mottaker, sak, Collections.singletonList(dokument));
+        Journalpost journalpost = new Journalpost(tiltakType.getTittel(), bruker, mottaker, sak, Collections.singletonList(dokument), sak.getFagsakId());
         return journalpost;
     }
 
