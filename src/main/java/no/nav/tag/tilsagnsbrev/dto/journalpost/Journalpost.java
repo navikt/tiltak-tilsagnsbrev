@@ -26,4 +26,5 @@ public class Journalpost {
     private final Mottaker avsenderMottaker;
     private final Sak sak;
     private final List<Dokument> dokumenter;
+    private final String eksternReferanseId;
 }
