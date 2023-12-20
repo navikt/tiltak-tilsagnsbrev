@@ -29,7 +29,7 @@ public class JoarkServiceTest {
     private final URI expUri = UriComponentsBuilder.fromUri(uri).path(PATH).query(QUERY_PARAM).build().toUri();
 
     private final Journalpost journalpost =
-            new Journalpost("Tittel", new Bruker("bid"), new Mottaker("mid", "navn"), new Sak("fagsakId"), Arrays.asList());
+            new Journalpost("Tittel", new Bruker("bid"), new Mottaker("mid", "navn"), new Sak("fagsakId"), Arrays.asList(), "12345678");
 
     @Mock
     private RestTemplate restTemplate;
