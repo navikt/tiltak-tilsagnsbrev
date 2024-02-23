@@ -3,6 +3,8 @@ logging:
     no.nav.tag.tilsagnsbrev: INFO
 
 spring:
+  datasource:
+    url: jdbc:postgresql://b27dbvl033.preprod.local:5432/tiltak-tilsagnsbrev-p15-preprod
   kafka:
     bootstrap-servers: ${KAFKA_BROKERS}
     client-id: tiltak-tilsagnsbrev
@@ -17,27 +19,27 @@ spring:
           location: ${KAFKA_TRUSTSTORE_PATH}
           password: ${KAFKA_CREDSTORE_PASSWORD}
     consumer:
-      group-id: ${tilsagnsbrev.consumer.group.id}
+      group-id: tiltak-tilsagnsbrev-7
 
 tilsagnsbrev:
   retry:
-    cron: ${tilsagnsbrev.process.cron}
+    cron: '0 0 * * * *'
   database:
     database-navn: tiltak-tilsagnsbrev-p15-preprod
-    database-url: jdbc:postgresql://b27dbvl033.preprod.local:5432/tiltak-tilsagnsbrev-p15-preprod
+    database-url: ${spring.datasource.url}
     vault-sti: postgresql/preprod-fss
     minimum-idle: 1
     maximum-pool-size: 1
     max-lifetime: 300000
   integrasjon:
     joark:
-      uri: ${tilsagnsbrev.joark.url}
+      uri: https://dokarkiv-q1.nais.preprod.local
     sts:
-      uri: ${tilsagnsbrev.sts.url}
-      ws-uri: ${tilsagnsbrev.sts.ws.url}
+      uri: https://security-token-service.nais.preprod.local
+      ws-uri: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
-      uri: ${altinn.correspondence.url}
+      uri: https://pep-gw-q1.oera-q.local:9443/ekstern/altinn/BehandleAltinnMelding/v1
       systemBruker: ${tilsagnsbrev_altinn_system_bruker}
       systemPassord: ${tilsagnsbrev_altinn_system_passord}
