@@ -40,3 +40,11 @@ spec:
       memory: 1024Mi
   kafka:
     pool: {{kafka-pool}}
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
+    logging:
+      destinations:
+        - id: elastic
+        - id: loki
