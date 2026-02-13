@@ -63,9 +63,9 @@ public class TilsagnsbrevBehandler {
             .map(tilsagn -> TiltakType.EKSPEBIST.getTiltakskode().equals(tilsagn.getTiltakKode()))
             .orElse(false);
 
-        boolean erEtterFagerHarTattOverEksperbistand = !kafkaRecordTidspunkt.isBefore(STOPP_BEHANDLING_AV_EKSPERTBISTAND);
+        boolean erEtterFagerHarTattOverEkspertbistand = !kafkaRecordTidspunkt.isBefore(STOPP_BEHANDLING_AV_EKSPERTBISTAND);
 
-        if (erEkspertbistand && erEtterFagerHarTattOverEksperbistand) {
+        if (erEkspertbistand && erEtterFagerHarTattOverEkspertbistand) {
             log.info(
                 "Melding med tilsagnsbrev-id {} er av type ekspertbistand og er mottatt etter at vi har sluttet å behandle denne typen. Avbryter videre behandling.",
                 tilsagnUnderBehandling.getTilsagnsbrevId()
