@@ -2,6 +2,9 @@ package no.nav.tag.tilsagnsbrev.mapper;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 @Getter
 public enum TiltakType {
     ARBFORB("ARBFORB", "Tilsagnsbrev Arbeidsforberedende trening", "arena-tilskudd-arbforb-tren"),
@@ -30,5 +33,16 @@ public enum TiltakType {
         this.tiltakskode = tiltakskode;
         this.tittel = tittel;
         this.brevkode = brevkode;
+    }
+
+    public boolean erEkspertbistand() {
+        return this == EKSPEBIST;
+    }
+
+    public static TiltakType parse(String str) {
+        return Arrays.stream(TiltakType.values())
+            .filter(tiltakType -> tiltakType.getTiltakskode().equals(str))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Kan ikke parse tiltakstype: " + str));
     }
 }

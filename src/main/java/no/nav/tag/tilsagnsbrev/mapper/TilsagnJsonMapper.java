@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -45,6 +48,16 @@ public class TilsagnJsonMapper {
         } catch (Exception e) {
             log.error("Feil ved utpakking av Arena-melding til tilsagnsbrev {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
             throw new RuntimeException();
+        }
+    }
+
+    public Optional<TiltakType> hentTiltakType(TilsagnUnderBehandling tilsagnUnderBehandling) {
+        try {
+            JsonNode tilsagnElem = objectMapper.readTree(tilsagnUnderBehandling.getJson());
+            return Optional.of(TiltakType.parse(tilsagnElem.get("tiltakKode").asText()));
+        } catch (Exception e) {
+            log.warn("Feil ved parsing av tiltakstype for tilsagnbrevId={}", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
+            return Optional.empty();
         }
     }
 
