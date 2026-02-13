@@ -16,14 +16,21 @@ public class TilsagnLoggRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public boolean lagretIdHvisNyMelding(TilsagnUnderBehandling tilsagnUnderBehandling) {
-        boolean erNyMelding = !tilsagnsbevIdFinnes(tilsagnUnderBehandling.getTilsagnsbrevId());
-        if (erNyMelding) {
-            TilsagnLogg tilsagnLogg = new TilsagnLogg(tilsagnUnderBehandling.getCid(), tilsagnUnderBehandling.getTilsagnsbrevId());
-            lagre(tilsagnLogg);
-            log.info("Melding med tilsagnsbrev-id {} registrert i logg", tilsagnLogg.getTilsagnsbrevId());
+    public boolean registrerNyMelding(TilsagnUnderBehandling tilsagnUnderBehandling) {
+        Integer tilsagnsbrevId = tilsagnUnderBehandling.getTilsagnsbrevId();
+
+        if (tilsagnsbevIdFinnes(tilsagnsbrevId)) {
+            return false;
         }
-        return erNyMelding;
+
+        TilsagnLogg tilsagnLogg = new TilsagnLogg(
+            tilsagnUnderBehandling.getCid(),
+            tilsagnsbrevId
+        );
+        lagre(tilsagnLogg);
+        log.info("Melding med tilsagnsbrev-id {} registrert i logg", tilsagnsbrevId);
+
+        return true;
     }
 
     public boolean tilsagnsbevIdFinnes(Integer tilsagnsbrevId) {

@@ -93,9 +93,11 @@ public class Oppgaver {
 
     public void utfoerOppgaver(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
-            tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
+            if (tilsagnUnderBehandling.getTilsagn() == null) {
+                tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
+            }
 
-            if(tilsagnUnderBehandling.manglerPdf()) {
+            if (tilsagnUnderBehandling.manglerPdf()) {
                 opprettPdfDok(tilsagnUnderBehandling);
             }
 
