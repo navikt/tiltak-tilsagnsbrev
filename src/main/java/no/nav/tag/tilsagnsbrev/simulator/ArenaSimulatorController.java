@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -47,7 +48,7 @@ public class ArenaSimulatorController {
         ArenaMelding arenaMelding = SimUtil.arenaMelding(tilsagnNr, tilsagnJson);
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).tilsagnsbrevId(tilsagnNr).cid(cid).opprettet(DatoUtils.getNow()).build();
         try {
-            tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
+            tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(Instant.now(), tub);
             return "OK";
         }finally {
             cidManager.fjernCorrelationId();

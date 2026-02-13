@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.swing.text.html.Option;
+import java.security.PrivateKey;
+import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -42,6 +46,7 @@ public class TilsagnJsonMapper {
             log.info("Behandler melding med tilsagnsbrev-id {}", tilsagnUnderBehandling.getTilsagnsbrevId());
             String jsonStr = meldingtilJsonString(after.get(JSON_ELEM_TILSAGN).asText());
             tilsagnUnderBehandling.setJson(jsonStr);
+            opprettTilsagn(tilsagnUnderBehandling, false);
         } catch (Exception e) {
             log.error("Feil ved utpakking av Arena-melding til tilsagnsbrev {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
             throw new RuntimeException();
@@ -49,18 +54,20 @@ public class TilsagnJsonMapper {
     }
 
     public void opprettTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
-        JsonNode tilsagnElem;
-        Tilsagn tilsagn;
-        try {
-            tilsagnElem = objectMapper.readTree(tilsagnUnderBehandling.getJson());
-            tilsagn = objectMapper.treeToValue(tilsagnElem, Tilsagn.class);
-        } catch (Exception e) {
-            log.error("Feil ved oppretting av Tilsagnsbrev fra Arenameldind Json", e);
-            throw new DataException(e.getMessage());
-        }
+        opprettTilsagn(tilsagnUnderBehandling, true);
+    }
 
-        tilsagnUnderBehandling.setTilsagn(tilsagn);
-        tilsagnUnderBehandling.setMappetFraArena(true);
+    private void opprettTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling, boolean kastException) {
+        try {
+            JsonNode tilsagnElem = objectMapper.readTree(tilsagnUnderBehandling.getJson());
+            Tilsagn tilsagn = objectMapper.treeToValue(tilsagnElem, Tilsagn.class);
+            tilsagnUnderBehandling.setTilsagn(tilsagn);
+            tilsagnUnderBehandling.setMappetFraArena(true);
+        } catch (Exception e) {
+            if (kastException) {
+                throw new DataException(e.getMessage());
+            }
+        }
     }
 
     private String meldingtilJsonString(String melding) {
