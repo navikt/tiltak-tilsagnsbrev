@@ -4,7 +4,7 @@ metadata:
   name: tiltak-tilsagnsbrev
   namespace: arbeidsgiver
   labels:
-    team: team-tiltak
+    team: arbeidsgiver
 spec:
   groups:
     - name: tiltak-tilsagnsbrev-alert
@@ -16,7 +16,7 @@ spec:
             summary: tiltak-tilsagnsbrev er nede
             action: "`kubectl describe pod {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for logger"
           labels:
-            namespace: team-tiltak
+            namespace: arbeidsgiver
             severity: critical
 
         - alert: høy feilrate i logger
@@ -26,7 +26,7 @@ spec:
             summary: tiltak-tilsagnsbrev feiler mye
             action: "`kubectl describe pod {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for logger"
           labels:
-            namespace: team-tiltak
+            namespace: arbeidsgiver
             severity: critical
 
         - alert: tilsagnsbrev feilet!
@@ -35,7 +35,7 @@ spec:
           annotations:
             summary: |-
               Tilsagnsbrev feilet v/behandling :this-is-fine-fire: Sjekk loggene om noe bør gjøres!
-            action: "Sjekk logs.adeo.no for logger: https://logs.adeo.no/app/r/s/HT3Nd"
+            action: "Sjekk logs.az.nav.no for logger. Snarvei for alle feil i våre namespace: https://logs.az.nav.no/app/data-explorer/discover/#/view/f21a8b00-0cd1-11f1-b30c-21dfcb1fad46"
           labels:
-            namespace: team-tiltak
+            namespace: arbeidsgiver
             severity: critical
