@@ -11,8 +11,8 @@ import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -95,7 +95,16 @@ public class Oppgaver {
         try {
             tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
 
-            if(tilsagnUnderBehandling.manglerPdf()) {
+            if (tilsagnUnderBehandling.getTilsagn().getTiltakType().erEkspertbistand()) {
+                log.info(
+                    "Melding med tilsagnsbrev-id {} er av type ekspertbistand og er mottatt etter " +
+                    "at Team-Fager har tatt over behandling av denne typen. Avbryter videre behandling.",
+                    tilsagnUnderBehandling.getTilsagnsbrevId()
+                );
+                return;
+            }
+
+            if (tilsagnUnderBehandling.manglerPdf()) {
                 opprettPdfDok(tilsagnUnderBehandling);
             }
 
