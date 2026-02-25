@@ -50,16 +50,6 @@ public class TilsagnJsonMapper {
         }
     }
 
-    public Optional<TiltakType> hentTiltakType(TilsagnUnderBehandling tilsagnUnderBehandling) {
-        try {
-            JsonNode tilsagnElem = objectMapper.readTree(tilsagnUnderBehandling.getJson());
-            return Optional.of(TiltakType.parse(tilsagnElem.get("tiltakKode").asText()));
-        } catch (Exception e) {
-            log.warn("Feil ved parsing av tiltakstype for tilsagnbrevId={}", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
-            return Optional.empty();
-        }
-    }
-
     public void opprettTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling) {
         JsonNode tilsagnElem;
         Tilsagn tilsagn;

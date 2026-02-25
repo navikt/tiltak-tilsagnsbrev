@@ -130,6 +130,15 @@ public class Oppgaver {
         try {
             tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
 
+            if (tilsagnUnderBehandling.getTilsagn().getTiltakType().erEkspertbistand()) {
+                log.info(
+                    "Melding med tilsagnsbrev-id {} er av type ekspertbistand og er mottatt etter " +
+                    "at Team-Fager har tatt over behandling av denne typen. Avbryter videre behandling.",
+                    tilsagnUnderBehandling.getTilsagnsbrevId()
+                );
+                return;
+            }
+
             if (tilsagnUnderBehandling.manglerDiskresjonskode()) {
                 hentDiskresjonskode(tilsagnUnderBehandling);
             }

@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -67,7 +66,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
         assertTrue(tilsagnLoggRepository.registrerNyMelding(tub), "Må logges før kjøring!");        tub.setCid(UUID.randomUUID()); //Blir lest fra topic igjen som en 'ny' melding
 
-        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(Instant.now(), tub);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
         //Skal ikke gjennomføre disse kallene
         assertFalse(tub.erJournalfoert());
         assertTrue(tub.skalTilAltinn());
@@ -83,7 +82,7 @@ public class TilsagnsbrevBehandlerIntTest {
         feiler.getAfter().put("TILSAGN_DATA", feilbarGoldengateJson);
         TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(feiler).cid(CID).build();
 
-        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(Instant.now(), tilsagnUnderBehandling);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
         Optional<TilsagnUnderBehandling> feilet = tilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
@@ -104,7 +103,7 @@ public class TilsagnsbrevBehandlerIntTest {
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();
 
-        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(Instant.now(), tilsagnUnderBehandling);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
         Optional<TilsagnUnderBehandling> feilet = tilsagnsbrevRepository.findById(CID);
 
         assertTrue(feilet.isPresent());
@@ -124,7 +123,7 @@ public class TilsagnsbrevBehandlerIntTest {
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();
 
-        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(Instant.now(), tilsagnUnderBehandling);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
         Optional<TilsagnUnderBehandling> feilet = tilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
@@ -144,7 +143,7 @@ public class TilsagnsbrevBehandlerIntTest {
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();
 
-        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(Instant.now(), tilsagnUnderBehandling);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
         Optional<TilsagnUnderBehandling> feilet = tilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());
@@ -165,7 +164,7 @@ public class TilsagnsbrevBehandlerIntTest {
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();
 
-        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(Instant.now(), tilsagnUnderBehandling);
+        tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tilsagnUnderBehandling);
 
         Optional<TilsagnUnderBehandling> feilet = tilsagnsbrevRepository.findById(CID);
         assertTrue(feilet.isPresent());

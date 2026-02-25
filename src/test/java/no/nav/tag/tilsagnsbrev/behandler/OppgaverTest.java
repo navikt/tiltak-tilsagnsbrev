@@ -3,6 +3,7 @@ package no.nav.tag.tilsagnsbrev.behandler;
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
@@ -13,6 +14,7 @@ import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TiltakType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -62,8 +65,8 @@ public class OppgaverTest {
 
     @Test
     public void behandlerTilsagnEtterEnManuellBehandlingAvArenaMappingFeil() {
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().build();
-        when(tilsagnTilAltinnMapper.tilAltinnMelding(null, null)).thenReturn(ALTINN_WS_REQUEST);
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MIDLONTIL.getTiltakskode()).build()).build();
+        when(tilsagnTilAltinnMapper.tilAltinnMelding(eq(tub.getTilsagn()), any())).thenReturn(ALTINN_WS_REQUEST);
 
         oppgaver.utfoerOppgaver(tub);
 
@@ -88,13 +91,15 @@ public class OppgaverTest {
     @Test
     public void behandlerTilsagnEtterFeiletJournalforing() {
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder()
-                .json(TILSAGN_DATA)
-                .pdfAltinn(PDF_BYTEARRAY)
-                .pdfJoark(PDF_BYTEARRAY)
-                .tilsagnsbrevId(1)
-                .mappetFraArena(true)
-                .altinnReferanse("2")
-                .build();
+            .json(TILSAGN_DATA)
+            .pdfAltinn(PDF_BYTEARRAY)
+            .pdfJoark(PDF_BYTEARRAY)
+            .tilsagnsbrevId(1)
+            .mappetFraArena(true)
+            .altinnReferanse("2")
+            .tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MIDLONTIL.getTiltakskode()).build())
+            .build();
+
         when(tilsagnJournalpostMapper.tilsagnTilJournalpost(any(TilsagnUnderBehandling.class))).thenReturn(JOURNALPOST);
 
         oppgaver.utfoerOppgaver(tub);
@@ -108,8 +113,15 @@ public class OppgaverTest {
 
     @Test
     public void behandlerTilsagnEtterFeiletAltinnSending() {
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().json(TILSAGN_DATA).pdfAltinn(PDF_BYTEARRAY).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1").build();
-        when(tilsagnTilAltinnMapper.tilAltinnMelding(null, PDF_BYTEARRAY)).thenReturn(ALTINN_WS_REQUEST);
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder()
+            .json(TILSAGN_DATA)
+            .pdfAltinn(PDF_BYTEARRAY)
+            .tilsagnsbrevId(1)
+            .mappetFraArena(true)
+            .journalpostId("1")
+            .tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MIDLONTIL.getTiltakskode()).build())
+            .build();
+        when(tilsagnTilAltinnMapper.tilAltinnMelding(eq(tub.getTilsagn()), eq(PDF_BYTEARRAY))).thenReturn(ALTINN_WS_REQUEST);
 
         oppgaver.utfoerOppgaver(tub);
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(any(TilsagnUnderBehandling.class));
@@ -131,8 +143,35 @@ public class OppgaverTest {
     }
 
     @Test
+    public void avbryterBehandlingHvisTiltakTypeErEkspertbistand() {
+        Tilsagn tilsagn = Tilsagn.builder().tiltakKode("EKSPEBIST").build();
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagnsbrevId(42).tilsagn(tilsagn).build();
+
+        oppgaver.utfoerOppgaver(tub);
+
+        verify(tilsagnJsonMapper, times(1)).opprettTilsagn(tub);
+        verifyNoInteractions(pdfService, tilsagnJournalpostMapper, joarkService, altInnService);
+        verify(tilsagnBehandler, never()).lagreStatus(any(TilsagnUnderBehandling.class));
+    }
+
+    @Test
+    public void fortsettBehandlingHvisTiltakTypeIkkeErEkspertbistand() {
+        Tilsagn tilsagn = Tilsagn.builder().tiltakKode("MENTOR").build();
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagnsbrevId(43).tilsagn(tilsagn).build();
+        when(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, null)).thenReturn(ALTINN_WS_REQUEST);
+
+        oppgaver.utfoerOppgaver(tub);
+
+        verify(tilsagnJsonMapper, times(1)).opprettTilsagn(tub);
+        verify(pdfService, times(2)).tilsagnsbrevTilPdfBytes(any(TilsagnUnderBehandling.class), any());
+        verify(tilsagnBehandler, times(1)).lagreStatus(any(TilsagnUnderBehandling.class));
+    }
+
+    @Test
     public void avbryterHvisOpprettPdfDokFeiler() {
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().build();
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder()
+            .tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MIDLONTIL.getTiltakskode()).build())
+            .build();
 
         when(tilsagnJsonMapper.opprettPdfJson(tub.getTilsagnsbrevId(), tub.getTilsagn())).thenThrow(DataException.class);
 
