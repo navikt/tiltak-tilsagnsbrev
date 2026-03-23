@@ -31,6 +31,8 @@ spec:
   env:
   - name: SPRING_PROFILES_ACTIVE
     value: {{spring-profil}}
+  envFrom:
+    - secret: tiltak-tilsagnsbrev
   webproxy: true
   prometheus:
     enabled: true
