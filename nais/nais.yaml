@@ -44,6 +44,12 @@ spec:
       memory: 1024Mi
   kafka:
     pool: {{kafka-pool}}
+  maskinporten:
+    enabled: true
+    scopes:
+      consumes:
+        - name: "altinn:serviceowner"
+        - name: "altinn:correspondence.write"
   observability:
     autoInstrumentation:
       enabled: true
@@ -57,6 +63,8 @@ spec:
       enabled: true
   accessPolicy:
     outbound:
+      external:
+        - host: {{altinn}}
       rules:
         - application: pdl-api
           namespace: pdl

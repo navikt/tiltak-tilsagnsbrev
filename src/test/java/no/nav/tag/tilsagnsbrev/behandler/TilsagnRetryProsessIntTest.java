@@ -49,6 +49,7 @@ public class TilsagnRetryProsessIntTest {
 
     @BeforeEach
     public void setUp() {
+        tilsagnsbrevRepository.deleteAll();
         mockServer.stubForAltOk();
     }
 
@@ -158,7 +159,7 @@ public class TilsagnRetryProsessIntTest {
 
     @Test
     public void feilerIgjenEtterFeiletAltinnSending() {
-        mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
+        mockServer.getServer().stubFor(post("/correspondence/api/v1/correspondence").willReturn(serverError()));
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling feilet = Testdata.tubBuilder().retry(1).cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();

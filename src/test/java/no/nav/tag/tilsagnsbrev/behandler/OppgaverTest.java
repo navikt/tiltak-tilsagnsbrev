@@ -1,29 +1,34 @@
 package no.nav.tag.tilsagnsbrev.behandler;
 
-import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.nav.tag.tilsagnsbrev.Testdata;
+import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnAttachmentInitRequest;
+import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceRequest;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.TilsagnException;
 import no.nav.tag.tilsagnsbrev.feilet.TilsagnBehandler;
-import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
+import no.nav.tag.tilsagnsbrev.integrasjon.AltinnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TiltakType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -47,7 +52,7 @@ public class OppgaverTest {
     private JoarkService joarkService;
 
     @Mock
-    private AltInnService altInnService;
+    private AltinnService altInnService;
 
     @Mock
     private TilsagnJournalpostMapper tilsagnJournalpostMapper;
@@ -61,12 +66,20 @@ public class OppgaverTest {
     private static final byte[] PDF_BYTEARRAY = "pdf".getBytes();
     private static final String TILSAGN_DATA = Testdata.hentFilString("TILSAGN_DATA.json");
     private static final Journalpost JOURNALPOST = mock(Journalpost.class);
-    private static final InsertCorrespondenceBasicV2 ALTINN_WS_REQUEST = mock(InsertCorrespondenceBasicV2.class);
+    private static final AltinnCorrespondenceRequest ALTINN_REQUEST = mock(AltinnCorrespondenceRequest.class);
+    private static final AltinnAttachmentInitRequest ALTINN_ATTACHMENT = mock(AltinnAttachmentInitRequest.class);
+    private static final String CORRESPONDENCE_ID = UUID.randomUUID().toString();
+
+    @BeforeEach
+    public void setUp() {
+        lenient().when(tilsagnTilAltinnMapper.tilAltinnKorrespondanse(any(), any())).thenReturn(ALTINN_REQUEST);
+        lenient().when(tilsagnTilAltinnMapper.tilAltinnVedlegg(any(), any())).thenReturn(ALTINN_ATTACHMENT);
+        lenient().when(altInnService.sendTilsagnsbrev(any())).thenReturn(CORRESPONDENCE_ID);
+    }
 
     @Test
     public void behandlerTilsagnEtterEnManuellBehandlingAvArenaMappingFeil() {
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MIDLONTIL.getTiltakskode()).build()).build();
-        when(tilsagnTilAltinnMapper.tilAltinnMelding(eq(tub.getTilsagn()), any())).thenReturn(ALTINN_WS_REQUEST);
 
         oppgaver.utfoerOppgaver(tub);
 
@@ -85,7 +98,7 @@ public class OppgaverTest {
     }
 
     private void verifySendTilAltinn() {
-        verify(altInnService, times(1)).sendTilsagnsbrev(ALTINN_WS_REQUEST);
+        verify(altInnService, times(1)).sendTilsagnsbrev(any());
     }
 
     @Test
@@ -110,7 +123,6 @@ public class OppgaverTest {
         verify(tilsagnBehandler, times(1)).lagreStatus(any(TilsagnUnderBehandling.class));
     }
 
-
     @Test
     public void behandlerTilsagnEtterFeiletAltinnSending() {
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder()
@@ -121,7 +133,6 @@ public class OppgaverTest {
             .journalpostId("1")
             .tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MIDLONTIL.getTiltakskode()).build())
             .build();
-        when(tilsagnTilAltinnMapper.tilAltinnMelding(eq(tub.getTilsagn()), eq(PDF_BYTEARRAY))).thenReturn(ALTINN_WS_REQUEST);
 
         oppgaver.utfoerOppgaver(tub);
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(any(TilsagnUnderBehandling.class));
@@ -158,7 +169,6 @@ public class OppgaverTest {
     public void fortsettBehandlingHvisTiltakTypeIkkeErEkspertbistand() {
         Tilsagn tilsagn = Tilsagn.builder().tiltakKode("MENTOR").build();
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagnsbrevId(43).tilsagn(tilsagn).build();
-        when(tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, null)).thenReturn(ALTINN_WS_REQUEST);
 
         oppgaver.utfoerOppgaver(tub);
 

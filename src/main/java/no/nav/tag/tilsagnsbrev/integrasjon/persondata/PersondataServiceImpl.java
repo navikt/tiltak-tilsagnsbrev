@@ -1,9 +1,10 @@
-package no.nav.tag.tilsagnsbrev.service;
+package no.nav.tag.tilsagnsbrev.integrasjon.persondata;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.security.token.support.client.core.ClientProperties;
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService;
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties;
+import no.nav.tag.tilsagnsbrev.konfigurasjon.PersondataKonfig;
 import no.nav.team_tiltak.felles.persondata.PersondataClient;
 import no.nav.team_tiltak.felles.persondata.pdl.domene.Diskresjonskode;
 import org.springframework.context.annotation.Profile;
@@ -18,7 +19,7 @@ public class PersondataServiceImpl implements PersondataService {
     private final PersondataClient persondataClient;
 
     public PersondataServiceImpl(
-        PersondataProperties persondataProperties,
+        PersondataKonfig persondataProperties,
         OAuth2AccessTokenService oAuth2AccessTokenService,
         ClientConfigurationProperties clientConfigurationProperties
     ) {
