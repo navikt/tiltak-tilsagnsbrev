@@ -1,7 +1,7 @@
 package no.nav.tag.tilsagnsbrev.mapper;
 
-import no.nav.tag.tilsagnsbrev.DatoUtils;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnAttachmentInitRequest;
+import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceAttachments;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceBase;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceContent;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceNotification;
@@ -10,10 +10,13 @@ import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TiltakArrangor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -36,65 +39,82 @@ public class TilsagnTilAltinnMapper {
 
     public AltinnCorrespondenceRequest tilAltinnKorrespondanse(final Tilsagn tilsagn) {
         return AltinnCorrespondenceRequest.builder()
-                .correspondence(lagKorrespondanseBase(tilsagn))
-                .recipients(Collections.singletonList(RECIPIENT_PREFIX + tilsagn.getTiltakArrangor().getOrgNummer()))
-                .existingAttachments(Collections.emptyList())
-                .build();
+            .correspondence(lagKorrespondanseBase(tilsagn))
+            .recipients(Collections.singletonList(RECIPIENT_PREFIX + tilsagn.getTiltakArrangor().getOrgNummer()))
+            .existingAttachments(Collections.emptyList())
+            .idempotentKey(tilsagn.getTilsagnNummer().toString())
+            .build();
     }
 
     public AltinnAttachmentInitRequest tilAltinnVedlegg(final Tilsagn tilsagn) {
         return AltinnAttachmentInitRequest.builder()
-                .resourceId(RESOURCE_ID)
-                .fileName(lagFilnavn(tilsagn))
-                .displayName(vedleggNavn(tilsagn))
-                .isEncrypted(false)
-                .sendersReference("NAV-" + UUID.randomUUID())
-                .build();
+            .resourceId(RESOURCE_ID)
+            .fileName(lagFilnavn(tilsagn))
+            .displayName(vedleggNavn(tilsagn))
+            .isEncrypted(false)
+            .sendersReference("NAV-" + UUID.randomUUID())
+            .build();
     }
 
     private AltinnCorrespondenceBase lagKorrespondanseBase(Tilsagn tilsagn) {
-        OffsetDateTime now = DatoUtils.getNow().atZone(ZoneId.systemDefault()).toOffsetDateTime();
-        OffsetDateTime forfallFrist = tilsagn.getRefusjonfristDato()
-                .atTime(LocalTime.MIDNIGHT)
-                .atZone(ZoneId.systemDefault())
-                .toOffsetDateTime();
+        OffsetDateTime requestedPublishTime = LocalDateTime.now()
+            .atZone(ZoneId.of("UTC"))
+            .toOffsetDateTime();
+        OffsetDateTime allowSystemDeleteAfter = LocalDate.now().plusYears(10)
+            .atTime(LocalTime.MIDNIGHT)
+            .atZone(ZoneId.of("UTC"))
+            .toOffsetDateTime();
+        OffsetDateTime dueDateTime = tilsagn.getRefusjonfristDato()
+            .atTime(LocalTime.MIDNIGHT)
+            .atZone(ZoneId.of("UTC"))
+            .toOffsetDateTime();
 
         return AltinnCorrespondenceBase.builder()
-                .resourceId(RESOURCE_ID)
-                .sendersReference("NAV-" + UUID.randomUUID())
-                .messageSender(MSG_SENDER)
-                .content(lagInnhold(tilsagn))
-                .requestedPublishTime(now)
-                .dueDateTime(forfallFrist)
-                .notification(lagVarsling(tilsagn.getTiltakArrangor()))
-                .build();
+            .resourceId(RESOURCE_ID)
+            .sendersReference("NAV-" + UUID.randomUUID())
+            .messageSender(MSG_SENDER)
+            .content(lagInnhold(tilsagn))
+            .requestedPublishTime(requestedPublishTime)
+            .dueDateTime(dueDateTime)
+            .notification(lagVarsling(tilsagn.getTiltakArrangor()))
+            .allowSystemDeleteAfter(allowSystemDeleteAfter)
+            .build();
     }
 
     private AltinnCorrespondenceContent lagInnhold(Tilsagn tilsagn) {
         return AltinnCorrespondenceContent.builder()
-                .language(LANGUAGE_CODE)
-                .messageTitle(vedleggNavn(tilsagn))
-                .messageSummary(lagSammendrag(tilsagn.getTiltakArrangor()))
-                .messageBody(lagMeldingsTekst(tilsagn.getTiltakArrangor()))
-                .build();
+            .language(LANGUAGE_CODE)
+            .messageTitle(vedleggNavn(tilsagn))
+            .messageSummary(lagSammendrag(tilsagn.getTiltakArrangor()))
+            .messageBody(lagMeldingsTekst(tilsagn.getTiltakArrangor()))
+            .attachments(List.of(
+                AltinnCorrespondenceAttachments.builder()
+                    .isEncrypted(false)
+                    .sendersReference("NAV-" + UUID.randomUUID())
+                    .fileName(lagFilnavn(tilsagn))
+                    .displayName(vedleggNavn(tilsagn))
+                    .dataLocationType("NewCorrespondenceAttachment")
+                    .build()
+            ))
+            .build();
     }
 
     private AltinnCorrespondenceNotification lagVarsling(TiltakArrangor tiltakArrangor) {
         String emne = VARSLING_EMNE_PREFIX + tiltakArrangor.getOrgNummer()
-                + " " + tiltakArrangor.getArbgiverNavn() + VARSLING_EMNE_SUFFIX;
+            + " " + tiltakArrangor.getArbgiverNavn() + VARSLING_EMNE_SUFFIX;
 
         return AltinnCorrespondenceNotification.builder()
-                .notificationTemplate(NOTIFICATION_TEMPLATE)
-                .notificationChannel(NOTIFICATION_CHANNEL)
-                .emailSubject(emne)
-                .emailBody(lagEpostTekst(tiltakArrangor))
-                .sendReminder(false)
-                .build();
+            .notificationTemplate(NOTIFICATION_TEMPLATE)
+            .notificationChannel(NOTIFICATION_CHANNEL)
+            .emailSubject(emne)
+            .emailBody(lagEpostTekst(tiltakArrangor))
+            .sendReminder(false)
+            .build();
     }
 
     private String lagSammendrag(TiltakArrangor tiltakArrangor) {
         return VARSLING_EMNE_PREFIX + tiltakArrangor.getOrgNummer()
-                + " " + tiltakArrangor.getArbgiverNavn() + VARSLING_TEKST_SUFFIX;
+            + " " + tiltakArrangor.getArbgiverNavn() + VARSLING_TEKST_SUFFIX;
     }
 
     private String lagMeldingsTekst(TiltakArrangor tiltakArrangor) {
@@ -103,18 +123,21 @@ public class TilsagnTilAltinnMapper {
 
     private String lagEpostTekst(TiltakArrangor tiltakArrangor) {
         return VARSLING_EMNE_PREFIX + tiltakArrangor.getOrgNummer()
-                + " " + tiltakArrangor.getArbgiverNavn() + VARSLING_TEKST_SUFFIX + VARSLING_TEKST_FOOTER;
+            + " " + tiltakArrangor.getArbgiverNavn() + VARSLING_TEKST_SUFFIX + VARSLING_TEKST_FOOTER;
     }
 
     private String vedleggNavn(Tilsagn tilsagn) {
         StringBuilder sb = new StringBuilder()
-                .append(ATTACHMENT_NAME_PREFIX)
-                .append(" ")
-                .append(tilsagn.getTiltakNavn())
-                .append(" ");
+            .append(ATTACHMENT_NAME_PREFIX)
+            .append(" ")
+            .append(tilsagn.getTiltakNavn())
+            .append(" ");
 
         if (tilsagn.erGruppeTilsagn()) {
-            return sb.append(tilsagn.getPeriode().getFraDato()).append(" til ").append(tilsagn.getPeriode().getTilDato()).toString();
+            return sb.append(tilsagn.getPeriode().getFraDato())
+                .append(" til ")
+                .append(tilsagn.getPeriode().getTilDato())
+                .toString();
         }
         return sb.append(tilsagn.getDeltaker().getEtternavn()).toString();
     }

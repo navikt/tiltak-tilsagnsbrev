@@ -25,9 +25,13 @@ public class AltinnCorrespondenceBase {
     @JsonProperty("requestedPublishTime")
     private OffsetDateTime requestedPublishTime;
 
+    @JsonProperty("allowSystemDeleteAfter")
+    private OffsetDateTime allowSystemDeleteAfter;
+
     @JsonProperty("dueDateTime")
     private OffsetDateTime dueDateTime;
 
     @JsonProperty("notification")
     private AltinnCorrespondenceNotification notification;
+
 }
