@@ -37,12 +37,12 @@ public class TilsagnTilAltinnMapper {
     private static final String VARSLING_TEKST_SUFFIX = " er tilgjengelig. Logg inn i Altinn for å se innholdet.";
     private static final String VARSLING_TEKST_FOOTER = "\n\nVennlig hilsen NAV";
 
-    public AltinnCorrespondenceRequest tilAltinnKorrespondanse(final Tilsagn tilsagn) {
+    public AltinnCorrespondenceRequest tilAltinnKorrespondanse(final Tilsagn tilsagn, final UUID vedleggId) {
         return AltinnCorrespondenceRequest.builder()
-            .correspondence(lagKorrespondanseBase(tilsagn))
+            .correspondence(lagKorrespondanseBase(tilsagn, vedleggId))
             .recipients(Collections.singletonList(RECIPIENT_PREFIX + tilsagn.getTiltakArrangor().getOrgNummer()))
-            .existingAttachments(Collections.emptyList())
-            .idempotentKey(tilsagn.getTilsagnNummer().toString())
+            .existingAttachments(List.of(vedleggId))
+            .idempotentKey(tilsagn.getTilsagnNummer().ref())
             .build();
     }
 
@@ -52,11 +52,11 @@ public class TilsagnTilAltinnMapper {
             .fileName(lagFilnavn(tilsagn))
             .displayName(vedleggNavn(tilsagn))
             .isEncrypted(false)
-            .sendersReference("NAV-" + UUID.randomUUID())
+            .sendersReference(tilsagn.getTilsagnNummer().ref())
             .build();
     }
 
-    private AltinnCorrespondenceBase lagKorrespondanseBase(Tilsagn tilsagn) {
+    private AltinnCorrespondenceBase lagKorrespondanseBase(Tilsagn tilsagn, UUID vedleggId) {
         OffsetDateTime requestedPublishTime = LocalDateTime.now()
             .atZone(ZoneId.of("UTC"))
             .toOffsetDateTime();
@@ -71,9 +71,9 @@ public class TilsagnTilAltinnMapper {
 
         return AltinnCorrespondenceBase.builder()
             .resourceId(RESOURCE_ID)
-            .sendersReference("NAV-" + UUID.randomUUID())
+            .sendersReference(tilsagn.getTilsagnNummer().ref())
             .messageSender(MSG_SENDER)
-            .content(lagInnhold(tilsagn))
+            .content(lagInnhold(tilsagn, vedleggId))
             .requestedPublishTime(requestedPublishTime)
             .dueDateTime(dueDateTime)
             .notification(lagVarsling(tilsagn.getTiltakArrangor()))
@@ -81,7 +81,7 @@ public class TilsagnTilAltinnMapper {
             .build();
     }
 
-    private AltinnCorrespondenceContent lagInnhold(Tilsagn tilsagn) {
+    private AltinnCorrespondenceContent lagInnhold(Tilsagn tilsagn, UUID vedleggId) {
         return AltinnCorrespondenceContent.builder()
             .language(LANGUAGE_CODE)
             .messageTitle(vedleggNavn(tilsagn))
@@ -89,9 +89,9 @@ public class TilsagnTilAltinnMapper {
             .messageBody(lagMeldingsTekst(tilsagn.getTiltakArrangor()))
             .attachments(List.of(
                 AltinnCorrespondenceAttachments.builder()
-                    .id(UUID.randomUUID())
+                    .id(vedleggId)
                     .isEncrypted(false)
-                    .sendersReference("NAV-" + UUID.randomUUID())
+                    .sendersReference(tilsagn.getTilsagnNummer().ref())
                     .fileName(lagFilnavn(tilsagn))
                     .displayName(vedleggNavn(tilsagn))
                     .dataLocationType("NewCorrespondenceAttachment")

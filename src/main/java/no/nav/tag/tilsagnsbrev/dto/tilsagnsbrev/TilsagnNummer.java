@@ -12,4 +12,8 @@ public class TilsagnNummer {
     private String aar;
     private String loepenrSak;
     private String loepenrTilsagn;
+
+    public String ref() {
+        return aar + "/" + loepenrSak + "-" + loepenrTilsagn;
+    }
 }

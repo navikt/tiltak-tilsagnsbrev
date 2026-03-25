@@ -10,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -25,7 +27,7 @@ public class TilsagnTilAltinnMapperTest {
     public void mapperTilAltinnKorrespondanse() {
         Tilsagn tilsagn = Testdata.gruppeTilsagn();
 
-        AltinnCorrespondenceRequest request = tilsagnTilAltinnMapper.tilAltinnKorrespondanse(tilsagn);
+        AltinnCorrespondenceRequest request = tilsagnTilAltinnMapper.tilAltinnKorrespondanse(tilsagn, UUID.randomUUID());
 
         assertNotNull(request);
         assertNotNull(request.getCorrespondence());

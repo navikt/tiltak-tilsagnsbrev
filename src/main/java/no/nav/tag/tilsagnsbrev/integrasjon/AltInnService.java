@@ -1,6 +1,5 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnAttachmentInitRequest;
@@ -19,7 +18,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.UUID;
 
 @Slf4j
@@ -42,16 +40,20 @@ public class AltInnService {
     @Autowired
     private AltinnProperties altinnProperties;
 
-    public String sendTilsagnsbrev(AltinnCorrespondenceRequest correspondenceRequest, AltinnAttachmentInitRequest attachmentInitRequest, byte[] pdf) {
+    public String sendTilsagnsbrev(AltinnCorrespondenceRequest correspondenceRequest) {
         try {
-            UUID attachmentId = initialiserVedlegg(attachmentInitRequest);
-            lastOppVedlegg(attachmentId, pdf);
-            return opprettKorrespondanse(correspondenceRequest, attachmentId);
+            return opprettKorrespondanse(correspondenceRequest);
         } catch (DataException | SystemException e) {
             throw e;
         } catch (Exception e) {
             throw new SystemException("Uventet feil ved sending til Altinn 3: " + e.getMessage());
         }
+    }
+
+    public UUID sendVedlegg(AltinnAttachmentInitRequest attachmentInitRequest, byte[] pdf) {
+        UUID attachmentId = initialiserVedlegg(attachmentInitRequest);
+        lastOppVedlegg(attachmentId, pdf);
+        return attachmentId;
     }
 
     private UUID initialiserVedlegg(AltinnAttachmentInitRequest request) {
@@ -89,19 +91,11 @@ public class AltInnService {
         }
     }
 
-    private String opprettKorrespondanse(AltinnCorrespondenceRequest request, UUID attachmentId) throws JsonProcessingException {
-        AltinnCorrespondenceRequest requestMedVedlegg = AltinnCorrespondenceRequest.builder()
-                .correspondence(request.getCorrespondence())
-                .recipients(request.getRecipients())
-                .existingAttachments(Collections.singletonList(attachmentId))
-                .build();
-
-        log.info("DEBUG: " + objectMapper.readTree(objectMapper.writeValueAsString(requestMedVedlegg)).toPrettyString());
-
+    private String opprettKorrespondanse(AltinnCorrespondenceRequest request) {
         try {
             AltinnCorrespondenceResponse response = restTemplate.postForObject(
                     altinnProperties.getBaseUrl() + CORRESPONDENCE_PATH,
-                    jsonEntityMedToken(requestMedVedlegg),
+                    jsonEntityMedToken(request),
                     AltinnCorrespondenceResponse.class
             );
 
