@@ -8,8 +8,6 @@ import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceNotification;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceRequest;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TiltakArrangor;
-import no.nav.tag.tilsagnsbrev.konfigurasjon.altinn.AltinnProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
@@ -21,8 +19,7 @@ import java.util.UUID;
 @Component
 public class TilsagnTilAltinnMapper {
 
-    @Autowired
-    private AltinnProperties altinnProperties;
+    public static final String RESOURCE_ID = "nav_tiltak_tilskuddsbrev";
 
     private static final String ATTACHMENT_NAME_PREFIX = "Tilskuddsbrev ";
     private static final String FILE_NAME_PREFIX = "Tilskuddsbrev-";
@@ -47,7 +44,7 @@ public class TilsagnTilAltinnMapper {
 
     public AltinnAttachmentInitRequest tilAltinnVedlegg(final Tilsagn tilsagn) {
         return AltinnAttachmentInitRequest.builder()
-                .resourceId(altinnProperties.getResourceId())
+                .resourceId(RESOURCE_ID)
                 .fileName(lagFilnavn(tilsagn))
                 .displayName(vedleggNavn(tilsagn))
                 .isEncrypted(false)
@@ -63,7 +60,7 @@ public class TilsagnTilAltinnMapper {
                 .toOffsetDateTime();
 
         return AltinnCorrespondenceBase.builder()
-                .resourceId(altinnProperties.getResourceId())
+                .resourceId(RESOURCE_ID)
                 .sendersReference("NAV-" + UUID.randomUUID())
                 .messageSender(MSG_SENDER)
                 .content(lagInnhold(tilsagn))

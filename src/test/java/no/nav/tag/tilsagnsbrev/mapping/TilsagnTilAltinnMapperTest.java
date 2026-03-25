@@ -26,15 +26,13 @@ public class TilsagnTilAltinnMapperTest {
 
     @Test
     public void mapperTilAltinnKorrespondanse() {
-        when(altinnProperties.getResourceId()).thenReturn("nav-tilsagnsbrev");
-
         Tilsagn tilsagn = Testdata.gruppeTilsagn();
 
         AltinnCorrespondenceRequest request = tilsagnTilAltinnMapper.tilAltinnKorrespondanse(tilsagn);
 
         assertNotNull(request);
         assertNotNull(request.getCorrespondence());
-        assertEquals("nav-tilsagnsbrev", request.getCorrespondence().getResourceId());
+        assertEquals(TilsagnTilAltinnMapper.RESOURCE_ID, request.getCorrespondence().getResourceId());
         assertEquals("NAV", request.getCorrespondence().getMessageSender());
         assertNotNull(request.getCorrespondence().getContent());
         assertNotNull(request.getCorrespondence().getContent().getMessageTitle());
@@ -45,14 +43,12 @@ public class TilsagnTilAltinnMapperTest {
 
     @Test
     public void mapperTilAltinnVedlegg() {
-        when(altinnProperties.getResourceId()).thenReturn("nav-tilsagnsbrev");
-
         Tilsagn tilsagn = Testdata.gruppeTilsagn();
 
         AltinnAttachmentInitRequest attachment = tilsagnTilAltinnMapper.tilAltinnVedlegg(tilsagn);
 
         assertNotNull(attachment);
-        assertEquals("nav-tilsagnsbrev", attachment.getResourceId());
+        assertEquals(TilsagnTilAltinnMapper.RESOURCE_ID, attachment.getResourceId());
         assertFalse(attachment.isEncrypted());
         assertTrue(attachment.getFileName().endsWith(".pdf"));
         assertNotNull(attachment.getSendersReference());

@@ -9,5 +9,4 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.altinn")
 public class AltinnProperties {
     private String baseUrl;
-    private String resourceId;
 }

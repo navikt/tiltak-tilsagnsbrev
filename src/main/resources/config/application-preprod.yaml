@@ -41,4 +41,3 @@ tilsagnsbrev:
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
       base-url: https://platform.tt02.altinn.no
-      resource-id: nav-tilsagnsbrev
