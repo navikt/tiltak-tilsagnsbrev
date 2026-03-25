@@ -63,9 +63,9 @@ public class OppgaverTest {
 
     @BeforeEach
     public void setUp() {
-        lenient().when(tilsagnTilAltinnMapper.tilAltinnKorrespondanse(any())).thenReturn(ALTINN_REQUEST);
+        lenient().when(tilsagnTilAltinnMapper.tilAltinnKorrespondanse(any(), any())).thenReturn(ALTINN_REQUEST);
         lenient().when(tilsagnTilAltinnMapper.tilAltinnVedlegg(any())).thenReturn(ALTINN_ATTACHMENT);
-        lenient().when(altInnService.sendTilsagnsbrev(any(), any(), any())).thenReturn(CORRESPONDENCE_ID);
+        lenient().when(altInnService.sendTilsagnsbrev(any())).thenReturn(CORRESPONDENCE_ID);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class OppgaverTest {
     }
 
     private void verifySendTilAltinn() {
-        verify(altInnService, times(1)).sendTilsagnsbrev(any(), any(), any());
+        verify(altInnService, times(1)).sendTilsagnsbrev(any());
     }
 
     @Test
