@@ -89,6 +89,7 @@ public class TilsagnTilAltinnMapper {
             .messageBody(lagMeldingsTekst(tilsagn.getTiltakArrangor()))
             .attachments(List.of(
                 AltinnCorrespondenceAttachments.builder()
+                    .id(UUID.randomUUID())
                     .isEncrypted(false)
                     .sendersReference("NAV-" + UUID.randomUUID())
                     .fileName(lagFilnavn(tilsagn))
