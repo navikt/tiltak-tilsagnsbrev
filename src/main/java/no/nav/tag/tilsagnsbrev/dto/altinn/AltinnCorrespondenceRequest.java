@@ -21,6 +21,6 @@ public class AltinnCorrespondenceRequest {
     private List<UUID> existingAttachments;
 
     @JsonProperty("idempotentKey")
-    private String idempotentKey;
+    private UUID idempotentKey;
 
 }

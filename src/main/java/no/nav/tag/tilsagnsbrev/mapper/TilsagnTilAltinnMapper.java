@@ -41,7 +41,7 @@ public class TilsagnTilAltinnMapper {
             .correspondence(lagKorrespondanseBase(tilsagn, vedleggId))
             .recipients(Collections.singletonList(RECIPIENT_PREFIX + tilsagn.getTiltakArrangor().getOrgNummer()))
             .existingAttachments(List.of(vedleggId))
-            .idempotentKey(tilsagn.getTilsagnNummer().ref())
+            .idempotentKey(UUID.randomUUID())
             .build();
     }
 
