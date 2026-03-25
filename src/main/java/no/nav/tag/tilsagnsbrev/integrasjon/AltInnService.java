@@ -1,6 +1,5 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnAttachmentInitRequest;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceRequest;
@@ -29,9 +28,6 @@ public class AltInnService {
     private static final String CORRESPONDENCE_PATH = "/correspondence/api/v1/correspondence";
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
@@ -58,12 +54,11 @@ public class AltInnService {
 
     private UUID initialiserVedlegg(AltinnAttachmentInitRequest request) {
         try {
-            UUID attachmentId = restTemplate.postForObject(
-                    altinnProperties.getBaseUrl() + ATTACHMENT_PATH,
-                    jsonEntityMedToken(request),
-                    UUID.class);
-            log.info("Vedlegg initialisert i Altinn 3, attachmentId: {}", attachmentId);
-            return attachmentId;
+            return restTemplate.postForObject(
+                altinnProperties.getBaseUrl() + ATTACHMENT_PATH,
+                jsonEntityMedToken(request),
+                UUID.class
+            );
         } catch (HttpClientErrorException e) {
             throw new DataException("Altinn 3 avviste vedlegget (4xx): " + e.getMessage());
         } catch (HttpServerErrorException e) {
@@ -78,11 +73,11 @@ public class AltInnService {
             headers.setBearerAuth(maskinportenService.hentToken());
 
             restTemplate.postForObject(
-                    altinnProperties.getBaseUrl() + ATTACHMENT_UPLOAD_PATH,
-                    new HttpEntity<>(pdf, headers),
-                    Void.class,
-                    attachmentId);
-            log.info("Vedlegg lastet opp til Altinn 3, attachmentId: {}", attachmentId);
+                altinnProperties.getBaseUrl() + ATTACHMENT_UPLOAD_PATH,
+                new HttpEntity<>(pdf, headers),
+                Void.class,
+                attachmentId
+            );
         } catch (HttpClientErrorException e) {
             throw new DataException("Altinn 3 avviste vedlegg-opplasting (4xx): " + e.getMessage());
         } catch (HttpServerErrorException e) {
@@ -94,18 +89,16 @@ public class AltInnService {
     private String opprettKorrespondanse(AltinnCorrespondenceRequest request) {
         try {
             AltinnCorrespondenceResponse response = restTemplate.postForObject(
-                    altinnProperties.getBaseUrl() + CORRESPONDENCE_PATH,
-                    jsonEntityMedToken(request),
-                    AltinnCorrespondenceResponse.class
+                altinnProperties.getBaseUrl() + CORRESPONDENCE_PATH,
+                jsonEntityMedToken(request),
+                AltinnCorrespondenceResponse.class
             );
 
             if (response == null || response.getCorrespondences() == null || response.getCorrespondences().isEmpty()) {
                 throw new SystemException("Tomt svar fra Altinn 3 korrespondanse-API");
             }
 
-            String correspondenceId = response.getCorrespondences().get(0).getCorrespondenceId().toString();
-            log.info("Korrespondanse opprettet i Altinn 3, correspondenceId: {}", correspondenceId);
-            return correspondenceId;
+            return response.getCorrespondences().get(0).getCorrespondenceId().toString();
         } catch (DataException | SystemException e) {
             throw e;
         } catch (HttpClientErrorException e) {

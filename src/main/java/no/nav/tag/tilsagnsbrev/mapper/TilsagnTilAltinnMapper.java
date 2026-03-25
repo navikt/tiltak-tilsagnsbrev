@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.mapper;
 
+import no.nav.tag.tilsagnsbrev.DatoUtils;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnAttachmentInitRequest;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceAttachments;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceBase;
@@ -10,8 +11,6 @@ import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TiltakArrangor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -57,16 +56,13 @@ public class TilsagnTilAltinnMapper {
     }
 
     private AltinnCorrespondenceBase lagKorrespondanseBase(Tilsagn tilsagn, UUID vedleggId) {
-        OffsetDateTime requestedPublishTime = LocalDateTime.now()
-            .atZone(ZoneId.of("UTC"))
+        OffsetDateTime requestedPublishTime = DatoUtils.getNow()
+            .atZone(ZoneId.systemDefault())
             .toOffsetDateTime();
-        OffsetDateTime allowSystemDeleteAfter = LocalDate.now().plusYears(10)
-            .atTime(LocalTime.MIDNIGHT)
-            .atZone(ZoneId.of("UTC"))
-            .toOffsetDateTime();
+        OffsetDateTime allowSystemDeleteAfter = requestedPublishTime.plusYears(10);
         OffsetDateTime dueDateTime = tilsagn.getRefusjonfristDato()
             .atTime(LocalTime.MIDNIGHT)
-            .atZone(ZoneId.of("UTC"))
+            .atZone(ZoneId.systemDefault())
             .toOffsetDateTime();
 
         return AltinnCorrespondenceBase.builder()

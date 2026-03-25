@@ -13,6 +13,8 @@ spring:
     banner-mode: off
   jackson:
     locale: "no"
+    serialization:
+      write-dates-as-timestamps: false
 
   kafka:
     bootstrap-servers:
