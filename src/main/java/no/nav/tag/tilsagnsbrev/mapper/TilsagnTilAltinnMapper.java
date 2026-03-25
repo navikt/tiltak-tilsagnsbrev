@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -57,13 +57,11 @@ public class TilsagnTilAltinnMapper {
 
     private AltinnCorrespondenceBase lagKorrespondanseBase(Tilsagn tilsagn, UUID vedleggId) {
         OffsetDateTime requestedPublishTime = DatoUtils.getNow()
-            .atZone(ZoneId.systemDefault())
-            .toOffsetDateTime();
+            .atOffset(ZoneOffset.UTC);
         OffsetDateTime allowSystemDeleteAfter = requestedPublishTime.plusYears(10);
         OffsetDateTime dueDateTime = tilsagn.getRefusjonfristDato()
             .atTime(LocalTime.MIDNIGHT)
-            .atZone(ZoneId.systemDefault())
-            .toOffsetDateTime();
+            .atOffset(ZoneOffset.UTC);
 
         return AltinnCorrespondenceBase.builder()
             .resourceId(RESOURCE_ID)
