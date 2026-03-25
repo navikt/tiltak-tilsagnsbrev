@@ -43,8 +43,9 @@ spec:
   maskinporten:
     enabled: true
     scopes:
-      - name: "altinn:serviceowner"
-      - name: "altinn:correspondence.write"
+      consumes:
+        - name: "altinn:serviceowner"
+        - name: "altinn:correspondence.write"
   accessPolicy:
     outbound:
       external:
