@@ -18,7 +18,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -95,8 +94,9 @@ public class AltInnService {
         try {
             AltinnCorrespondenceResponse response = restTemplate.postForObject(
                     altinnProperties.getBaseUrl() + CORRESPONDENCE_PATH,
-                    jsonEntityMedToken(List.of(requestMedVedlegg)),
-                    AltinnCorrespondenceResponse.class);
+                    jsonEntityMedToken(requestMedVedlegg),
+                    AltinnCorrespondenceResponse.class
+            );
 
             if (response == null || response.getCorrespondences() == null || response.getCorrespondences().isEmpty()) {
                 throw new SystemException("Tomt svar fra Altinn 3 korrespondanse-API");
