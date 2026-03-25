@@ -4,7 +4,6 @@ server:
 logging:
   level:
     no.nav.tag.tilsagnsbrev: INFO
-    org.apache.cxf.services.*: OFF
     org.springframework.kafka.listener.LoggingErrorHandler: OFF
 
 spring:
@@ -36,6 +35,5 @@ tilsagnsbrev:
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
-      uri: http://localhost:8090/ekstern/altinn/BehandleAltinnMelding/v1
-      systemBruker: systemBruker
-      systemPassord: systemPassord
+      base-url: http://localhost:8090
+      resource-id: nav-tilsagnsbrev

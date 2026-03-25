@@ -40,6 +40,15 @@ spec:
       memory: 1024Mi
   kafka:
     pool: {{kafka-pool}}
+  maskinporten:
+    enabled: true
+    scopes:
+      - name: "altinn:serviceowner"
+      - name: "altinn:correspondence.write"
+  accessPolicy:
+    outbound:
+      external:
+        - host: {{altinn}}
   observability:
     autoInstrumentation:
       enabled: true

@@ -40,6 +40,5 @@ tilsagnsbrev:
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
-      uri: https://pep-gw-q1.oera-q.local:9443/ekstern/altinn/BehandleAltinnMelding/v1
-      systemBruker: ${tilsagnsbrev_altinn_system_bruker}
-      systemPassord: ${tilsagnsbrev_altinn_system_passord}
+      base-url: https://platform.tt02.altinn.no
+      resource-id: nav-tilsagnsbrev

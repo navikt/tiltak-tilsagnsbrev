@@ -4,5 +4,6 @@
   "vault-serviceuser-path": "serviceuser/data/dev/srvtiltak-tilsagns",
   "vault-default-path": "kv/preprod/fss/tiltak-tilsagnsbrev/default",
   "slack_alert_channel": "arbeidsgiver-notifications-test",
-  "kafka-pool": "nav-dev"
+  "kafka-pool": "nav-dev",
+  "altinn": "platform.tt02.altinn.no"
 }

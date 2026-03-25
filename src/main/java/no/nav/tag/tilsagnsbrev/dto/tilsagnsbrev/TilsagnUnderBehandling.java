@@ -35,7 +35,7 @@ public class TilsagnUnderBehandling {
     private LocalDateTime opprettet;
     private Integer tilsagnsbrevId;
     private String journalpostId;
-    private Integer altinnReferanse;
+    private String altinnReferanse;
     private String json;
     private byte[] pdf;
 

@@ -1,28 +1,124 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
-import lombok.AllArgsConstructor;
-import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic;
-import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasicInsertCorrespondenceBasicV2AltinnFaultFaultFaultMessage;
-import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
+import lombok.extern.slf4j.Slf4j;
+import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnAttachmentInitRequest;
+import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceRequest;
+import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceResponse;
+import no.nav.tag.tilsagnsbrev.exception.DataException;
+import no.nav.tag.tilsagnsbrev.exception.SystemException;
+import no.nav.tag.tilsagnsbrev.integrasjon.maskinporten.MaskinportenService;
+import no.nav.tag.tilsagnsbrev.konfigurasjon.altinn.AltinnProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+@Slf4j
 @Service
-@AllArgsConstructor
 public class AltInnService {
 
-    private final ICorrespondenceAgencyExternalBasic iCorrespondenceAgencyExternalBasic;
+    private static final String ATTACHMENT_PATH = "/correspondence/api/v1/attachment";
+    private static final String ATTACHMENT_UPLOAD_PATH = "/correspondence/api/v1/attachment/{attachmentId}/upload";
+    private static final String CORRESPONDENCE_PATH = "/correspondence/api/v1/correspondence";
 
-    public int sendTilsagnsbrev(InsertCorrespondenceBasicV2 insertCorrespondenceBasicV2) {
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private MaskinportenService maskinportenService;
+
+    @Autowired
+    private AltinnProperties altinnProperties;
+
+    public String sendTilsagnsbrev(AltinnCorrespondenceRequest correspondenceRequest, AltinnAttachmentInitRequest attachmentInitRequest, byte[] pdf) {
         try {
-            return iCorrespondenceAgencyExternalBasic.insertCorrespondenceBasicV2(
-                    insertCorrespondenceBasicV2.getSystemUserName(),
-                    insertCorrespondenceBasicV2.getSystemPassword(),
-                    insertCorrespondenceBasicV2.getSystemUserCode(),
-                    insertCorrespondenceBasicV2.getExternalShipmentReference(),
-                    insertCorrespondenceBasicV2.getCorrespondence()
-            ).getReceiptId();
-        } catch (ICorrespondenceAgencyExternalBasicInsertCorrespondenceBasicV2AltinnFaultFaultFaultMessage fault) {
-            throw new RuntimeException(fault);
+            UUID attachmentId = initialiserVedlegg(attachmentInitRequest);
+            lastOppVedlegg(attachmentId, pdf);
+            return opprettKorrespondanse(correspondenceRequest, attachmentId);
+        } catch (DataException | SystemException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new SystemException("Uventet feil ved sending til Altinn 3: " + e.getMessage());
         }
+    }
+
+    private UUID initialiserVedlegg(AltinnAttachmentInitRequest request) {
+        try {
+            UUID attachmentId = restTemplate.postForObject(
+                    altinnProperties.getBaseUrl() + ATTACHMENT_PATH,
+                    jsonEntityMedToken(request),
+                    UUID.class);
+            log.info("Vedlegg initialisert i Altinn 3, attachmentId: {}", attachmentId);
+            return attachmentId;
+        } catch (HttpClientErrorException e) {
+            throw new DataException("Altinn 3 avviste vedlegget (4xx): " + e.getMessage());
+        } catch (HttpServerErrorException e) {
+            throw new SystemException("Altinn 3 serverfeil ved initialisering av vedlegg (5xx): " + e.getMessage());
+        }
+    }
+
+    private void lastOppVedlegg(UUID attachmentId, byte[] pdf) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setBearerAuth(maskinportenService.hentToken());
+
+            restTemplate.postForObject(
+                    altinnProperties.getBaseUrl() + ATTACHMENT_UPLOAD_PATH,
+                    new HttpEntity<>(pdf, headers),
+                    Void.class,
+                    attachmentId);
+            log.info("Vedlegg lastet opp til Altinn 3, attachmentId: {}", attachmentId);
+        } catch (HttpClientErrorException e) {
+            throw new DataException("Altinn 3 avviste vedlegg-opplasting (4xx): " + e.getMessage());
+        } catch (HttpServerErrorException e) {
+            maskinportenService.evict();
+            throw new SystemException("Altinn 3 serverfeil ved opplasting av vedlegg (5xx): " + e.getMessage());
+        }
+    }
+
+    private String opprettKorrespondanse(AltinnCorrespondenceRequest request, UUID attachmentId) {
+        AltinnCorrespondenceRequest requestMedVedlegg = AltinnCorrespondenceRequest.builder()
+                .correspondence(request.getCorrespondence())
+                .recipients(request.getRecipients())
+                .existingAttachments(Collections.singletonList(attachmentId))
+                .build();
+
+        try {
+            AltinnCorrespondenceResponse response = restTemplate.postForObject(
+                    altinnProperties.getBaseUrl() + CORRESPONDENCE_PATH,
+                    jsonEntityMedToken(List.of(requestMedVedlegg)),
+                    AltinnCorrespondenceResponse.class);
+
+            if (response == null || response.getCorrespondences() == null || response.getCorrespondences().isEmpty()) {
+                throw new SystemException("Tomt svar fra Altinn 3 korrespondanse-API");
+            }
+
+            String correspondenceId = response.getCorrespondences().get(0).getCorrespondenceId().toString();
+            log.info("Korrespondanse opprettet i Altinn 3, correspondenceId: {}", correspondenceId);
+            return correspondenceId;
+        } catch (DataException | SystemException e) {
+            throw e;
+        } catch (HttpClientErrorException e) {
+            throw new DataException("Altinn 3 avviste korrespondansen (4xx): " + e.getMessage());
+        } catch (HttpServerErrorException e) {
+            maskinportenService.evict();
+            throw new SystemException("Altinn 3 serverfeil ved oppretting av korrespondanse (5xx): " + e.getMessage());
+        }
+    }
+
+    private <T> HttpEntity<T> jsonEntityMedToken(T body) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(maskinportenService.hentToken());
+        return new HttpEntity<>(body, headers);
     }
 }

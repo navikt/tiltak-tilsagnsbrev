@@ -9,3 +9,10 @@ H2 konsoll url: http://localhost:8082/tiltak-tilsagnsbrev/h2-console
 JDBC URL: jdbc:h2:mem:testdb
 Bruker: sa, Passord: blank
 .
+
+⚠️ Before going to production (manual steps)
+
+1. Create the Altinn 3 resource in Altinn Studio — suggested ID: nav-tilsagnsbrev
+2. Request scopes altinn:serviceowner + altinn:correspondence.write from servicedesk@altinn.no
+3. Register Maskinporten client with those scopes in Samarbeidsportalen
+4. Set env vars in NAIS: altinn.base.url and altinn.resource.id for production

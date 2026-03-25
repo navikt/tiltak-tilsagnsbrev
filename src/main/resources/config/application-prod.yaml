@@ -43,6 +43,5 @@ tilsagnsbrev:
       bruker: ${tilsagnsbrev_srvuser}
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
-      uri: ${altinn.correspondence.url}
-      systemBruker: ${tilsagnsbrev_altinn_system_bruker}
-      systemPassord: ${tilsagnsbrev_altinn_system_passord}
+      base-url: https://platform.altinn.no
+      resource-id: nav-tilsagnsbrev

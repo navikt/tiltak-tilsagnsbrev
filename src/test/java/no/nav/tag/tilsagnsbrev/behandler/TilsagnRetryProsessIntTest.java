@@ -62,7 +62,7 @@ public class TilsagnRetryProsessIntTest {
         final UUID CID1 = UUID.randomUUID();
         final UUID CID2 = UUID.randomUUID();
         TilsagnUnderBehandling tub1 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(false).cid(CID1).tilsagnsbrevId(1).opprettet(DatoUtils.getNow()).build();
-        TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).pdf("pdf".getBytes()).altinnReferanse(1).cid(CID2).opprettet(DatoUtils.getNow()).tilsagnsbrevId(2).build();
+        TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).pdf("pdf".getBytes()).altinnReferanse("ref-001").cid(CID2).opprettet(DatoUtils.getNow()).tilsagnsbrevId(2).build();
 
         tilsagnsbrevRepository.saveAll(Arrays.asList(tub1, tub2));
 
@@ -104,7 +104,7 @@ public class TilsagnRetryProsessIntTest {
     @Test
     public void behandlerTilsagnEtterFeiletJournalforing() {
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdf("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).altinnReferanse(002).build();
+        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdf("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).altinnReferanse("ref-002").build();
         tilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
@@ -142,7 +142,7 @@ public class TilsagnRetryProsessIntTest {
 
     @Test
     public void feilerIgjenEtterFeiletAltinnSending() {
-        mockServer.getServer().stubFor(post("/ekstern/altinn/BehandleAltinnMelding/v1").willReturn(serverError().withBodyFile(altinnFeilRespons)));
+        mockServer.getServer().stubFor(post("/correspondence/api/v1/correspondence").willReturn(serverError()));
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling feilet = Testdata.tubBuilder().retry(1).cid(CID).json(tilsagnData).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
