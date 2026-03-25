@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Builder
 public class AltinnCorrespondenceContent {
@@ -21,7 +19,4 @@ public class AltinnCorrespondenceContent {
 
     @JsonProperty("messageBody")
     private String messageBody;
-
-    @JsonProperty("attachments")
-    private List<AltinnCorrespondenceAttachments> attachments;
 }

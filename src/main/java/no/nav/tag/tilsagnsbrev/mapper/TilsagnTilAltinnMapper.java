@@ -2,7 +2,6 @@ package no.nav.tag.tilsagnsbrev.mapper;
 
 import no.nav.tag.tilsagnsbrev.DatoUtils;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnAttachmentInitRequest;
-import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceAttachments;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceBase;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceContent;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceNotification;
@@ -38,7 +37,7 @@ public class TilsagnTilAltinnMapper {
 
     public AltinnCorrespondenceRequest tilAltinnKorrespondanse(final Tilsagn tilsagn, final UUID vedleggId) {
         return AltinnCorrespondenceRequest.builder()
-            .correspondence(lagKorrespondanseBase(tilsagn, vedleggId))
+            .correspondence(lagKorrespondanseBase(tilsagn))
             .recipients(Collections.singletonList(RECIPIENT_PREFIX + tilsagn.getTiltakArrangor().getOrgNummer()))
             .existingAttachments(List.of(vedleggId))
             .idempotentKey(UUID.randomUUID())
@@ -55,7 +54,7 @@ public class TilsagnTilAltinnMapper {
             .build();
     }
 
-    private AltinnCorrespondenceBase lagKorrespondanseBase(Tilsagn tilsagn, UUID vedleggId) {
+    private AltinnCorrespondenceBase lagKorrespondanseBase(Tilsagn tilsagn) {
         OffsetDateTime requestedPublishTime = DatoUtils.getNow()
             .atOffset(ZoneOffset.UTC);
         OffsetDateTime allowSystemDeleteAfter = requestedPublishTime.plusYears(10);
@@ -67,7 +66,7 @@ public class TilsagnTilAltinnMapper {
             .resourceId(RESOURCE_ID)
             .sendersReference(tilsagn.getTilsagnNummer().ref())
             .messageSender(MSG_SENDER)
-            .content(lagInnhold(tilsagn, vedleggId))
+            .content(lagInnhold(tilsagn))
             .requestedPublishTime(requestedPublishTime)
             .dueDateTime(dueDateTime)
             .notification(lagVarsling(tilsagn.getTiltakArrangor()))
@@ -75,22 +74,12 @@ public class TilsagnTilAltinnMapper {
             .build();
     }
 
-    private AltinnCorrespondenceContent lagInnhold(Tilsagn tilsagn, UUID vedleggId) {
+    private AltinnCorrespondenceContent lagInnhold(Tilsagn tilsagn) {
         return AltinnCorrespondenceContent.builder()
             .language(LANGUAGE_CODE)
             .messageTitle(vedleggNavn(tilsagn))
             .messageSummary(lagSammendrag(tilsagn.getTiltakArrangor()))
             .messageBody(lagMeldingsTekst(tilsagn.getTiltakArrangor()))
-            .attachments(List.of(
-                AltinnCorrespondenceAttachments.builder()
-                    .id(vedleggId)
-                    .isEncrypted(false)
-                    .sendersReference(tilsagn.getTilsagnNummer().ref())
-                    .fileName(lagFilnavn(tilsagn))
-                    .displayName(vedleggNavn(tilsagn))
-                    .dataLocationType("NewCorrespondenceAttachment")
-                    .build()
-            ))
             .build();
     }
 
