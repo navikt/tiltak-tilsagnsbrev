@@ -1,5 +1,7 @@
 package no.nav.tag.tilsagnsbrev.integrasjon;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnAttachmentInitRequest;
 import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceRequest;
@@ -27,6 +29,9 @@ public class AltInnService {
     private static final String ATTACHMENT_PATH = "/correspondence/api/v1/attachment";
     private static final String ATTACHMENT_UPLOAD_PATH = "/correspondence/api/v1/attachment/{attachmentId}/upload";
     private static final String CORRESPONDENCE_PATH = "/correspondence/api/v1/correspondence";
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -84,12 +89,14 @@ public class AltInnService {
         }
     }
 
-    private String opprettKorrespondanse(AltinnCorrespondenceRequest request, UUID attachmentId) {
+    private String opprettKorrespondanse(AltinnCorrespondenceRequest request, UUID attachmentId) throws JsonProcessingException {
         AltinnCorrespondenceRequest requestMedVedlegg = AltinnCorrespondenceRequest.builder()
                 .correspondence(request.getCorrespondence())
                 .recipients(request.getRecipients())
                 .existingAttachments(Collections.singletonList(attachmentId))
                 .build();
+
+        log.info("DEBUG: " + objectMapper.readTree(objectMapper.writeValueAsString(requestMedVedlegg)).toPrettyString());
 
         try {
             AltinnCorrespondenceResponse response = restTemplate.postForObject(
