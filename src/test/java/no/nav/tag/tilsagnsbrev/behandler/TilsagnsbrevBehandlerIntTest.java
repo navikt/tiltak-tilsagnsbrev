@@ -19,7 +19,7 @@ import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer.topic;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("local")
@@ -60,8 +60,7 @@ public class TilsagnsbrevBehandlerIntTest {
     public void abryterHvisAlleredeLest(){
         TilsagnUnderBehandling tub = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).tilsagnsbrevId(111).build();
 
-        assertTrue("Må logges før kjøring!", tilsagnLoggRepository.registrerNyMelding(tub));
-        tub.setCid(UUID.randomUUID()); //Blir lest fra topic igjen som en 'ny' melding
+        assertTrue(tilsagnLoggRepository.registrerNyMelding(tub), "Må logges før kjøring!");        tub.setCid(UUID.randomUUID()); //Blir lest fra topic igjen som en 'ny' melding
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(Instant.now(), tub);
         //Skal ikke gjennomføre disse kallene
@@ -88,7 +87,7 @@ public class TilsagnsbrevBehandlerIntTest {
             assertFalse(tub.isMappetFraArena());
             assertEquals(feilbarGoldengateJson, tub.getJson());
             assertNotNull(tub.getOpprettet());
-            assertTrue("Ikke satt til datafeil", tub.isDatafeil());
+            assertTrue(tub.isDatafeil(), "Ikke satt til datafeil");
             return tub;
         });
     }
