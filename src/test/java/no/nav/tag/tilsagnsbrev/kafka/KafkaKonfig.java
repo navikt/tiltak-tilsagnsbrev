@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
-import org.springframework.kafka.test.EmbeddedKafkaBroker;
+import org.springframework.kafka.test.EmbeddedKafkaZKBroker;
 
 @Slf4j
 @Configuration
@@ -15,9 +15,9 @@ import org.springframework.kafka.test.EmbeddedKafkaBroker;
 public class KafkaKonfig {
 
     @Autowired
-    public EmbeddedKafkaBroker embeddedKafkaBroker() {
+    public EmbeddedKafkaZKBroker embeddedKafkaBroker() {
         log.info("Starter embedded Kafka");
-        EmbeddedKafkaBroker embeddedKafka = new EmbeddedKafkaBroker(1, true, ArenaConsumer.topic);
+        EmbeddedKafkaZKBroker embeddedKafka = new EmbeddedKafkaZKBroker(1, true, ArenaConsumer.topic);
         System.setProperty("spring.kafka.bootstrap-servers", embeddedKafka.getBrokersAsString());
         embeddedKafka.afterPropertiesSet();
         return embeddedKafka;
