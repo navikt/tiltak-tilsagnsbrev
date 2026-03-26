@@ -6,6 +6,7 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.PhaseInterceptor;
+import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 
 import java.util.Arrays;
@@ -22,6 +23,8 @@ public class WsClient {
         factory.getFeatures().add(new LoggingFeature());
         T port = (T) factory.create();
         Client client = ClientProxy.getClient(port);
+        HTTPConduit conduit = (HTTPConduit) client.getConduit();
+        conduit.getClient().setVersion("1.1");
         Arrays.stream(interceptors).forEach(client.getOutInterceptors()::add);
         return port;
     }
