@@ -44,12 +44,13 @@ public class TilsagnTilAltinnMapperTest {
     public void mapperTilAltinnVedlegg() {
         Tilsagn tilsagn = Testdata.gruppeTilsagn();
 
-        AltinnAttachmentInitRequest attachment = tilsagnTilAltinnMapper.tilAltinnVedlegg(tilsagn);
+        AltinnAttachmentInitRequest attachment = tilsagnTilAltinnMapper.tilAltinnVedlegg(tilsagn, new byte[]{1, 2, 3});
 
         assertNotNull(attachment);
         assertEquals(TilsagnTilAltinnMapper.RESOURCE_ID, attachment.getResourceId());
         assertFalse(attachment.isEncrypted());
         assertTrue(attachment.getFileName().endsWith(".pdf"));
         assertNotNull(attachment.getSendersReference());
+        assertNotNull(attachment.getChecksum());
     }
 }

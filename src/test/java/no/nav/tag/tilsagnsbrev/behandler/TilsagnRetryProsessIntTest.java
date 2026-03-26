@@ -48,6 +48,7 @@ public class TilsagnRetryProsessIntTest {
 
     @BeforeEach
     public void setUp() {
+        tilsagnsbrevRepository.deleteAll();
         mockServer.stubForAltOk();
     }
 

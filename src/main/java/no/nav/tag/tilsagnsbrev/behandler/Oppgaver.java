@@ -84,7 +84,7 @@ public class Oppgaver {
 
     private AltinnAttachmentInitRequest mapTilVedlegg(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
-            return tilsagnTilAltinnMapper.tilAltinnVedlegg(tilsagnUnderBehandling.getTilsagn());
+            return tilsagnTilAltinnMapper.tilAltinnVedlegg(tilsagnUnderBehandling.getTilsagn(), tilsagnUnderBehandling.getPdf());
         } catch (Exception e) {
             log.error("Feil ved opprettelse av Altinn vedlegg fra Tilsagn id {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
             throw new DataException(e.getMessage());

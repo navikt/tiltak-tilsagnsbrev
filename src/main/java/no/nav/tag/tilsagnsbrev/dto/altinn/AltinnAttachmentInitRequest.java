@@ -22,4 +22,8 @@ public class AltinnAttachmentInitRequest {
 
     @JsonProperty("sendersReference")
     private String sendersReference;
+
+    @JsonProperty("checksum")
+    private String checksum;
+
 }

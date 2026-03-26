@@ -9,6 +9,7 @@ import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceRequest;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TiltakArrangor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
 
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
@@ -44,13 +45,15 @@ public class TilsagnTilAltinnMapper {
             .build();
     }
 
-    public AltinnAttachmentInitRequest tilAltinnVedlegg(final Tilsagn tilsagn) {
+    public AltinnAttachmentInitRequest tilAltinnVedlegg(final Tilsagn tilsagn, final byte[] pdf) {
+        String md5Hex = DigestUtils.md5DigestAsHex(pdf);
         return AltinnAttachmentInitRequest.builder()
             .resourceId(RESOURCE_ID)
             .fileName(lagFilnavn(tilsagn))
             .displayName(vedleggNavn(tilsagn))
             .isEncrypted(false)
             .sendersReference(tilsagn.getTilsagnNummer().ref())
+            .checksum(md5Hex)
             .build();
     }
 

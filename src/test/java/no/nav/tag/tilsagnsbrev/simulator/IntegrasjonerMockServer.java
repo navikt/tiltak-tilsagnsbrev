@@ -52,6 +52,10 @@ public class IntegrasjonerMockServer implements DisposableBean {
         server.stubFor(post(urlPathMatching("/correspondence/api/v1/attachment/.*/upload"))
                 .willReturn(okJson("{\"attachmentId\" : \"" + ATTACHMENT_ID + "\", \"status\" : \"UploadProcessing\"}")));
 
+        // Altinn 3 — hent vedleggstatus (polles til Published)
+        server.stubFor(get(urlPathMatching("/correspondence/api/v1/attachment/[^/]+$"))
+                .willReturn(okJson("{\"attachmentId\" : \"" + ATTACHMENT_ID + "\", \"status\" : \"Published\"}")));
+
         // Altinn 3 — opprett korrespondanse
         server.stubFor(post("/correspondence/api/v1/correspondence")
                 .willReturn(okJson("{\"correspondences\": [{\"correspondenceId\": \"" + CORRESPONDENCE_ID + "\", \"status\": \"Initialized\", \"recipient\": \"urn:altinn:organization:identifier-no:123456789\"}], \"attachmentIds\": [\"" + ATTACHMENT_ID + "\"]}")));

@@ -64,7 +64,7 @@ public class OppgaverTest {
     @BeforeEach
     public void setUp() {
         lenient().when(tilsagnTilAltinnMapper.tilAltinnKorrespondanse(any(), any())).thenReturn(ALTINN_REQUEST);
-        lenient().when(tilsagnTilAltinnMapper.tilAltinnVedlegg(any())).thenReturn(ALTINN_ATTACHMENT);
+        lenient().when(tilsagnTilAltinnMapper.tilAltinnVedlegg(any(), any())).thenReturn(ALTINN_ATTACHMENT);
         lenient().when(altInnService.sendTilsagnsbrev(any())).thenReturn(CORRESPONDENCE_ID);
     }
 
