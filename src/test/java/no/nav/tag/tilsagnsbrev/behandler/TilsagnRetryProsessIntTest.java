@@ -23,7 +23,7 @@ import java.util.UUID;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer.topic;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("local")
@@ -75,10 +75,10 @@ public class TilsagnRetryProsessIntTest {
         assertTrue(tubList.stream().anyMatch(tub -> tub.getCid().equals(CID2)));
 
         tubList.stream().forEach(tub -> {
-            assertTrue("Ikke behandlet", tub.isBehandlet());
-            assertTrue("MappetFraArena", tub.isMappetFraArena());
-            assertFalse("Til Altinn", tub.skalTilAltinn());
-            assertTrue("Journalført", tub.erJournalfoert());
+            assertTrue(tub.isBehandlet(), "Ikke behandlet");
+            assertTrue(tub.isMappetFraArena(), "MappetFraArena");
+            assertFalse(tub.skalTilAltinn(), "Til Altinn");
+            assertTrue(tub.erJournalfoert(), "Journalført");
             assertMeldingBleIkkeLoggetVedRetry(tub.getTilsagnsbrevId());
         });
     }
@@ -110,13 +110,13 @@ public class TilsagnRetryProsessIntTest {
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
         Optional<TilsagnUnderBehandling> opt = tilsagnsbrevRepository.findById(CID);
-        assertTrue("Tilsagn ikke i database", opt.isPresent());
+        assertTrue(opt.isPresent(), "Tilsagn ikke i database");
 
         TilsagnUnderBehandling tub = opt.get();
-        assertTrue("Ikke behandlet", tub.isBehandlet());
-        assertTrue("MappetFraArena", tub.isMappetFraArena());
-        assertFalse("Til Altinn", tub.skalTilAltinn());
-        assertTrue("Journalført", tub.erJournalfoert());
+        assertTrue(tub.isBehandlet(), "Ikke behandlet");
+        assertTrue(tub.isMappetFraArena(), "MappetFraArena");
+        assertFalse(tub.skalTilAltinn(), "Til Altinn");
+        assertTrue(tub.erJournalfoert(), "Journalført");
         assertMeldingBleIkkeLoggetVedRetry(tub.getTilsagnsbrevId());
     }
 
@@ -130,13 +130,13 @@ public class TilsagnRetryProsessIntTest {
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
         Optional<TilsagnUnderBehandling> opt = tilsagnsbrevRepository.findById(CID);
-        assertTrue("Tilsagn ikke i database", opt.isPresent());
+        assertTrue(opt.isPresent(), "Tilsagn ikke i database");
 
         TilsagnUnderBehandling tub = opt.get();
-        assertTrue("Ikke behandlet", tub.isBehandlet());
-        assertTrue("MappetFraArena", tub.isMappetFraArena());
-        assertFalse("Til Altinn", tub.skalTilAltinn());
-        assertTrue("Journalført", tub.erJournalfoert());
+        assertTrue(tub.isBehandlet(), "Ikke behandlet");
+        assertTrue(tub.isMappetFraArena(), "MappetFraArena");
+        assertFalse(tub.skalTilAltinn(), "Til Altinn");
+        assertTrue(tub.erJournalfoert(), "Journalført");
         assertMeldingBleIkkeLoggetVedRetry(tub.getTilsagnsbrevId());
     }
 
@@ -151,14 +151,14 @@ public class TilsagnRetryProsessIntTest {
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
 
         Optional<TilsagnUnderBehandling> opt = tilsagnsbrevRepository.findById(CID);
-        assertTrue("Tilsagn ikke i database", opt.isPresent());
+        assertTrue(opt.isPresent(), "Tilsagn ikke i database");
 
         TilsagnUnderBehandling tub = opt.get();
-        assertFalse("Behandlet", tub.isBehandlet());
-        assertTrue("MappetFraArena", tub.isMappetFraArena());
-        assertTrue("Til Altinn", tub.skalTilAltinn());
-        assertTrue("Journalført", tub.erJournalfoert());
-        assertEquals("Feil retry", 2, tub.getRetry());
+        assertFalse(tub.isBehandlet(), "Behandlet");
+        assertTrue(tub.isMappetFraArena(), "MappetFraArena");
+        assertTrue(tub.skalTilAltinn(), "Til Altinn");
+        assertTrue(tub.erJournalfoert(), "Journalført");
+        assertEquals(2, tub.getRetry(), "Feil retry");
         assertEquals(feilet.getOpprettet(), tub.getOpprettet());
         assertMeldingBleIkkeLoggetVedRetry(tub.getTilsagnsbrevId());
     }

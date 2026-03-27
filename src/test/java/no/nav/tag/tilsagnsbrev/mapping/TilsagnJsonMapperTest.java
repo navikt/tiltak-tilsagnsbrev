@@ -15,8 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +47,7 @@ public class TilsagnJsonMapperTest {
 
         final String forventetJson = Testdata.hentFilString("TILSAGN_DATA.json");
 
-        assertEquals("Tilsagnsbrev_id", 111, tub.getTilsagnsbrevId().intValue());
+        assertEquals(111, tub.getTilsagnsbrevId().intValue(), "Tilsagnsbrev_id");
         assertNotNull(tub.getJson());
         assertFalse(tub.getJson().contains("}\""));
         assertFalse(tub.getJson().contains("TILSAGN_ID"));
