@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,6 +55,7 @@ public class Tilsagn {
         return this.deltaker == null;
     }
 
+    @JsonIgnore
     public Tilsagn getSladdetVersjon() {
         return this.toBuilder()
             .deltaker(

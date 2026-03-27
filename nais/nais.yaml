@@ -31,6 +31,8 @@ spec:
   env:
   - name: SPRING_PROFILES_ACTIVE
     value: {{spring-profil}}
+  - name: PDL_API_SCOPE
+    value: {{pdl-api-scope}}
   webproxy: true
   prometheus:
     enabled: true

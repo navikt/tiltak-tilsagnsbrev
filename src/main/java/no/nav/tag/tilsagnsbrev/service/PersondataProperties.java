@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "tilsagnsbrev.persondata")
+@ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.persondata")
 public class PersondataProperties {
     private String uri;
 }

@@ -71,7 +71,7 @@ public class TilsagnJsonMapperTest {
         assertThrows(DataException.class, () -> {
             tilsagnJsonMapper = new TilsagnJsonMapper();
             TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagn).build();
-            tilsagnJsonMapper.opprettPdfJson(tub);
+            tilsagnJsonMapper.opprettPdfJson(tub.getTilsagnsbrevId(), tub.getTilsagn());
         });
     }
 }

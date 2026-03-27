@@ -167,7 +167,7 @@ public class PdfgenServiceIntTest {
 
 
     private void opprettPdf(TiltakType tiltakType, TilsagnUnderBehandling tub) {
-        String pdfJson = tilsagnJsonMapper.opprettPdfJson(tub);
+        String pdfJson = tilsagnJsonMapper.opprettPdfJson(tub.getTilsagnsbrevId(), tub.getTilsagn());
         System.out.println(pdfJson);
         pdfGenService.tilsagnsbrevTilPdfBytes(tub, pdfJson);
 
