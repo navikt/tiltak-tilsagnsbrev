@@ -60,7 +60,8 @@ public class TilsagnsbrevBehandlerIntTest {
     public void abryterHvisAlleredeLest(){
         TilsagnUnderBehandling tub = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(UUID.randomUUID()).tilsagnsbrevId(111).build();
 
-        assertTrue(tilsagnLoggRepository.registrerNyMelding(tub), "Må logges før kjøring!");        tub.setCid(UUID.randomUUID()); //Blir lest fra topic igjen som en 'ny' melding
+        assertTrue(tilsagnLoggRepository.registrerNyMelding(tub), "Må logges før kjøring!");
+        tub.setCid(UUID.randomUUID()); //Blir lest fra topic igjen som en 'ny' melding
 
         tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(Instant.now(), tub);
         //Skal ikke gjennomføre disse kallene
