@@ -43,3 +43,5 @@ tilsagnsbrev:
       uri: https://pep-gw-q1.oera-q.local:9443/ekstern/altinn/BehandleAltinnMelding/v1
       systemBruker: ${tilsagnsbrev_altinn_system_bruker}
       systemPassord: ${tilsagnsbrev_altinn_system_passord}
+    persondata:
+      uri: https://pdl-api.dev.intern.nav.no

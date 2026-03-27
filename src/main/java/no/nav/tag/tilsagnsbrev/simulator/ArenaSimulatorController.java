@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
+import no.nav.security.token.support.core.api.Unprotected;
 import no.nav.tag.tilsagnsbrev.DatoUtils;
 import no.nav.tag.tilsagnsbrev.behandler.CidManager;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnRetryProsess;
@@ -10,12 +11,16 @@ import no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Unprotected
 @RestController
 @Profile({"local", "preprod"})
 public class ArenaSimulatorController {

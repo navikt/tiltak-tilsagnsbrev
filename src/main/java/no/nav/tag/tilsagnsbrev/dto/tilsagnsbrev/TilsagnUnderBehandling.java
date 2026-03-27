@@ -9,6 +9,8 @@ import no.nav.tag.tilsagnsbrev.dto.ArenaMelding;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
+import no.nav.team_tiltak.felles.persondata.pdl.domene.Diskresjonskode;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -37,12 +39,15 @@ public class TilsagnUnderBehandling {
     private String journalpostId;
     private Integer altinnReferanse;
     private String json;
-    private byte[] pdf;
+    private byte[] pdfAltinn;
+    private byte[] pdfJoark;
 
     @Transient
     private ArenaMelding arenaMelding;
     @Transient
     private Tilsagn tilsagn;
+    @Transient
+    private Diskresjonskode diskresjonskode;
 
     public boolean skaljournalfoeres(){
         return this.journalpostId == null;
@@ -61,7 +66,11 @@ public class TilsagnUnderBehandling {
     }
 
     public boolean manglerPdf(){
-        return this.pdf == null;
+        return this.pdfAltinn == null;
+    }
+
+    public boolean manglerDiskresjonskode(){
+        return this.diskresjonskode == null;
     }
 
     public void increaseRetry(){
@@ -76,7 +85,7 @@ public class TilsagnUnderBehandling {
         this.altinnReferanse = ny.altinnReferanse;
         this.behandlet = ny.behandlet;
         this.json = ny.json;
-        this.pdf = ny.pdf;
+        this.pdfAltinn = ny.pdfAltinn;
         return this;
     }
 }
