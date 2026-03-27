@@ -21,6 +21,18 @@ spring:
     consumer:
       group-id: tiltak-tilsagnsbrev-7
 
+no.nav.security.jwt:
+  client:
+    registration:
+      pdl-api:
+        token-endpoint-url: https://login.microsoftonline.com/${AZURE_APP_TENANT_ID}/oauth2/v2.0/token
+        grant-type: client_credentials
+        scope: api://dev-fss.pdl.pdl-api/.default
+        authentication:
+          client-id: ${AZURE_APP_CLIENT_ID}
+          client-secret: ${AZURE_APP_CLIENT_SECRET}
+          client-auth-method: client_secret_basic
+
 tilsagnsbrev:
   retry:
     cron: '0 0 * * * *'
@@ -43,3 +55,5 @@ tilsagnsbrev:
       uri: https://pep-gw-q1.oera-q.local:9443/ekstern/altinn/BehandleAltinnMelding/v1
       systemBruker: ${tilsagnsbrev_altinn_system_bruker}
       systemPassord: ${tilsagnsbrev_altinn_system_passord}
+    persondata:
+      uri: https://pdl-api.dev.intern.nav.no
