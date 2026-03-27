@@ -114,7 +114,7 @@ public class Oppgaver {
 
         String fnr = tilsagnUnderBehandling.getTilsagn().getDeltaker().getFodselsnr();
         if (fnr == null) {
-            throw new IllegalStateException("Klarte ikke utlede diskresjonskode for deltaker. Vet derfor ikke om tilsagnsbrev skal sladdes eller ikke");
+            throw new SystemException("Klarte ikke utlede diskresjonskode for deltaker. Deltaker fnr er null");
         }
 
         Diskresjonskode diskresjonskode = persondataService.hentDiskresjonskode(fnr);
