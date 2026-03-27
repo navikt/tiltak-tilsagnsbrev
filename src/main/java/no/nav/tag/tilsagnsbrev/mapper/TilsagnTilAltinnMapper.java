@@ -4,7 +4,12 @@ import no.altinn.schemas.serviceengine.formsengine._2009._10.TransportType;
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.AttachmentsV2;
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.ExternalContentV2;
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.InsertCorrespondenceV2;
-import no.altinn.schemas.services.serviceengine.notification._2009._10.*;
+import no.altinn.schemas.services.serviceengine.notification._2009._10.Notification;
+import no.altinn.schemas.services.serviceengine.notification._2009._10.NotificationBEList;
+import no.altinn.schemas.services.serviceengine.notification._2009._10.ReceiverEndPoint;
+import no.altinn.schemas.services.serviceengine.notification._2009._10.ReceiverEndPointBEList;
+import no.altinn.schemas.services.serviceengine.notification._2009._10.TextToken;
+import no.altinn.schemas.services.serviceengine.notification._2009._10.TextTokenSubstitutionBEList;
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List;
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2;
@@ -27,6 +32,13 @@ public class TilsagnTilAltinnMapper {
     @Autowired
     private AltinnProperties altinnProperties;
 
+    private static final no.altinn.schemas.services.serviceengine.correspondence._2010._10.ObjectFactory corrFactory =
+            new no.altinn.schemas.services.serviceengine.correspondence._2010._10.ObjectFactory();
+    private static final no.altinn.schemas.services.serviceengine.notification._2009._10.ObjectFactory notifFactory =
+            new no.altinn.schemas.services.serviceengine.notification._2009._10.ObjectFactory();
+    private static final no.altinn.services.serviceengine.reporteeelementlist._2010._10.ObjectFactory attachFactory =
+            new no.altinn.services.serviceengine.reporteeelementlist._2010._10.ObjectFactory();
+
     private static final String ATTACHMENT_NAME_PREFIX = "Tilskuddsbrev ";
     private static final String FILE_NAME_PREFIX = "Tilskuddsbrev-";
     private static final String FIL_EXT = ".pdf";
@@ -46,74 +58,86 @@ public class TilsagnTilAltinnMapper {
     private static final String SLUTT_AVSNITT = "</p>";
 
     public InsertCorrespondenceBasicV2 tilAltinnMelding(final Tilsagn tilsagn, final byte[] pdf) {
-        return new InsertCorrespondenceBasicV2()
-                .withSystemUserName(altinnProperties.getSystemBruker())
-                .withSystemPassword(altinnProperties.getSystemPassord())
-                .withSystemUserCode(SYSTEM_USERCODE)
-                .withExternalShipmentReference(extShipmentRef())
-                .withCorrespondence(new InsertCorrespondenceV2()
-                        .withServiceCode(SERVICE_CODE)
-                        .withServiceEdition(SERVICE_EDITION)
-                        .withVisibleDateTime(fromLocalDate(DatoUtils.getNow()))
-                        .withAllowSystemDeleteDateTime(fromLocalDate(DatoUtils.getNow().plusYears(10)))
-                        .withDueDateTime(fromLocalDate(tilsagn.getRefusjonfristDato().atTime(LocalTime.MIDNIGHT).plusNanos(1)))
-                        .withAllowForwarding(false)
-                        .withMessageSender(MSG_SENDER)
-                        .withReportee(tilsagn.getTiltakArrangor().getOrgNummer())
-                        .withNotifications(new NotificationBEList().withNotification(notification(tilsagn.getTiltakArrangor())))
-                        .withContent(new ExternalContentV2()
-                                .withLanguageCode(LANGUAGE_CODE)
-                                .withMessageTitle(vedleggNavn(tilsagn))
-                                .withAttachments(new AttachmentsV2()
-                                        .withBinaryAttachments(new BinaryAttachmentExternalBEV2List()
-                                                .withBinaryAttachmentV2(new BinaryAttachmentV2()
-                                                        .withData(pdf)
-                                                        .withFileName(new StringBuilder()
-                                                                .append(FILE_NAME_PREFIX)
-                                                                .append(tilsagn.getTiltakNavn())
-                                                                .append(FIL_EXT)
-                                                                .toString())
-                                                        .withName(vedleggNavn(tilsagn)))))));
+        InsertCorrespondenceBasicV2 request = new InsertCorrespondenceBasicV2();
+        request.setSystemUserName(altinnProperties.getSystemBruker());
+        request.setSystemPassword(altinnProperties.getSystemPassord());
+        request.setSystemUserCode(SYSTEM_USERCODE);
+        request.setExternalShipmentReference(extShipmentRef());
+        request.setCorrespondence(buildCorrespondence(tilsagn, pdf));
+        return request;
+    }
+
+    private InsertCorrespondenceV2 buildCorrespondence(Tilsagn tilsagn, byte[] pdf) {
+        InsertCorrespondenceV2 corr = new InsertCorrespondenceV2();
+        corr.setServiceCode(corrFactory.createInsertCorrespondenceV2ServiceCode(SERVICE_CODE));
+        corr.setServiceEdition(corrFactory.createInsertCorrespondenceV2ServiceEdition(SERVICE_EDITION));
+        corr.setVisibleDateTime(fromLocalDate(DatoUtils.getNow()));
+        corr.setAllowSystemDeleteDateTime(corrFactory.createInsertCorrespondenceV2AllowSystemDeleteDateTime(fromLocalDate(DatoUtils.getNow().plusYears(10))));
+        corr.setDueDateTime(fromLocalDate(tilsagn.getRefusjonfristDato().atTime(LocalTime.MIDNIGHT).plusNanos(1)));
+        corr.setAllowForwarding(corrFactory.createInsertCorrespondenceV2AllowForwarding(false));
+        corr.setMessageSender(corrFactory.createInsertCorrespondenceV2MessageSender(MSG_SENDER));
+        corr.setReportee(corrFactory.createInsertCorrespondenceV2Reportee(tilsagn.getTiltakArrangor().getOrgNummer()));
+        corr.setNotifications(corrFactory.createInsertCorrespondenceV2Notifications(buildNotifications(tilsagn.getTiltakArrangor())));
+        corr.setContent(corrFactory.createInsertCorrespondenceV2Content(buildContent(tilsagn, pdf)));
+        return corr;
+    }
+
+    private NotificationBEList buildNotifications(TiltakArrangor tiltakArrangor) {
+        NotificationBEList list = new NotificationBEList();
+        list.getNotification().add(notification(tiltakArrangor));
+        return list;
+    }
+
+    private ExternalContentV2 buildContent(Tilsagn tilsagn, byte[] pdf) {
+        BinaryAttachmentV2 attachment = new BinaryAttachmentV2();
+        attachment.setData(attachFactory.createBinaryAttachmentV2Data(pdf));
+        attachment.setFileName(attachFactory.createBinaryAttachmentV2FileName(FILE_NAME_PREFIX + tilsagn.getTiltakNavn() + FIL_EXT));
+        attachment.setName(attachFactory.createBinaryAttachmentV2Name(vedleggNavn(tilsagn)));
+
+        BinaryAttachmentExternalBEV2List binaryList = new BinaryAttachmentExternalBEV2List();
+        binaryList.getBinaryAttachmentV2().add(attachment);
+
+        AttachmentsV2 attachments = new AttachmentsV2();
+        attachments.setBinaryAttachments(corrFactory.createAttachmentsV2BinaryAttachments(binaryList));
+
+        ExternalContentV2 content = new ExternalContentV2();
+        content.setLanguageCode(corrFactory.createExternalContentV2LanguageCode(LANGUAGE_CODE));
+        content.setMessageTitle(corrFactory.createExternalContentV2MessageTitle(vedleggNavn(tilsagn)));
+        content.setAttachments(corrFactory.createExternalContentV2Attachments(attachments));
+        return content;
     }
 
     private Notification notification(TiltakArrangor tiltakArrangor) {
+        final String genText = VARSLING_EMNE_PREFIX + tiltakArrangor.getOrgNummer() + " " + tiltakArrangor.getArbgiverNavn();
+        final String varslingTekst = START_AVSNITT + genText + VARSLING_TEKST_SUFFIX + SLUTT_AVSNITT
+                + START_AVSNITT + VARSLING_TEKST_FOOTER + SLUTT_AVSNITT;
 
-        final String GEN_TEXT = new StringBuilder(4)
-                .append(VARSLING_EMNE_PREFIX)
-                .append(tiltakArrangor.getOrgNummer())
-                .append(" ")
-                .append(tiltakArrangor.getArbgiverNavn())
-                .toString();
+        ReceiverEndPoint endpoint = new ReceiverEndPoint();
+        endpoint.setTransportType(notifFactory.createReceiverEndPointTransportType(TransportType.EMAIL));
 
-        final String VARSLING_TEKST = new StringBuilder(7)
-                .append(START_AVSNITT)
-                .append(GEN_TEXT)
-                .append(VARSLING_TEKST_SUFFIX)
-                .append(SLUTT_AVSNITT)
-                .append(START_AVSNITT)
-                .append(VARSLING_TEKST_FOOTER)
-                .append(SLUTT_AVSNITT)
-                .toString();
+        ReceiverEndPointBEList endpointList = new ReceiverEndPointBEList();
+        endpointList.getReceiverEndPoint().add(endpoint);
 
-        return new Notification()
-                .withLanguageCode(LANGUAGE_CODE)
-                .withShipmentDateTime(fromLocalDate(DatoUtils.getNow()))
-                .withReceiverEndPoints(new ReceiverEndPointBEList()
-                        .withReceiverEndPoint(new ReceiverEndPoint()
-                                .withTransportType(TransportType.EMAIL)))
-                .withFromAddress(FRA_EPOST_ALTINN)
-                .withNotificationType(VARSLING_TYPE)
-                .withTextTokens(new TextTokenSubstitutionBEList()
-                        .withTextToken(
-                                new TextToken()
-                                        .withTokenNum(0)
-                                        .withTokenValue(new StringBuilder(3)
-                                                .append(GEN_TEXT)
-                                                .append(VARSLING_EMNE_SUFFIX).toString()),
-                                new TextToken()
-                                        .withTokenNum(1)
-                                        .withTokenValue(VARSLING_TEKST)
-                        ));
+        TextToken token0 = new TextToken();
+        token0.setTokenNum(0);
+        token0.setTokenValue(notifFactory.createTextTokenTokenValue(genText + VARSLING_EMNE_SUFFIX));
+
+        TextToken token1 = new TextToken();
+        token1.setTokenNum(1);
+        token1.setTokenValue(notifFactory.createTextTokenTokenValue(varslingTekst));
+
+        TextTokenSubstitutionBEList textTokens = new TextTokenSubstitutionBEList();
+        textTokens.getTextToken().add(token0);
+        textTokens.getTextToken().add(token1);
+
+        Notification notif = new Notification();
+        notif.setLanguageCode(notifFactory.createNotificationLanguageCode(LANGUAGE_CODE));
+        notif.setShipmentDateTime(fromLocalDate(DatoUtils.getNow()));
+        notif.setReceiverEndPoints(notifFactory.createNotificationReceiverEndPoints(endpointList));
+        notif.setFromAddress(notifFactory.createNotificationFromAddress(FRA_EPOST_ALTINN));
+        notif.setNotificationType(notifFactory.createNotificationNotificationType(VARSLING_TYPE));
+        notif.setTextTokens(notifFactory.createNotificationTextTokens(textTokens));
+        return notif;
     }
 
     private String vedleggNavn(Tilsagn tilsagn) {

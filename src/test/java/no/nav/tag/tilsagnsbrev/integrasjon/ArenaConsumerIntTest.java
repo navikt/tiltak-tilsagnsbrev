@@ -16,7 +16,7 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
 
 import static no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer.topic;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("local")
 @SpringBootTest
@@ -76,8 +76,8 @@ public class ArenaConsumerIntTest {
         kafkaTemplate.send(topic, "", arenameldingMedFeil);
         Thread.sleep(SLEEP_LENGTH);
 
-        assertTrue("feil-database",tilsagnsbrevRepository.findAll().isEmpty());
-        assertTrue("logg-database", loggCrudRepository.findAll().isEmpty());
+        assertTrue(tilsagnsbrevRepository.findAll().isEmpty(), "feil-database");
+        assertTrue(loggCrudRepository.findAll().isEmpty(), "logg-database");
     }
 
     @Test
