@@ -27,7 +27,7 @@ public class TilsagnJournalpostMapper {
 
     public Journalpost tilsagnTilJournalpost(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {
-            return opprettJournalpost(tilsagnUnderBehandling.getTilsagn(), tilsagnUnderBehandling.getPdf(), tilsagnUnderBehandling.getTilsagnsbrevId());
+            return opprettJournalpost(tilsagnUnderBehandling.getTilsagn(), tilsagnUnderBehandling.getPdfJoark(), tilsagnUnderBehandling.getTilsagnsbrevId());
         } catch (Exception e) {
             log.error("Feil ved mapping til Journalpost", e);
             throw new DataException(e.getMessage());

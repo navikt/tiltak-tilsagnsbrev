@@ -127,7 +127,7 @@ public class TilsagnsbrevBehandlerIntTest {
             assertTrue(tub.skalRekjoeres());
             assertFalse(tub.erJournalfoert());
             assertNotNull(tub.getJson());
-            assertNotNull(tub.getPdf());
+            assertNotNull(tub.getPdfAltinn());
             return tub;
         });
     }
@@ -146,7 +146,7 @@ public class TilsagnsbrevBehandlerIntTest {
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
             assertNotNull(tub.getJson());
-            assertNotNull(tub.getPdf());
+            assertNotNull(tub.getPdfAltinn());
             return tub;
         });
     }
@@ -167,7 +167,7 @@ public class TilsagnsbrevBehandlerIntTest {
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
             assertNotNull(tub.getJson());
-            assertNotNull(tub.getPdf());
+            assertNotNull(tub.getPdfAltinn());
             return tub;
         });
     }

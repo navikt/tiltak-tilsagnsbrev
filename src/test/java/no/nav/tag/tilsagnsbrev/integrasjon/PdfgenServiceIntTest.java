@@ -173,7 +173,7 @@ public class PdfgenServiceIntTest {
 
         PDDocument pdf = null;
         try {
-            pdf = PDDocument.load(new ByteArrayInputStream(tub.getPdf()));
+            pdf = PDDocument.load(new ByteArrayInputStream(tub.getPdfAltinn()));
             pdf.save("src/test/resources/PDF/" + tiltakType.getTiltakskode() + ".pdf");
             pdf.close();
         } catch (IOException e) {

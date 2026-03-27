@@ -45,6 +45,9 @@ tilsagnsbrev:
       uri: uri
       user: ${tilsagnsbrev_srvuser}
       password: ${tilsagnsbrev_srvpwd}
+    persondata:
+      uri: uri
+
 
 management.endpoints.web:
   exposure.include: prometheus
