@@ -39,7 +39,7 @@ public class TilsagnTilAltinnMapperTest {
         InsertCorrespondenceBasicV2 correspondenceBasicV2 = tilsagnTilAltinnMapper.tilAltinnMelding(tilsagn, bytes);
         assertNotNull(correspondenceBasicV2.getCorrespondence().getVisibleDateTime());
 
-        BinaryAttachmentV2 binaryAttachmentV2 = correspondenceBasicV2.getCorrespondence().getContent().getAttachments().getBinaryAttachments().getBinaryAttachmentV2().get(0);
+        BinaryAttachmentV2 binaryAttachmentV2 = correspondenceBasicV2.getCorrespondence().getContent().getValue().getAttachments().getValue().getBinaryAttachments().getValue().getBinaryAttachmentV2().get(0);
         binaryAttachmentV2.getData();
         assertEquals(EncodedString.ENC_STR, new String(bytes));
     }
