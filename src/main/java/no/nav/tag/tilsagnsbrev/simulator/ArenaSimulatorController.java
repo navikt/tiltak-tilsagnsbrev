@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.simulator;
 
+import no.nav.security.token.support.core.api.Unprotected;
 import no.nav.tag.tilsagnsbrev.DatoUtils;
 import no.nav.tag.tilsagnsbrev.behandler.CidManager;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnRetryProsess;
@@ -16,6 +17,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Unprotected
 @RestController
 @Profile({"local", "preprod"})
 public class ArenaSimulatorController {
