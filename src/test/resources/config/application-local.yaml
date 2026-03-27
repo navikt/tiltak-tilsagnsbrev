@@ -39,3 +39,5 @@ tilsagnsbrev:
       uri: http://localhost:8090/ekstern/altinn/BehandleAltinnMelding/v1
       systemBruker: systemBruker
       systemPassord: systemPassord
+    persondata:
+        uri: http://localhost:8090/persondata

@@ -28,6 +28,18 @@ spring:
           json:
             value.default.type: no.nav.tag.tilsagnsbrev.dto.ArenaMelding
 
+no.nav.security.jwt:
+  client:
+    registration:
+      pdl-api:
+        token-endpoint-url: https://login.microsoftonline.com/${AZURE_APP_TENANT_ID}/oauth2/v2.0/token
+        grant-type: client_credentials
+        scope: ${PDL_API_SCOPE}
+        authentication:
+          client-id: ${AZURE_APP_CLIENT_ID}
+          client-secret: ${AZURE_APP_CLIENT_SECRET}
+          client-auth-method: client_secret_basic
+
 tilsagnsbrev:
   retry:
     cron:

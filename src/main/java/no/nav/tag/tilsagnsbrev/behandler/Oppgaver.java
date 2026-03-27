@@ -3,7 +3,6 @@ package no.nav.tag.tilsagnsbrev.behandler;
 import lombok.extern.slf4j.Slf4j;
 import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
-import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Deltaker;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
@@ -13,14 +12,12 @@ import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.service.PersondataService;
 import no.nav.team_tiltak.felles.persondata.pdl.domene.Diskresjonskode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -110,11 +107,17 @@ public class Oppgaver {
     }
 
     private void hentDiskresjonskode(TilsagnUnderBehandling tilsagnUnderBehandling) {
-        Diskresjonskode diskresjonskode = Optional.ofNullable(tilsagnUnderBehandling.getTilsagn().getDeltaker())
-            .map(Deltaker::getFodselsnr)
-            .map(fnr -> persondataService.hentDiskresjonskode(fnr))
-            .orElseThrow(() -> new IllegalStateException("Klarte ikke utlede diskresjonskode for deltaker. Vet derfor ikke om tilsagnsbrev skal sladdes eller ikke"));
+        if (tilsagnUnderBehandling.getTilsagn() == null || tilsagnUnderBehandling.getTilsagn().getDeltaker() == null) {
+            tilsagnUnderBehandling.setDiskresjonskode(Diskresjonskode.UGRADERT);
+            return;
+        }
 
+        String fnr = tilsagnUnderBehandling.getTilsagn().getDeltaker().getFodselsnr();
+        if (fnr == null) {
+            throw new IllegalStateException("Klarte ikke utlede diskresjonskode for deltaker. Vet derfor ikke om tilsagnsbrev skal sladdes eller ikke");
+        }
+
+        Diskresjonskode diskresjonskode = persondataService.hentDiskresjonskode(fnr);
         tilsagnUnderBehandling.setDiskresjonskode(diskresjonskode);
     }
 

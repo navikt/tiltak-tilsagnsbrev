@@ -14,7 +14,6 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,9 @@ import java.util.UUID;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer.topic;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles("local")
@@ -62,7 +63,7 @@ public class TilsagnRetryProsessIntTest {
         final UUID CID1 = UUID.randomUUID();
         final UUID CID2 = UUID.randomUUID();
         TilsagnUnderBehandling tub1 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(false).cid(CID1).tilsagnsbrevId(1).opprettet(DatoUtils.getNow()).build();
-        TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).pdf("pdf".getBytes()).altinnReferanse(1).cid(CID2).opprettet(DatoUtils.getNow()).tilsagnsbrevId(2).build();
+        TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).pdfJoark("pdf".getBytes()).altinnReferanse(1).cid(CID2).opprettet(DatoUtils.getNow()).tilsagnsbrevId(2).build();
 
         tilsagnsbrevRepository.saveAll(Arrays.asList(tub1, tub2));
 
@@ -88,7 +89,7 @@ public class TilsagnRetryProsessIntTest {
         final UUID CID1 = UUID.randomUUID();
         final UUID CID2 = UUID.randomUUID();
         TilsagnUnderBehandling ok = Testdata.tubBuilder().behandlet(true).cid(CID1).retry(0).build();
-        TilsagnUnderBehandling feil = Testdata.tubBuilder().json(tilsagnData).pdf("pdf".getBytes()).cid(CID2).retry(0).build();
+        TilsagnUnderBehandling feil = Testdata.tubBuilder().json(tilsagnData).pdfAltinn("pdf".getBytes()).cid(CID2).retry(0).build();
 
         tilsagnsbrevRepository.saveAll(Arrays.asList(ok, feil));
 
@@ -104,7 +105,7 @@ public class TilsagnRetryProsessIntTest {
     @Test
     public void behandlerTilsagnEtterFeiletJournalforing() {
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdf("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).altinnReferanse(002).build();
+        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdfJoark("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).altinnReferanse(002).build();
         tilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
@@ -124,7 +125,7 @@ public class TilsagnRetryProsessIntTest {
     @Test
     public void behandlerTilsagnEtterFeiletAltinnSending() {
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdf("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
+        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdfAltinn("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).journalpostId("1234").build();
         tilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();

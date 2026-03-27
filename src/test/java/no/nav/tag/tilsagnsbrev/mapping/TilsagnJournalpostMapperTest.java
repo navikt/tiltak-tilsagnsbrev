@@ -21,7 +21,7 @@ public class TilsagnJournalpostMapperTest {
 
     TilsagnJournalpostMapper tilsagnJournalpostMapper = new TilsagnJournalpostMapper();
     Tilsagn tilsagn = Testdata.gruppeTilsagn();
-    TilsagnUnderBehandling tub = Testdata.tubBuilder().tilsagn(tilsagn).pdf("pds".getBytes()).build();
+    TilsagnUnderBehandling tub = Testdata.tubBuilder().tilsagn(tilsagn).pdfJoark("pds".getBytes()).build();
 
     @BeforeEach
     public void setUp() {
