@@ -16,17 +16,17 @@ import java.util.Objects;
 
 public class WsClient {
 
-    @SuppressWarnings("unchecked")
+    @SafeVarargs
     public static <T> T createPort(String serviceUrl, Class<T> portType, PhaseInterceptor<? extends Message>... interceptors) {
         return createPort(serviceUrl, portType, null, null, interceptors);
     }
 
-    @SuppressWarnings("unchecked")
+    @SafeVarargs
     public static <T> T createPort(String serviceUrl, Class<T> portType, URL wsdlUrl, QName serviceName, PhaseInterceptor<? extends Message>... interceptors) {
         return createPort(serviceUrl, portType, wsdlUrl, serviceName, null, interceptors);
     }
 
-    @SuppressWarnings("unchecked")
+    @SafeVarargs
     public static <T> T createPort(String serviceUrl, Class<T> portType, URL wsdlUrl, QName serviceName, QName endpointName, PhaseInterceptor<? extends Message>... interceptors) {
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setServiceClass(portType);
@@ -42,7 +42,7 @@ public class WsClient {
         }
         factory.getFeatures().add(new WSAddressingFeature());
         factory.getFeatures().add(new LoggingFeature());
-        T port = (T) factory.create();
+        T port = portType.cast(factory.create());
         Client client = ClientProxy.getClient(port);
         HTTPConduit conduit = (HTTPConduit) client.getConduit();
         conduit.getClient().setVersion("1.1");
