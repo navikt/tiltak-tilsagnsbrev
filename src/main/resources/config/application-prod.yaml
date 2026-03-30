@@ -47,4 +47,4 @@ tilsagnsbrev:
       systemBruker: ${tilsagnsbrev_altinn_system_bruker}
       systemPassord: ${tilsagnsbrev_altinn_system_passord}
     persondata:
-      uri: https://pdl-api.intern.nav.no
+      uri: https://pdl-api.intern.nav.no/graphql
