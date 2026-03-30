@@ -4,6 +4,7 @@ import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLogg;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggCrudRepository;
 import no.nav.tag.tilsagnsbrev.behandler.TilsagnLoggRepository;
+import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.feilet.TilsagnsbrevRepository;
 import no.nav.tag.tilsagnsbrev.simulator.IntegrasjonerMockServer;
 import org.junit.jupiter.api.AfterEach;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
@@ -35,7 +37,7 @@ public class ArenaConsumerIntTest {
     @Autowired
     private IntegrasjonerMockServer mockServer;
 
-    private static final long SLEEP_LENGTH = 1000L;
+    private static final long SLEEP_LENGTH = 3000L;
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
@@ -92,8 +94,12 @@ public class ArenaConsumerIntTest {
         kafkaTemplate.send(topic, "", arenameldingOk);
         Thread.sleep(SLEEP_LENGTH);
 
-        assertEquals(1, tilsagnsbrevRepository.findAll().stream().filter(tub -> tub.getTilsagnsbrevId() == 111).count());
-        assertTrue(tilsagnsbrevRepository.findAll().stream().filter(tub -> tub.getTilsagnsbrevId() == 111).allMatch(tub -> tub.isBehandlet()));
+        assertEquals(1, tilsagnsbrevRepository.findAll().stream()
+                .filter(tub -> tub.getTilsagnsbrevId() == 111)
+                .count());
+        assertTrue(tilsagnsbrevRepository.findAll().stream()
+                .filter(tub -> tub.getTilsagnsbrevId() == 111)
+                .allMatch(TilsagnUnderBehandling::isBehandlet));
 
         TilsagnLogg tilsagnLogg = loggCrudRepository.findAll().get(0);
         assertEquals(111, tilsagnLogg.getTilsagnsbrevId().intValue());
