@@ -87,7 +87,7 @@ public class Oppgaver {
 
     public void oppdaterFeiletTilsagn(TilsagnUnderBehandling tilsagnUnderBehandling, Exception e) {
         if (!tilsagnBehandler.lagreEllerOppdaterFeil(tilsagnUnderBehandling, e)) {
-            log.error("Feil ble ikke lagret! Melding: {}", tilsagnUnderBehandling.getJson(), e.getMessage());
+            log.error("Feil ble ikke lagret! Melding: {}, feilmelding: {}", tilsagnUnderBehandling.getJson(), e.getMessage());
         }
     }
 
