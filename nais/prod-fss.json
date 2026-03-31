@@ -5,6 +5,6 @@
   "vault-default-path": "kv/prod/fss/tiltak-tilsagnsbrev/default",
   "slack_alert_channel": "arbeidsgiver-tiltak-alerts",
   "kafka-pool": "nav-prod",
-  "min-replicas": "0",
-  "max-replicas": "0"
+  "min-replicas": "1",
+  "max-replicas": "1"
 }
