@@ -86,6 +86,7 @@ public class TilsagnUnderBehandling {
         this.behandlet = ny.behandlet;
         this.json = ny.json;
         this.pdfAltinn = ny.pdfAltinn;
+        this.pdfJoark = ny.pdfJoark;
         return this;
     }
 }
