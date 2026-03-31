@@ -98,7 +98,7 @@ public class Oppgaver {
     private void sentWsRequest(TilsagnUnderBehandling tilsagnUnderBehandling, InsertCorrespondenceBasicV2 wsRequest) {
         try{
             int kvitteringId = altInnService.sendTilsagnsbrev(wsRequest);
-            tilsagnUnderBehandling.setAltinnReferanse(kvitteringId);
+            tilsagnUnderBehandling.setAltinnReferanse(String.valueOf(kvitteringId));
         } catch (Exception e) {
             log.error("Feil ved sending av tilsagnsbrev {} til Altinn", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
             throw new SystemException(e.getMessage());

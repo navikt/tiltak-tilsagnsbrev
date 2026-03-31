@@ -87,7 +87,14 @@ public class OppgaverTest {
 
     @Test
     public void behandlerTilsagnEtterFeiletJournalforing() {
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().json(TILSAGN_DATA).pdfAltinn(PDF_BYTEARRAY).pdfJoark(PDF_BYTEARRAY).tilsagnsbrevId(1).mappetFraArena(true).altinnReferanse(002).build();
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder()
+                .json(TILSAGN_DATA)
+                .pdfAltinn(PDF_BYTEARRAY)
+                .pdfJoark(PDF_BYTEARRAY)
+                .tilsagnsbrevId(1)
+                .mappetFraArena(true)
+                .altinnReferanse("2")
+                .build();
         when(tilsagnJournalpostMapper.tilsagnTilJournalpost(any(TilsagnUnderBehandling.class))).thenReturn(JOURNALPOST);
 
         oppgaver.utfoerOppgaver(tub);

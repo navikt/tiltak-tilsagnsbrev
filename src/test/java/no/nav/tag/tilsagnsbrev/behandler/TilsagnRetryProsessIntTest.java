@@ -63,7 +63,15 @@ public class TilsagnRetryProsessIntTest {
         final UUID CID1 = UUID.randomUUID();
         final UUID CID2 = UUID.randomUUID();
         TilsagnUnderBehandling tub1 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(false).cid(CID1).tilsagnsbrevId(1).opprettet(DatoUtils.getNow()).build();
-        TilsagnUnderBehandling tub2 = Testdata.tubBuilder().json(tilsagnData).mappetFraArena(true).pdfJoark("pdf".getBytes()).altinnReferanse(1).cid(CID2).opprettet(DatoUtils.getNow()).tilsagnsbrevId(2).build();
+        TilsagnUnderBehandling tub2 = Testdata.tubBuilder()
+                .json(tilsagnData)
+                .mappetFraArena(true)
+                .pdfJoark("pdf".getBytes())
+                .altinnReferanse("1")
+                .cid(CID2)
+                .opprettet(DatoUtils.getNow())
+                .tilsagnsbrevId(2)
+                .build();
 
         tilsagnsbrevRepository.saveAll(Arrays.asList(tub1, tub2));
 
@@ -75,7 +83,7 @@ public class TilsagnRetryProsessIntTest {
         assertTrue(tubList.stream().anyMatch(tub -> tub.getCid().equals(CID1)));
         assertTrue(tubList.stream().anyMatch(tub -> tub.getCid().equals(CID2)));
 
-        tubList.stream().forEach(tub -> {
+        tubList.forEach(tub -> {
             assertTrue(tub.isBehandlet(), "Ikke behandlet");
             assertTrue(tub.isMappetFraArena(), "MappetFraArena");
             assertFalse(tub.skalTilAltinn(), "Til Altinn");
@@ -105,7 +113,14 @@ public class TilsagnRetryProsessIntTest {
     @Test
     public void behandlerTilsagnEtterFeiletJournalforing() {
         final UUID CID = UUID.randomUUID();
-        TilsagnUnderBehandling feilet = Testdata.tubBuilder().cid(CID).json(tilsagnData).pdfJoark("pdf".getBytes()).tilsagnsbrevId(1).mappetFraArena(true).altinnReferanse(002).build();
+        TilsagnUnderBehandling feilet = Testdata.tubBuilder()
+                .cid(CID)
+                .json(tilsagnData)
+                .pdfJoark("pdf".getBytes())
+                .tilsagnsbrevId(1)
+                .mappetFraArena(true)
+                .altinnReferanse("2")
+                .build();
         tilsagnsbrevRepository.save(feilet);
 
         tilsagnRetryProsess.finnOgRekjoerFeiletTilsagn();
