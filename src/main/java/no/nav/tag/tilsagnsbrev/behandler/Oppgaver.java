@@ -51,14 +51,19 @@ public class Oppgaver {
         Tilsagn tilsagn = tilsagnUnderBehandling.getTilsagn();
         Integer tilsagnsbrevId = tilsagnUnderBehandling.getTilsagnsbrevId();
 
-        String pdfJsonAltinn = tilsagnJsonMapper.opprettPdfJson(tilsagnsbrevId, tilsagn);
-        byte[] altinnPdf = pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJsonAltinn);
-        tilsagnUnderBehandling.setPdfAltinn(altinnPdf);
-
-        Tilsagn tilsagnJoark = tilsagnUnderBehandling.getDiskresjonskode().erKode6Eller7() ? tilsagn.getSladdetVersjon() : tilsagn;
-        String pdfJsonJoark = tilsagnJsonMapper.opprettPdfJson(tilsagnsbrevId, tilsagnJoark);
-        byte[] pdfJoark = pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJsonJoark);
-        tilsagnUnderBehandling.setPdfJoark(pdfJoark);
+        // Altinn PDF (ingen sladding)
+        if (tilsagnUnderBehandling.getPdfAltinn() == null) {
+            String pdfJsonAltinn = tilsagnJsonMapper.opprettPdfJson(tilsagnsbrevId, tilsagn);
+            byte[] altinnPdf = pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJsonAltinn);
+            tilsagnUnderBehandling.setPdfAltinn(altinnPdf);
+        }
+        // Joark/Gosys PDF (sladding av deltaker ved diskresjon)
+        if (tilsagnUnderBehandling.getPdfJoark() == null) {
+            Tilsagn tilsagnJoark = tilsagnUnderBehandling.getDiskresjonskode().erKode6Eller7() ? tilsagn.getSladdetVersjon() : tilsagn;
+            String pdfJsonJoark = tilsagnJsonMapper.opprettPdfJson(tilsagnsbrevId, tilsagnJoark);
+            byte[] pdfJoark = pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJsonJoark);
+            tilsagnUnderBehandling.setPdfJoark(pdfJoark);
+        }
     }
 
     private void journalfoerTilsagnsbrev(TilsagnUnderBehandling tilsagnUnderBehandling) {

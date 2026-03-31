@@ -66,7 +66,7 @@ public class TilsagnUnderBehandling {
     }
 
     public boolean manglerPdf(){
-        return this.pdfAltinn == null;
+        return this.pdfAltinn == null || this.pdfJoark == null;
     }
 
     public boolean manglerDiskresjonskode(){
