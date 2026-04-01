@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tilsagn {
@@ -52,6 +53,23 @@ public class Tilsagn {
 
     public boolean erGruppeTilsagn() {
         return this.deltaker == null;
+    }
+
+    @JsonIgnore
+    public Tilsagn getSladdetVersjon() {
+        return this.toBuilder()
+            .deltaker(
+                Deltaker.builder()
+                    .fornavn("***********")
+                    .etternavn("***********")
+                    .fodselsnr("***********")
+                    .postAdresse("***********")
+                    .postNummer("****")
+                    .postSted("***********")
+                    .landKode("**")
+                    .build()
+            )
+            .build();
     }
 
 }

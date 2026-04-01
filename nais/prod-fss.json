@@ -6,5 +6,6 @@
   "slack_alert_channel": "arbeidsgiver-tiltak-alerts",
   "kafka-pool": "nav-prod",
   "min-replicas": "1",
-  "max-replicas": "1"
+  "max-replicas": "1",
+  "pdl-api-scope": "api://prod-fss.pdl.pdl-api/.default"
 }

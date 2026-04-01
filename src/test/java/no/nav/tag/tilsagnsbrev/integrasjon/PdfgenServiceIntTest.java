@@ -167,13 +167,13 @@ public class PdfgenServiceIntTest {
 
 
     private void opprettPdf(TiltakType tiltakType, TilsagnUnderBehandling tub) {
-        String pdfJson = tilsagnJsonMapper.opprettPdfJson(tub);
+        String pdfJson = tilsagnJsonMapper.opprettPdfJson(tub.getTilsagnsbrevId(), tub.getTilsagn());
         System.out.println(pdfJson);
         pdfGenService.tilsagnsbrevTilPdfBytes(tub, pdfJson);
 
         PDDocument pdf = null;
         try {
-            pdf = PDDocument.load(new ByteArrayInputStream(tub.getPdf()));
+            pdf = PDDocument.load(new ByteArrayInputStream(tub.getPdfAltinn()));
             pdf.save("src/test/resources/PDF/" + tiltakType.getTiltakskode() + ".pdf");
             pdf.close();
         } catch (IOException e) {
