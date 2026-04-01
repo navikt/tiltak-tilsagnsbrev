@@ -6,5 +6,6 @@
   "slack_alert_channel": "arbeidsgiver-notifications-test",
   "kafka-pool": "nav-dev",
   "min-replicas": "1",
-  "max-replicas": "1"
+  "max-replicas": "1",
+  "pdl-api-scope": "api://dev-fss.pdl.pdl-api/.default"
 }

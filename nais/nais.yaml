@@ -31,6 +31,8 @@ spec:
   env:
   - name: SPRING_PROFILES_ACTIVE
     value: {{spring-profil}}
+  - name: PDL_API_SCOPE
+    value: {{pdl-api-scope}}
   webproxy: true
   prometheus:
     enabled: true
@@ -48,3 +50,11 @@ spec:
       destinations:
         - id: elastic
         - id: loki
+  azure:
+    application:
+      enabled: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: pdl-api
+          namespace: pdl

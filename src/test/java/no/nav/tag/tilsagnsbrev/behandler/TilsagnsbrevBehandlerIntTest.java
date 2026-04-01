@@ -17,9 +17,14 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
+import static com.github.tomakehurst.wiremock.client.WireMock.unauthorized;
 import static no.nav.tag.tilsagnsbrev.integrasjon.ArenaConsumer.topic;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles("local")
@@ -127,7 +132,7 @@ public class TilsagnsbrevBehandlerIntTest {
             assertTrue(tub.skalRekjoeres());
             assertFalse(tub.erJournalfoert());
             assertNotNull(tub.getJson());
-            assertNotNull(tub.getPdf());
+            assertNotNull(tub.getPdfAltinn());
             return tub;
         });
     }
@@ -146,7 +151,7 @@ public class TilsagnsbrevBehandlerIntTest {
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
             assertNotNull(tub.getJson());
-            assertNotNull(tub.getPdf());
+            assertNotNull(tub.getPdfAltinn());
             return tub;
         });
     }
@@ -167,7 +172,7 @@ public class TilsagnsbrevBehandlerIntTest {
         feilet.map(tub -> {
             assertTrue(tub.skalRekjoeres());
             assertNotNull(tub.getJson());
-            assertNotNull(tub.getPdf());
+            assertNotNull(tub.getPdfAltinn());
             return tub;
         });
     }
