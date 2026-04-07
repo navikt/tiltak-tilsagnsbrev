@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
 import java.util.UUID;
 
 @Unprotected
@@ -53,7 +52,7 @@ public class ArenaSimulatorController {
         ArenaMelding arenaMelding = SimUtil.arenaMelding(tilsagnNr, tilsagnJson);
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().arenaMelding(arenaMelding).tilsagnsbrevId(tilsagnNr).cid(cid).opprettet(DatoUtils.getNow()).build();
         try {
-            tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(Instant.now(), tub);
+            tilsagnsbrevbehandler.behandleOgVerifisereTilsagn(tub);
             return "OK";
         }finally {
             cidManager.fjernCorrelationId();

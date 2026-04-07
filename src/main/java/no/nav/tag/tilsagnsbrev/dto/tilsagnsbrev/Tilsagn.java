@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.nav.tag.tilsagnsbrev.mapper.TiltakType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,6 +54,10 @@ public class Tilsagn {
 
     public boolean erGruppeTilsagn() {
         return this.deltaker == null;
+    }
+
+    public TiltakType getTiltakType() {
+        return TiltakType.parse(tiltakKode);
     }
 
     @JsonIgnore
