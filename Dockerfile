@@ -1,3 +1,5 @@
-FROM ghcr.io/navikt/baseimages/temurin:21
-COPY export-service-user.sh /init-scripts/03-export-service-user.sh
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/jre:openjdk-21
 COPY /target/tiltak-tilsagnsbrev-*.jar app.jar
+ENV TZ="Europe/Oslo"
+EXPOSE 8080
+CMD ["-jar", "app.jar"]
