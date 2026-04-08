@@ -95,7 +95,7 @@ public class Oppgaver {
 
     private AltinnCorrespondenceRequest mapTilKorrespondanse(TilsagnUnderBehandling tilsagnUnderBehandling, UUID vedleggId) {
         try {
-            return tilsagnTilAltinnMapper.tilAltinnKorrespondanse(tilsagnUnderBehandling.getTilsagn(), vedleggId);
+            return tilsagnTilAltinnMapper.tilAltinnKorrespondanse(tilsagnUnderBehandling.getTilsagn(), vedleggId, tilsagnUnderBehandling.getCid());
         } catch (Exception e) {
             log.error("Feil ved opprettelse av Altinn melding fra tilsagn-id {} og melding: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
             throw new DataException(e.getMessage());

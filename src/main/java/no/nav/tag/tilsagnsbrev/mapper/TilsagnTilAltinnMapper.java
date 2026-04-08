@@ -35,12 +35,12 @@ public class TilsagnTilAltinnMapper {
     private static final String VARSLING_TEKST_SUFFIX = " er tilgjengelig. Logg inn i Altinn for å se innholdet.";
     private static final String VARSLING_TEKST_FOOTER = "\n\nVennlig hilsen NAV";
 
-    public AltinnCorrespondenceRequest tilAltinnKorrespondanse(final Tilsagn tilsagn, final UUID vedleggId) {
+    public AltinnCorrespondenceRequest tilAltinnKorrespondanse(final Tilsagn tilsagn, final UUID vedleggId, final UUID idempotentKey) {
         return AltinnCorrespondenceRequest.builder()
             .correspondence(lagKorrespondanseBase(tilsagn))
             .recipients(Collections.singletonList(RECIPIENT_PREFIX + tilsagn.getTiltakArrangor().getOrgNummer()))
             .existingAttachments(List.of(vedleggId))
-            .idempotentKey(UUID.randomUUID())
+            .idempotentKey(idempotentKey)
             .build();
     }
 

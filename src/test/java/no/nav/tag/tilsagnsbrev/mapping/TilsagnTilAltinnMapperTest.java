@@ -26,8 +26,9 @@ public class TilsagnTilAltinnMapperTest {
     @Test
     public void mapperTilAltinnKorrespondanse() {
         Tilsagn tilsagn = Testdata.gruppeTilsagn();
+        UUID idempotentKey = UUID.randomUUID();
 
-        AltinnCorrespondenceRequest request = tilsagnTilAltinnMapper.tilAltinnKorrespondanse(tilsagn, UUID.randomUUID());
+        AltinnCorrespondenceRequest request = tilsagnTilAltinnMapper.tilAltinnKorrespondanse(tilsagn, UUID.randomUUID(), idempotentKey);
 
         assertNotNull(request);
         assertNotNull(request.getCorrespondence());
@@ -38,6 +39,7 @@ public class TilsagnTilAltinnMapperTest {
         assertNotNull(request.getCorrespondence().getNotification());
         assertEquals(1, request.getRecipients().size());
         assertTrue(request.getRecipients().get(0).startsWith("urn:altinn:organization:identifier-no:"));
+        assertEquals(idempotentKey, request.getIdempotentKey());
     }
 
     @Test
