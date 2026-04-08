@@ -49,7 +49,7 @@ public class AltinnService {
         } catch (DataException | SystemException e) {
             throw e;
         } catch (Exception e) {
-            throw new SystemException("Uventet feil ved sending til Altinn 3: " + e.getMessage());
+            throw new SystemException("Uventet feil ved sending til Altinn 3", e);
         }
     }
 
