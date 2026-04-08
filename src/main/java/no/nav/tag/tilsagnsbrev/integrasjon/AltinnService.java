@@ -62,11 +62,15 @@ public class AltinnService {
 
     private UUID initialiserVedlegg(AltinnAttachmentInitRequest request) {
         try {
-            return restTemplate.postForObject(
+            UUID attachmentId = restTemplate.postForObject(
                 altinnKonfig.getBaseUrl() + ATTACHMENT_PATH,
                 jsonEntityMedToken(request),
                 UUID.class
             );
+            if (attachmentId == null) {
+                throw new SystemException("Altinn 3 returnerte ikke attachmentId ved initialisering av vedlegg.");
+            }
+            return attachmentId;
         } catch (HttpClientErrorException e) {
             throw new DataException("Altinn 3 avviste vedlegget (4xx): " + e.getMessage());
         } catch (HttpServerErrorException e) {
