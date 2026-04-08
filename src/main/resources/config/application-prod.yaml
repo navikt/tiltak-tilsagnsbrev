@@ -36,7 +36,7 @@ tilsagnsbrev:
     max-lifetime: 300000
   integrasjon:
     joark:
-      uri: ${tilsagnsbrev.joark.url}
+      uri: https://dokarkiv.intern.nav.no
     sts:
       uri: ${tilsagnsbrev.sts.url}
       ws-uri: ${tilsagnsbrev.sts.ws.url}
