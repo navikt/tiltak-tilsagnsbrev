@@ -77,6 +77,7 @@ public class TilsagnTilAltinnMapper {
         return AltinnCorrespondenceContent.builder()
             .language(LANGUAGE_CODE)
             .messageTitle(vedleggNavn(tilsagn))
+            .messageBody("Se vedlagt tilskuddsbrev for " + tilsagn.getTiltakNavn() + ".")
             .build();
     }
 

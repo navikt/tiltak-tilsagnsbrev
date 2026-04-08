@@ -14,4 +14,7 @@ public class AltinnCorrespondenceContent {
     @JsonProperty("messageTitle")
     private String messageTitle;
 
+    @JsonProperty("messageBody")
+    private String messageBody;
+
 }
