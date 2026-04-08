@@ -36,6 +36,5 @@ tilsagnsbrev:
       passord: ${tilsagnsbrev_srvpwd}
     altinn:
       base-url: http://localhost:8090
-      resource-id: nav-tilsagnsbrev
     persondata:
         uri: http://localhost:8090/persondata
