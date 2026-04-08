@@ -97,7 +97,7 @@ public class Oppgaver {
         try {
             return tilsagnTilAltinnMapper.tilAltinnKorrespondanse(tilsagnUnderBehandling.getTilsagn(), vedleggId);
         } catch (Exception e) {
-            log.error("Feil ved opprettelse av Altinn melding fra tilsagn-id {} og melding: ", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
+            log.error("Feil ved opprettelse av Altinn melding fra tilsagn-id {} og melding: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
             throw new DataException(e.getMessage());
         }
     }
