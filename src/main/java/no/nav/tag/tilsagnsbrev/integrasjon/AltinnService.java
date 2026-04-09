@@ -18,6 +18,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Random;
 import java.util.UUID;
 
 @Slf4j
@@ -31,8 +32,13 @@ public class AltinnService {
 
     private static final String ATTACHMENT_STATUS_PUBLISHED = "Published";
     private static final String ATTACHMENT_STATUS_FAILED = "Failed";
-    private static final int ATTACHMENT_POLL_INTERVAL_MS = 2000;
-    private static final int ATTACHMENT_POLL_MAX_ATTEMPTS = 30;
+    private static final int ATTACHMENT_POLL_INITIAL_INTERVAL_MS = 500;
+    private static final int ATTACHMENT_POLL_MAX_INTERVAL_MS = 10_000;
+    private static final int ATTACHMENT_POLL_MAX_ATTEMPTS = 15;
+    private static final double ATTACHMENT_POLL_BACKOFF_MULTIPLIER = 2.0;
+    private static final double ATTACHMENT_POLL_JITTER_FACTOR = 0.5;
+
+    private final Random random = new Random();
 
     @Autowired
     private RestTemplate restTemplate;
@@ -99,6 +105,7 @@ public class AltinnService {
     }
 
     private void ventTilVedleggErPublisert(UUID attachmentId) {
+        long intervalMs = ATTACHMENT_POLL_INITIAL_INTERVAL_MS;
         for (int attempt = 1; attempt <= ATTACHMENT_POLL_MAX_ATTEMPTS; attempt++) {
             try {
                 AltinnVedleggStatusResponse response = restTemplate.exchange(
@@ -123,7 +130,9 @@ public class AltinnService {
                     throw new DataException("Altinn 3 feilet under virusskanning av vedlegg " + attachmentId + " (status: " + status + ")");
                 }
 
-                Thread.sleep(ATTACHMENT_POLL_INTERVAL_MS);
+                long jitter = (long) (intervalMs * ATTACHMENT_POLL_JITTER_FACTOR * random.nextDouble());
+                Thread.sleep(intervalMs + jitter);
+                intervalMs = Math.min((long) (intervalMs * ATTACHMENT_POLL_BACKOFF_MULTIPLIER), ATTACHMENT_POLL_MAX_INTERVAL_MS);
             } catch (DataException | SystemException e) {
                 throw e;
             } catch (HttpClientErrorException e) {

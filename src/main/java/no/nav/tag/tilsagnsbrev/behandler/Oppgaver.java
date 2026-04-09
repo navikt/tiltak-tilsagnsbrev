@@ -77,7 +77,7 @@ public class Oppgaver {
         }catch (DataException de){
             throw de;
         } catch (Exception e) {
-            throw new SystemException(e.getMessage());
+            throw new SystemException(e.getMessage(), e);
         }
     }
 
@@ -98,7 +98,7 @@ public class Oppgaver {
             return tilsagnTilAltinnMapper.tilAltinnKorrespondanse(tilsagnUnderBehandling.getTilsagn(), vedleggId, tilsagnUnderBehandling.getCid());
         } catch (Exception e) {
             log.error("Feil ved opprettelse av Altinn melding fra tilsagn-id {} og melding: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
-            throw new DataException(e.getMessage());
+            throw new DataException(e.getMessage(), e);
         }
     }
 
@@ -107,7 +107,7 @@ public class Oppgaver {
             return tilsagnTilAltinnMapper.tilAltinnVedlegg(tilsagnUnderBehandling.getTilsagn(), tilsagnUnderBehandling.getPdfAltinn());
         } catch (Exception e) {
             log.error("Feil ved opprettelse av Altinn vedlegg fra tilsagn-id {} og melding: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
-            throw new DataException(e.getMessage());
+            throw new DataException(e.getMessage(), e);
         }
     }
 
@@ -116,7 +116,7 @@ public class Oppgaver {
             return altInnService.sendVedlegg(vedlegg, tilsagnUnderBehandling.getPdfAltinn());
         } catch (Exception e) {
             log.error("Feil ved opplasting av vedlegg {} til Altinn med melding: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
-            throw new SystemException(e.getMessage());
+            throw new SystemException(e.getMessage(), e);
         }
     }
 
@@ -126,7 +126,7 @@ public class Oppgaver {
             tilsagnUnderBehandling.setAltinnReferanse(correspondenceId);
         } catch (Exception e) {
             log.error("Feil ved sending av tilsagnsbrev {} til Altinn med melding: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
-            throw new SystemException(e.getMessage());
+            throw new SystemException(e.getMessage(), e);
         }
     }
 
