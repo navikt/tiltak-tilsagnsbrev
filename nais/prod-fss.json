@@ -7,5 +7,6 @@
   "kafka-pool": "nav-prod",
   "min-replicas": "1",
   "max-replicas": "1",
-  "pdl-api-scope": "api://prod-fss.pdl.pdl-api/.default"
+  "pdl-api-scope": "api://prod-fss.pdl.pdl-api/.default",
+  "dokarkiv-scope": "api://prod-fss.teamdokumenthandtering.dokarkiv/.default"
 }

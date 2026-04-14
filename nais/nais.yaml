@@ -33,6 +33,8 @@ spec:
     value: {{spring-profil}}
   - name: PDL_API_SCOPE
     value: {{pdl-api-scope}}
+  - name: DOKARKIV_SCOPE
+    value: {{dokarkiv-scope}}
   webproxy: true
   prometheus:
     enabled: true
@@ -58,3 +60,5 @@ spec:
       rules:
         - application: pdl-api
           namespace: pdl
+        - application: dokarkiv
+          namespace: teamdokumenthandtering

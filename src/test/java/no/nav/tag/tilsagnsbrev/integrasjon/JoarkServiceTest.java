@@ -56,17 +56,4 @@ public class JoarkServiceTest {
             joarkService.sendJournalpost(null);
         });
     }
-
-    @Test
-    public void feil_mot_tjeneste_skal_hente_nytt_sts_token_og_forsøke_på_nytt() {
-        when(restTemplate.postForObject(eq(expUri), any(HttpEntity.class), any())).thenThrow(RuntimeException.class);
-        try {
-            joarkService.sendJournalpost(journalpost);
-        } catch (RuntimeException re) {
-            verify(stsService).evict();
-            verify(stsService, times(2)).hentToken();
-            verify(restTemplate, times(2)).postForObject(eq(expUri), any(HttpEntity.class), any());
-        }
-    }
-
 }

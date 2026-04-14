@@ -1,5 +1,5 @@
 insert into public.tilsagn_under_behandling (cid, opprettet, tilsagnsbrev_id, retry, datafeil, mappet_fra_arena,
-                                             journalpost_id, altinn_referanse, behandlet, json, pdf)
+                                             journalpost_id, altinn_referanse, behandlet, json, pdf_altinn)
 values ('123e4567-e89b-12d3-a456-426655440000',
         now(),
         222,

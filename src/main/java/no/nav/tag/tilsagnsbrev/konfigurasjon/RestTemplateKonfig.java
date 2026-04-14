@@ -1,0 +1,57 @@
+package no.nav.tag.tilsagnsbrev.konfigurasjon;
+
+import no.nav.security.token.support.client.core.ClientProperties;
+import no.nav.security.token.support.client.spring.ClientConfigurationProperties;
+import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPropertiesMatcher;
+import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client;
+import no.nav.security.token.support.client.spring.oauth2.OAuth2ClientRequestInterceptor;
+import no.nav.security.token.support.spring.api.EnableJwtTokenValidation;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+import java.util.Arrays;
+
+@Configuration
+@EnableOAuth2Client(cacheEnabled = true)
+@EnableJwtTokenValidation
+@Profile({"preprod", "prod"})
+public class RestTemplateKonfig {
+
+    @Bean
+    public RestTemplate tokenSupportRestTemplate(
+            RestTemplateBuilder restTemplateBuilder,
+            OAuth2ClientRequestInterceptor oAuth2ClientRequestInterceptor
+    ) {
+        return restTemplateBuilder.interceptors(oAuth2ClientRequestInterceptor).build();
+    }
+
+    @Bean
+    public ClientConfigurationPropertiesMatcher clientConfigurationPropertiesMatcher() {
+        return new ClientConfigurationPropertiesMatcher() {
+            @Override
+            public ClientProperties findProperties(
+                    ClientConfigurationProperties properties,
+                    String s
+            ) {
+                return findProperties(properties, URI.create(s));
+            }
+
+            @Override
+            public ClientProperties findProperties(
+                    ClientConfigurationProperties properties,
+                    URI uri
+            ) {
+                String registration = Arrays.stream(uri.getHost().split("\\.")).findFirst().orElse("");
+
+                return switch (registration) {
+                    case "dokarkiv-q1" -> properties.getRegistration().get("dokarkiv");
+                    default -> properties.getRegistration().get(registration);
+                };
+            }
+        };
+    }
+}
