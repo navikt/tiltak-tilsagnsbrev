@@ -30,8 +30,6 @@ public class TilsagnTilAltinnMapper {
     private static final String RECIPIENT_PREFIX = "urn:altinn:organization:identifier-no:";
     private static final String NOTIFICATION_TEMPLATE = "CustomMessage";
     private static final String NOTIFICATION_CHANNEL = "Email";
-    private static final String VARSLING_EMNE_PREFIX = "Tilskuddsbrev for ";
-    private static final String VARSLING_EMNE_SUFFIX = " er tilgjengelig i Altinn";
     private static final String VARSLING_TEKST_SUFFIX = " er tilgjengelig. Logg inn i Altinn for å se innholdet.";
     private static final String VARSLING_TEKST_FOOTER = "\n\nVennlig hilsen NAV";
 
@@ -82,8 +80,9 @@ public class TilsagnTilAltinnMapper {
     }
 
     private AltinnCorrespondenceNotification lagVarsling(TiltakArrangor tiltakArrangor) {
-        String emne = VARSLING_EMNE_PREFIX + tiltakArrangor.getOrgNummer()
-            + " " + tiltakArrangor.getArbgiverNavn() + VARSLING_EMNE_SUFFIX;
+        String emne = "Tilskuddsbrev for " +
+            tiltakArrangor.getOrgNummer() + " " + tiltakArrangor.getArbgiverNavn() +
+            " er tilgjengelig i Altinn";
 
         return AltinnCorrespondenceNotification.builder()
             .notificationTemplate(NOTIFICATION_TEMPLATE)
@@ -95,8 +94,10 @@ public class TilsagnTilAltinnMapper {
     }
 
     private String lagEpostTekst(TiltakArrangor tiltakArrangor) {
-        return VARSLING_EMNE_PREFIX + tiltakArrangor.getOrgNummer()
-            + " " + tiltakArrangor.getArbgiverNavn() + VARSLING_TEKST_SUFFIX + VARSLING_TEKST_FOOTER;
+        return "Tilskuddsbrev for " +
+            tiltakArrangor.getOrgNummer() + " " + tiltakArrangor.getArbgiverNavn() +
+            " er tilgjengelig. Logg inn i Altinn for å se innholdet." +
+            "\n\nVennlig hilsen NAV";
     }
 
     private String vedleggNavn(Tilsagn tilsagn) {

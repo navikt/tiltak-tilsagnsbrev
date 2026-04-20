@@ -8,7 +8,6 @@ import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnVedleggStatusResponse;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.SystemException;
 import no.nav.tag.tilsagnsbrev.konfigurasjon.AltinnKonfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -39,15 +38,19 @@ public class AltinnService {
     private static final double ATTACHMENT_POLL_JITTER_FACTOR = 0.5;
 
     private final Random random = new Random();
+    private final RestTemplate restTemplate;
+    private final MaskinportenTokenService maskinportenTokenService;
+    private final AltinnKonfig altinnKonfig;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @Autowired
-    private MaskinportenTokenService maskinportenTokenService;
-
-    @Autowired
-    private AltinnKonfig altinnKonfig;
+    public AltinnService(
+        RestTemplate restTemplate,
+        MaskinportenTokenService maskinportenTokenService,
+        AltinnKonfig altinnKonfig
+    ) {
+        this.restTemplate = restTemplate;
+        this.maskinportenTokenService = maskinportenTokenService;
+        this.altinnKonfig = altinnKonfig;
+    }
 
     public String sendTilsagnsbrev(AltinnCorrespondenceRequest correspondenceRequest) {
         try {
@@ -97,9 +100,9 @@ public class AltinnService {
                 attachmentId
             );
         } catch (HttpClientErrorException e) {
+            maskinportenTokenService.evict();
             throw new DataException("Altinn 3 avviste vedlegg-opplasting (4xx): " + e.getMessage());
         } catch (HttpServerErrorException e) {
-            maskinportenTokenService.evict();
             throw new SystemException("Altinn 3 serverfeil ved opplasting av vedlegg (5xx): " + e.getMessage());
         }
     }
@@ -163,9 +166,9 @@ public class AltinnService {
         } catch (DataException | SystemException e) {
             throw e;
         } catch (HttpClientErrorException e) {
+            maskinportenTokenService.evict();
             throw new DataException("Altinn 3 avviste korrespondansen (4xx): " + e.getMessage());
         } catch (HttpServerErrorException e) {
-            maskinportenTokenService.evict();
             throw new SystemException("Altinn 3 serverfeil ved oppretting av korrespondanse (5xx): " + e.getMessage());
         }
     }
