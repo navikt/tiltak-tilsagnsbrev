@@ -65,8 +65,3 @@ spec:
     outbound:
       external:
         - host: {{altinn}}
-      rules:
-        - application: pdl-api
-          namespace: pdl
-        - application: {{dokarkiv-app}}
-          namespace: teamdokumenthandtering

@@ -1,6 +1,7 @@
 package no.nav.tag.tilsagnsbrev.konfigurasjon;
 
 import no.nav.security.token.support.client.core.ClientProperties;
+import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService;
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties;
 import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPropertiesMatcher;
 import no.nav.security.token.support.client.spring.oauth2.OAuth2ClientRequestInterceptor;
@@ -23,6 +24,15 @@ public class RestTemplateKonfig {
             OAuth2ClientRequestInterceptor oAuth2ClientRequestInterceptor
     ) {
         return restTemplateBuilder.interceptors(oAuth2ClientRequestInterceptor).build();
+    }
+
+    @Bean
+    public OAuth2ClientRequestInterceptor oAuth2ClientRequestInterceptor(
+        ClientConfigurationProperties properties,
+        OAuth2AccessTokenService service,
+        ClientConfigurationPropertiesMatcher matcher
+    ) {
+        return new OAuth2ClientRequestInterceptor(properties, service, matcher);
     }
 
     @Bean
