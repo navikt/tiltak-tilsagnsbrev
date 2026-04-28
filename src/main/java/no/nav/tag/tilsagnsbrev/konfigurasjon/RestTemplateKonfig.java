@@ -20,14 +20,16 @@ public class RestTemplateKonfig {
 
     @Bean
     public RestTemplate tokenSupportRestTemplate(
-            RestTemplateBuilder restTemplateBuilder,
-            OAuth2ClientRequestInterceptor oAuth2ClientRequestInterceptor
+        RestTemplateBuilder restTemplateBuilder,
+        OAuth2ClientRequestInterceptor tokenSupportAuth2ClientRequestInterceptor
     ) {
-        return restTemplateBuilder.interceptors(oAuth2ClientRequestInterceptor).build();
+        return restTemplateBuilder
+            .interceptors(tokenSupportAuth2ClientRequestInterceptor)
+            .build();
     }
 
     @Bean
-    public OAuth2ClientRequestInterceptor oAuth2ClientRequestInterceptor(
+    public OAuth2ClientRequestInterceptor tokenSupportAuth2ClientRequestInterceptor(
         ClientConfigurationProperties properties,
         OAuth2AccessTokenService service,
         ClientConfigurationPropertiesMatcher matcher
