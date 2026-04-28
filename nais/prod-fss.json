@@ -1,5 +1,6 @@
 {
   "altinn": "platform.altinn.no",
+  "dokarkiv-app": "dokarkiv",
   "dokarkiv-scope": "api://prod-fss.teamdokumenthandtering.dokarkiv/.default",
   "ingress": "https://arbeidsgiver.nais.adeo.no/tiltak-tilsagnsbrev/",
   "kafka-pool": "nav-prod",

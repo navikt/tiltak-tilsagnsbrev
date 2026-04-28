@@ -68,5 +68,5 @@ spec:
       rules:
         - application: pdl-api
           namespace: pdl
-        - application: dokarkiv
+        - application: {{dokarkiv-app}}
           namespace: teamdokumenthandtering
