@@ -3,9 +3,7 @@ package no.nav.tag.tilsagnsbrev.konfigurasjon;
 import no.nav.security.token.support.client.core.ClientProperties;
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties;
 import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPropertiesMatcher;
-import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client;
 import no.nav.security.token.support.client.spring.oauth2.OAuth2ClientRequestInterceptor;
-import no.nav.security.token.support.spring.api.EnableJwtTokenValidation;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +14,6 @@ import java.net.URI;
 import java.util.Arrays;
 
 @Configuration
-@EnableOAuth2Client(cacheEnabled = true)
-@EnableJwtTokenValidation
 @Profile({"preprod", "prod"})
 public class RestTemplateKonfig {
 
