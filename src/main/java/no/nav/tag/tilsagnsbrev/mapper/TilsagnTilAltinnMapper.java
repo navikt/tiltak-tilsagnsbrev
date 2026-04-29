@@ -30,8 +30,6 @@ public class TilsagnTilAltinnMapper {
     private static final String RECIPIENT_PREFIX = "urn:altinn:organization:identifier-no:";
     private static final String NOTIFICATION_TEMPLATE = "CustomMessage";
     private static final String NOTIFICATION_CHANNEL = "Email";
-    private static final String VARSLING_TEKST_SUFFIX = " er tilgjengelig. Logg inn i Altinn for å se innholdet.";
-    private static final String VARSLING_TEKST_FOOTER = "\n\nVennlig hilsen NAV";
 
     public AltinnCorrespondenceRequest tilAltinnKorrespondanse(final Tilsagn tilsagn, final UUID vedleggId, final UUID idempotentKey) {
         return AltinnCorrespondenceRequest.builder()
