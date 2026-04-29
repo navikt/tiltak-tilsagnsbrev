@@ -8,4 +8,3 @@ H2 konsoll url: http://localhost:8082/tiltak-tilsagnsbrev/h2-console
 
 JDBC URL: jdbc:h2:mem:testdb
 Bruker: sa, Passord: blank
-.

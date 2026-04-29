@@ -1,11 +1,10 @@
 package no.nav.tag.tilsagnsbrev.konfigurasjon;
 
 import no.nav.security.token.support.client.core.ClientProperties;
+import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService;
 import no.nav.security.token.support.client.spring.ClientConfigurationProperties;
 import no.nav.security.token.support.client.spring.oauth2.ClientConfigurationPropertiesMatcher;
-import no.nav.security.token.support.client.spring.oauth2.EnableOAuth2Client;
 import no.nav.security.token.support.client.spring.oauth2.OAuth2ClientRequestInterceptor;
-import no.nav.security.token.support.spring.api.EnableJwtTokenValidation;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,17 +15,26 @@ import java.net.URI;
 import java.util.Arrays;
 
 @Configuration
-@EnableOAuth2Client(cacheEnabled = true)
-@EnableJwtTokenValidation
 @Profile({"preprod", "prod"})
 public class RestTemplateKonfig {
 
     @Bean
     public RestTemplate tokenSupportRestTemplate(
-            RestTemplateBuilder restTemplateBuilder,
-            OAuth2ClientRequestInterceptor oAuth2ClientRequestInterceptor
+        RestTemplateBuilder restTemplateBuilder,
+        OAuth2ClientRequestInterceptor tokenSupportAuth2ClientRequestInterceptor
     ) {
-        return restTemplateBuilder.interceptors(oAuth2ClientRequestInterceptor).build();
+        return restTemplateBuilder
+            .interceptors(tokenSupportAuth2ClientRequestInterceptor)
+            .build();
+    }
+
+    @Bean
+    public OAuth2ClientRequestInterceptor tokenSupportAuth2ClientRequestInterceptor(
+        ClientConfigurationProperties properties,
+        OAuth2AccessTokenService service,
+        ClientConfigurationPropertiesMatcher matcher
+    ) {
+        return new OAuth2ClientRequestInterceptor(properties, service, matcher);
     }
 
     @Bean

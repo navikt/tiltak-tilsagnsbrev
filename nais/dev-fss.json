@@ -1,12 +1,13 @@
 {
+  "altinn": "platform.tt02.altinn.no",
+  "dokarkiv-scope": "api://dev-fss.teamdokumenthandtering.dokarkiv-q1/.default",
   "ingress": "https://arbeidsgiver.nais.preprod.local/tiltak-tilsagnsbrev/",
-  "spring-profil": "preprod",
-  "vault-serviceuser-path": "serviceuser/data/dev/srvtiltak-tilsagns",
-  "vault-default-path": "kv/preprod/fss/tiltak-tilsagnsbrev/default",
-  "slack_alert_channel": "arbeidsgiver-notifications-test",
   "kafka-pool": "nav-dev",
-  "min-replicas": "1",
   "max-replicas": "1",
+  "min-replicas": "1",
   "pdl-api-scope": "api://dev-fss.pdl.pdl-api/.default",
-  "dokarkiv-scope": "api://dev-fss.teamdokumenthandtering.dokarkiv-q1/.default"
+  "slack_alert_channel": "arbeidsgiver-notifications-test",
+  "spring-profil": "preprod",
+  "vault-default-path": "kv/preprod/fss/tiltak-tilsagnsbrev/default",
+  "vault-serviceuser-path": "serviceuser/data/dev/srvtiltak-tilsagns"
 }

@@ -13,4 +13,9 @@ public abstract class TilsagnException extends RuntimeException{
         super(errMsg);
         this.datafeil = erDatafeil;
     }
+
+    public TilsagnException(String errMsg, boolean erDatafeil, Throwable cause) {
+        super(errMsg, cause);
+        this.datafeil = erDatafeil;
+    }
 }

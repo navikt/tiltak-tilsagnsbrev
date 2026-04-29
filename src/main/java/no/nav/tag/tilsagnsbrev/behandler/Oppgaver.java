@@ -1,23 +1,26 @@
 package no.nav.tag.tilsagnsbrev.behandler;
 
 import lombok.extern.slf4j.Slf4j;
-import no.altinn.services.serviceengine.correspondence._2009._10.InsertCorrespondenceBasicV2;
+import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnAttachmentInitRequest;
+import no.nav.tag.tilsagnsbrev.dto.altinn.AltinnCorrespondenceRequest;
 import no.nav.tag.tilsagnsbrev.dto.journalpost.Journalpost;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
 import no.nav.tag.tilsagnsbrev.exception.DataException;
 import no.nav.tag.tilsagnsbrev.exception.SystemException;
 import no.nav.tag.tilsagnsbrev.feilet.TilsagnBehandler;
-import no.nav.tag.tilsagnsbrev.integrasjon.AltInnService;
+import no.nav.tag.tilsagnsbrev.integrasjon.AltinnService;
 import no.nav.tag.tilsagnsbrev.integrasjon.JoarkService;
 import no.nav.tag.tilsagnsbrev.integrasjon.PdfGenService;
+import no.nav.tag.tilsagnsbrev.integrasjon.persondata.PersondataService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
-import no.nav.tag.tilsagnsbrev.service.PersondataService;
 import no.nav.team_tiltak.felles.persondata.pdl.domene.Diskresjonskode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -33,7 +36,7 @@ public class Oppgaver {
     private JoarkService joarkService;
 
     @Autowired
-    private AltInnService altInnService;
+    private AltinnService altInnService;
 
     @Autowired
     private TilsagnJournalpostMapper tilsagnJournalpostMapper;
@@ -74,34 +77,56 @@ public class Oppgaver {
         }catch (DataException de){
             throw de;
         } catch (Exception e) {
-            throw new SystemException(e.getMessage());
+            throw new SystemException(e.getMessage(), e);
         }
     }
 
     private void sendTilAltinn(TilsagnUnderBehandling tilsagnUnderBehandling) {
-        InsertCorrespondenceBasicV2 wsRequest = mapTilWebserviceRequest(tilsagnUnderBehandling);
-        log.info("Sender tilsagnsbrev {} til Altinn. Ekstern-ref {}", tilsagnUnderBehandling.getTilsagnsbrevId(), wsRequest.getExternalShipmentReference());
-        sentWsRequest(tilsagnUnderBehandling, wsRequest);
-        log.info("Tilsagnsbrev {} er sendt til Altinn. Referanse {}",tilsagnUnderBehandling.getTilsagnsbrevId(), tilsagnUnderBehandling.getAltinnReferanse());
+        log.info("Laster opp vedlegg for tilsagnsbrev {} til Altinn", tilsagnUnderBehandling.getTilsagnsbrevId());
+        AltinnAttachmentInitRequest vedlegg = mapTilVedlegg(tilsagnUnderBehandling);
+        UUID vedleggId = sendVedlegg(tilsagnUnderBehandling, vedlegg);
+        log.info("Vedlegg for tilsagnsbrev {} er lastet oppt til Altinn med id {}", tilsagnUnderBehandling.getTilsagnsbrevId(), vedleggId);
+        log.info("Sender tilsagnsbrev {} til Altinn", tilsagnUnderBehandling.getTilsagnsbrevId());
+        AltinnCorrespondenceRequest korrespondanse = mapTilKorrespondanse(tilsagnUnderBehandling, vedleggId);
+        sendKorrespondanse(tilsagnUnderBehandling, korrespondanse);
+        log.info("Tilsagnsbrev {} er sendt til Altinn. Referanse {}", tilsagnUnderBehandling.getTilsagnsbrevId(), tilsagnUnderBehandling.getAltinnReferanse());
     }
 
 
-    private InsertCorrespondenceBasicV2 mapTilWebserviceRequest(TilsagnUnderBehandling tilsagnUnderBehandling) {
+    private AltinnCorrespondenceRequest mapTilKorrespondanse(TilsagnUnderBehandling tilsagnUnderBehandling, UUID vedleggId) {
         try {
-            return tilsagnTilAltinnMapper.tilAltinnMelding(tilsagnUnderBehandling.getTilsagn(), tilsagnUnderBehandling.getPdfAltinn());
+            return tilsagnTilAltinnMapper.tilAltinnKorrespondanse(tilsagnUnderBehandling.getTilsagn(), vedleggId, tilsagnUnderBehandling.getCid());
         } catch (Exception e) {
-            log.error("Feil ved oppretterlse av Altinn melding fra Tilsagn id {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
-            throw new DataException(e.getMessage());
+            log.error("Feil ved opprettelse av Altinn melding fra tilsagn-id {} og melding: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
+            throw new DataException(e.getMessage(), e);
         }
     }
 
-    private void sentWsRequest(TilsagnUnderBehandling tilsagnUnderBehandling, InsertCorrespondenceBasicV2 wsRequest) {
-        try{
-            int kvitteringId = altInnService.sendTilsagnsbrev(wsRequest);
-            tilsagnUnderBehandling.setAltinnReferanse(String.valueOf(kvitteringId));
+    private AltinnAttachmentInitRequest mapTilVedlegg(TilsagnUnderBehandling tilsagnUnderBehandling) {
+        try {
+            return tilsagnTilAltinnMapper.tilAltinnVedlegg(tilsagnUnderBehandling.getTilsagn(), tilsagnUnderBehandling.getPdfAltinn());
         } catch (Exception e) {
-            log.error("Feil ved sending av tilsagnsbrev {} til Altinn", tilsagnUnderBehandling.getTilsagnsbrevId(), e);
-            throw new SystemException(e.getMessage());
+            log.error("Feil ved opprettelse av Altinn vedlegg fra tilsagn-id {} og melding: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
+            throw new DataException(e.getMessage(), e);
+        }
+    }
+
+    private UUID sendVedlegg(TilsagnUnderBehandling tilsagnUnderBehandling, AltinnAttachmentInitRequest vedlegg) {
+        try {
+            return altInnService.sendVedlegg(vedlegg, tilsagnUnderBehandling.getPdfAltinn());
+        } catch (Exception e) {
+            log.error("Feil ved opplasting av vedlegg {} til Altinn med melding: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
+            throw new SystemException(e.getMessage(), e);
+        }
+    }
+
+    private void sendKorrespondanse(TilsagnUnderBehandling tilsagnUnderBehandling, AltinnCorrespondenceRequest korrespondanse) {
+        try {
+            String correspondenceId = altInnService.sendTilsagnsbrev(korrespondanse);
+            tilsagnUnderBehandling.setAltinnReferanse(correspondenceId);
+        } catch (Exception e) {
+            log.error("Feil ved sending av tilsagnsbrev {} til Altinn med melding: {}", tilsagnUnderBehandling.getTilsagnsbrevId(), e.getMessage(), e);
+            throw new SystemException(e.getMessage(), e);
         }
     }
 

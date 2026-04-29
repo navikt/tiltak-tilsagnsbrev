@@ -24,14 +24,13 @@
 		<maven.compiler.target>21</maven.compiler.target>
 
 		<nav-token-security.version>5.0.27</nav-token-security.version>
-		<cxf.version>4.1.4</cxf.version>
 		<mockito.version>5.14.2</mockito.version>
 		<byte-buddy.version>1.15.11</byte-buddy.version>
 		<logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
 		<tiltak-persondata.version>2026.04.21_06.19-b62bcf9d7d1d</tiltak-persondata.version>
 		<vault-jdbc.version>1.3.10</vault-jdbc.version>
 		<wiremock-standalone.version>3.13.2</wiremock-standalone.version>
-		<jaxws-maven-plugin.version>4.0.3</jaxws-maven-plugin.version>
+		<pdfbox.version>2.0.31</pdfbox.version>
 	</properties>
 
 	<dependencies>
@@ -160,50 +159,6 @@
 			<artifactId>vault-jdbc</artifactId>
 			<version>${vault-jdbc.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-core</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-bindings-soap</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxws</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-simple</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-transports-http</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-ws-policy</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-ws-security</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-features-logging</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
-		</dependency>
 
 		<!-- Test -->
 		<dependency>
@@ -230,7 +185,7 @@
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			<version>2.0.31</version>
+			<version>${pdfbox.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -270,25 +225,6 @@
 			<plugin>
 				<groupId>org.cyclonedx</groupId>
 				<artifactId>cyclonedx-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.sun.xml.ws</groupId>
-				<artifactId>jaxws-maven-plugin</artifactId>
-				<version>${jaxws-maven-plugin.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>wsimport</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<wsdlFiles>
-						<wsdlFile>${project.basedir}/src/main/resources/wsdl/CorrespondenceAgencyExternalBasic.svc.wsdl</wsdlFile>
-					</wsdlFiles>
-					<sourceDestDir>${project.build.directory}/generated-sources/wsimport</sourceDestDir>
-					<extension>true</extension>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
