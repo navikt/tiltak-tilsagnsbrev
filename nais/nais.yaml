@@ -35,6 +35,8 @@ spec:
     value: {{pdl-api-scope}}
   - name: DOKARKIV_SCOPE
     value: {{dokarkiv-scope}}
+  envFrom:
+    - secret: tiltak-tilsagnsbrev
   webproxy: true
   prometheus:
     enabled: true
