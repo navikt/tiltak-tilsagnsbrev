@@ -27,7 +27,7 @@
 		<mockito.version>5.14.2</mockito.version>
 		<byte-buddy.version>1.15.11</byte-buddy.version>
 		<logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
-		<tiltak-persondata.version>2026.04.21_06.19-b62bcf9d7d1d</tiltak-persondata.version>
+		<tiltak-persondata.version>2026.04.28_07.58-d9e06b02d7f3</tiltak-persondata.version>
 		<vault-jdbc.version>1.3.10</vault-jdbc.version>
 		<wiremock-standalone.version>3.13.2</wiremock-standalone.version>
 		<pdfbox.version>2.0.31</pdfbox.version>
