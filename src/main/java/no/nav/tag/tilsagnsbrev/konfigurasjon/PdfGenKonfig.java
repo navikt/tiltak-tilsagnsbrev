@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.net.URI;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -18,7 +19,7 @@ import java.util.Locale;
 @AllArgsConstructor
 @ConfigurationProperties(prefix = "tilsagnsbrev.integrasjon.pdfgen")
 public class PdfGenKonfig {
-    private String uri;
+    private URI uri;
 
     private static final String PDF_DATOFORMAT = "d. MMMM yyyy";
     private static final Locale LOCALE_NO = Locale.forLanguageTag("no");

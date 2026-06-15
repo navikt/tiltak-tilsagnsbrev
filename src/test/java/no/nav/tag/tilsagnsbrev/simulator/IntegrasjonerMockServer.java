@@ -41,8 +41,8 @@ public class IntegrasjonerMockServer implements DisposableBean {
                 .willReturn(okJson("{\"journalpostId\" : \"001\", \"journalstatus\" : \"MIDLERTIDIG\", \"melding\" : \"Gikk bra\"}")));
 
         // PDF-generering
-        server.stubFor(post(urlPathMatching("/template/.*/create-pdf"))
-                .willReturn(okJson("{\"pdf\" : \"" + pdfFil + "\"}")));
+        server.stubFor(post(urlPathMatching("/tiltak-tilsagnsbrev/.*"))
+                .willReturn(okForContentType("application/octet-stream", pdfFil)));
 
         // Altinn 3 — initialiser vedlegg
         server.stubFor(post("/correspondence/api/v1/attachment")

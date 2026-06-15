@@ -79,13 +79,12 @@ public class OppgaverTest {
 
     @Test
     public void behandlerTilsagnEtterEnManuellBehandlingAvArenaMappingFeil() {
-        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MIDLONTIL.getTiltakskode()).build()).build();
+        TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MENTOR.name()).build()).build();
 
         oppgaver.utfoerOppgaver(tub);
 
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(eq(tub));
-        verify(tilsagnJsonMapper, times(2)).opprettPdfJson(tub.getTilsagnsbrevId(), tub.getTilsagn());
-        verify(pdfService, times(2)).tilsagnsbrevTilPdfBytes(any(TilsagnUnderBehandling.class), any());
+        verify(pdfService, times(2)).tilsagnsbrevTilPdfBytes(any(Tilsagn.class));
         verify(tilsagnJournalpostMapper, times(1)).tilsagnTilJournalpost(any(TilsagnUnderBehandling.class));
         verify(joarkService, times(1)).sendJournalpost(any());
         verifySendTilAltinn();
@@ -110,7 +109,7 @@ public class OppgaverTest {
             .tilsagnsbrevId(1)
             .mappetFraArena(true)
             .altinnReferanse("2")
-            .tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MIDLONTIL.getTiltakskode()).build())
+            .tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MENTOR.name()).build())
             .build();
 
         when(tilsagnJournalpostMapper.tilsagnTilJournalpost(any(TilsagnUnderBehandling.class))).thenReturn(JOURNALPOST);
@@ -131,7 +130,7 @@ public class OppgaverTest {
             .tilsagnsbrevId(1)
             .mappetFraArena(true)
             .journalpostId("1")
-            .tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MIDLONTIL.getTiltakskode()).build())
+            .tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MENTOR.name()).build())
             .build();
 
         oppgaver.utfoerOppgaver(tub);
@@ -173,23 +172,23 @@ public class OppgaverTest {
         oppgaver.utfoerOppgaver(tub);
 
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(tub);
-        verify(pdfService, times(2)).tilsagnsbrevTilPdfBytes(any(TilsagnUnderBehandling.class), any());
+        verify(pdfService, times(2)).tilsagnsbrevTilPdfBytes(any(Tilsagn.class));
         verify(tilsagnBehandler, times(1)).lagreStatus(any(TilsagnUnderBehandling.class));
     }
 
     @Test
     public void avbryterHvisOpprettPdfDokFeiler() {
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder()
-            .tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MIDLONTIL.getTiltakskode()).build())
+            .tilsagn(Tilsagn.builder().tiltakKode(TiltakType.MENTOR.name()).build())
             .build();
 
-        when(tilsagnJsonMapper.opprettPdfJson(tub.getTilsagnsbrevId(), tub.getTilsagn())).thenThrow(DataException.class);
+        doThrow(DataException.class).when(pdfService).tilsagnsbrevTilPdfBytes(any(Tilsagn.class));
 
         oppgaver.utfoerOppgaver(tub);
 
         verify(tilsagnJsonMapper, times(1)).opprettTilsagn(tub);
-        verify(tilsagnJsonMapper, times(1)).opprettPdfJson(tub.getTilsagnsbrevId(), tub.getTilsagn());
-        verifyNoInteractions(pdfService, altInnService, tilsagnJournalpostMapper, joarkService);
+        verify(pdfService, times(1)).tilsagnsbrevTilPdfBytes(any(Tilsagn.class));
+        verifyNoInteractions(altInnService, tilsagnJournalpostMapper, joarkService);
         verify(tilsagnBehandler, times(1)).lagreEllerOppdaterFeil(eq(tub), any(TilsagnException.class));
     }
 
