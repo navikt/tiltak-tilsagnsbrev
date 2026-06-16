@@ -18,7 +18,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 @Getter
 public class IntegrasjonerMockServer implements DisposableBean {
     private final WireMockServer server;
-    private final String pdfFil = EncodedString.ENC_STR;
+    private final byte[] pdfFil = EncodedString.getDecAsBytes();
     private static final String ATTACHMENT_ID = UUID.randomUUID().toString();
     private static final String CORRESPONDENCE_ID = UUID.randomUUID().toString();
 
@@ -42,7 +42,9 @@ public class IntegrasjonerMockServer implements DisposableBean {
 
         // PDF-generering
         server.stubFor(post(urlPathMatching("/tiltak-tilsagnsbrev/.*"))
-                .willReturn(okForContentType("application/octet-stream", pdfFil)));
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/octet-stream")
+                        .withBody(pdfFil)));
 
         // Altinn 3 — initialiser vedlegg
         server.stubFor(post("/correspondence/api/v1/attachment")

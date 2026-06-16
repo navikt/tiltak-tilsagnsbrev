@@ -38,6 +38,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void ARBFORB() {
         tilsagnGruppe.setTiltakNavn("Arbeidsforberedende trening");
+        tilsagnDeltaker.setTiltakKode(ARBFORB.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnGruppe).build();
         opprettPdf(ARBFORB, tub);
     }

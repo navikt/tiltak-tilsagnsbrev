@@ -156,7 +156,7 @@ public class Oppgaver {
             TiltakType tiltakType = tilsagnUnderBehandling.getTilsagn().getTiltakType();
             if (!tiltakType.isSkalBehandles()) {
                 log.info(
-                    "Melding med tilsagnsbrev-id {} er av type {} og skal ikke lengre behandles.",
+                    "Melding med tilsagnsbrev-id {} er av type {} og skal ikke lenger behandles.",
                     tilsagnUnderBehandling.getTilsagnsbrevId(),
                     tiltakType
                 );
