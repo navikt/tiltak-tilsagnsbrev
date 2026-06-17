@@ -18,6 +18,7 @@ import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TiltakType;
 import no.nav.team_tiltak.felles.persondata.pdl.domene.Diskresjonskode;
+import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -155,7 +156,8 @@ public class Oppgaver {
 
             TiltakType tiltakType = tilsagnUnderBehandling.getTilsagn().getTiltakType();
             if (!tiltakType.isSkalBehandles()) {
-                log.info(
+                Level level = TiltakType.EKSPEBIST == tiltakType ? Level.INFO : Level.WARN;
+                log.atLevel(level).log(
                     "Melding med tilsagnsbrev-id {} er av type {} og skal ikke lenger behandles.",
                     tilsagnUnderBehandling.getTilsagnsbrevId(),
                     tiltakType
