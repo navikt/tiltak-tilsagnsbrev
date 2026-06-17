@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.Optional;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -27,15 +25,6 @@ public class TilsagnJsonMapper {
 
     private static final String OLD_PATTERN_3 = "}\"";
     private static final String NEW_PATTERN_3 = "}";
-
-    public String opprettPdfJson(Integer tilsagnsbrevId, Tilsagn tilsagn) {
-        try {
-            return objectMapper.writeValueAsString(tilsagn);
-        } catch (Exception e) {
-            log.error("Feil v/mapping til pdf-request. TilsagnbrevId={}", tilsagnsbrevId, e);
-            throw new DataException(e.getMessage());
-        }
-    }
 
     public void pakkUtArenaMelding(TilsagnUnderBehandling tilsagnUnderBehandling) {
         try {

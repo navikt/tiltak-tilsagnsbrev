@@ -1,5 +1,6 @@
 package no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,8 +35,10 @@ public class Tilsagn {
 
     private Person saksbehandler;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate tilsagnDato;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate refusjonfristDato;
 
     private TilsagnNummer tilsagnNummer;
