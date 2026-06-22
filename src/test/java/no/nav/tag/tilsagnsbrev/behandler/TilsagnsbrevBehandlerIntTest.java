@@ -98,7 +98,7 @@ public class TilsagnsbrevBehandlerIntTest {
 
     @Test
     public void pdfGenFeil() {
-        mockServer.getServer().stubFor(post("/template/tiltak-tilsagnsbrev-midlertidig-lonnstilskudd/create-pdf").willReturn(serverError()));
+        mockServer.getServer().stubFor(post("/tiltak-tilsagnsbrev/mentortilskudd").willReturn(serverError()));
 
         final UUID CID = UUID.randomUUID();
         TilsagnUnderBehandling tilsagnUnderBehandling = Testdata.tubBuilder().arenaMelding(arenaMelding).cid(CID).build();

@@ -31,9 +31,9 @@ public class TilsagnJournalpostMapperTest {
     @ParameterizedTest
     @EnumSource(TiltakType.class)
     public void mapperTilRikitigTiltak(TiltakType tiltakType) {
-        tilsagn.setTiltakKode(tiltakType.getTiltakskode());
+        tilsagn.setTiltakKode(tiltakType.name());
         Journalpost journalpost = tilsagnJournalpostMapper.tilsagnTilJournalpost(tub);
-        assertEquals(tiltakType.getTiltakskode(), tilsagn.getTiltakKode());
+        assertEquals(tiltakType.name(), tilsagn.getTiltakKode());
         assertEquals(tiltakType.getTittel(), journalpost.getTittel());
         assertEquals(tiltakType.getTittel(), journalpost.getDokumenter().get(0).getTittel());
         assertEquals(tiltakType.getBrevkode(), journalpost.getDokumenter().get(0).getBrevkode());

@@ -3,7 +3,6 @@ package no.nav.tag.tilsagnsbrev.integrasjon;
 import no.nav.tag.tilsagnsbrev.Testdata;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.Tilsagn;
 import no.nav.tag.tilsagnsbrev.dto.tilsagnsbrev.TilsagnUnderBehandling;
-import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TiltakType;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.Disabled;
@@ -31,9 +30,6 @@ import static no.nav.tag.tilsagnsbrev.mapper.TiltakType.*;
 public class PdfgenServiceIntTest {
 
     @Autowired
-    private TilsagnJsonMapper tilsagnJsonMapper;
-
-    @Autowired
     private PdfGenService pdfGenService;
 
     private Tilsagn tilsagnDeltaker = Testdata.tilsagnEnDeltaker();
@@ -41,8 +37,8 @@ public class PdfgenServiceIntTest {
 
     @Test
     public void ARBFORB() {
-        tilsagnGruppe.setTiltakKode(ARBFORB.getTiltakskode());
         tilsagnGruppe.setTiltakNavn("Arbeidsforberedende trening");
+        tilsagnDeltaker.setTiltakKode(ARBFORB.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnGruppe).build();
         opprettPdf(ARBFORB, tub);
     }
@@ -50,7 +46,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void EKSPEBIST() {
         tilsagnDeltaker.setTiltakNavn("Ekspertbistand");
-        tilsagnDeltaker.setTiltakKode(EKSPEBIST.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(EKSPEBIST.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(EKSPEBIST, tub);
     }
@@ -58,7 +54,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void FUNKSJASS() {
         tilsagnDeltaker.setTiltakNavn("funksjonsassistanse");
-        tilsagnDeltaker.setTiltakKode(FUNKSJASS.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(FUNKSJASS.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(FUNKSJASS, tub);
     }
@@ -66,7 +62,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void INKLUTILS() {
         tilsagnDeltaker.setTiltakNavn("Inkluderingstilskudd");
-        tilsagnDeltaker.setTiltakKode(INKLUTILS.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(INKLUTILS.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(INKLUTILS, tub);
     }
@@ -74,7 +70,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void MENTOR() {
         tilsagnDeltaker.setTiltakNavn("Mentor");
-        tilsagnDeltaker.setTiltakKode(MENTOR.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(MENTOR.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(MENTOR, tub);
     }
@@ -82,7 +78,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void MIDLONTIL() {
         tilsagnDeltaker.setTiltakNavn("Midlertidig lønnstilskudd");
-        tilsagnDeltaker.setTiltakKode(MIDLONTIL.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(MIDLONTIL.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(MIDLONTIL, tub);
     }
@@ -90,7 +86,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void ENKELAMO() {
         tilsagnDeltaker.setTiltakNavn("Opplæring AMO");
-        tilsagnDeltaker.setTiltakKode(ENKELAMO.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(ENKELAMO.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(ENKELAMO, tub);
     }
@@ -98,7 +94,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void ENKFAGYRKE() {
         tilsagnDeltaker.setTiltakNavn("Enkeltplass fag og yrkesopplæring");
-        tilsagnDeltaker.setTiltakKode(ENKFAGYRKE.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(ENKFAGYRKE.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(ENKFAGYRKE, tub);
     }
@@ -106,7 +102,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void GRUFAGYRKE() {
         tilsagnGruppe.setTiltakNavn("Gruppe fag og yrkesopplæring");
-        tilsagnGruppe.setTiltakKode(GRUFAGYRKE.getTiltakskode());
+        tilsagnGruppe.setTiltakKode(GRUFAGYRKE.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnGruppe).build();
         opprettPdf(GRUFAGYRKE, tub);
     }
@@ -114,7 +110,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void HOYEREUTD() {
         tilsagnDeltaker.setTiltakNavn("Høyere utdanning");
-        tilsagnDeltaker.setTiltakKode(HOYEREUTD.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(HOYEREUTD.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(HOYEREUTD, tub);
     }
@@ -122,7 +118,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void VARLONTIL() {
         tilsagnDeltaker.setTiltakNavn("Varig lønnstilskudd");
-        tilsagnDeltaker.setTiltakKode(VARLONTIL.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(VARLONTIL.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(VARLONTIL, tub);
     }
@@ -130,7 +126,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void VASV() {
         tilsagnGruppe.setTiltakNavn("Varig tilrettelagt arbeid");
-        tilsagnGruppe.setTiltakKode(VASV.getTiltakskode());
+        tilsagnGruppe.setTiltakKode(VASV.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnGruppe).build();
         opprettPdf(VASV, tub);
     }
@@ -138,7 +134,7 @@ public class PdfgenServiceIntTest {
     @Test
     public void VATIAROR() {
         tilsagnDeltaker.setTiltakNavn("Varig tilrettelagt arbeid i ordinær virksomhet");
-        tilsagnDeltaker.setTiltakKode(VATIAROR.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(VATIAROR.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(VATIAROR, tub);
     }
@@ -146,35 +142,33 @@ public class PdfgenServiceIntTest {
     @Test
     public void FORSAMOENK() {
         tilsagnDeltaker.setTiltakNavn("Forsøk AMO enkeltplass");
-        tilsagnDeltaker.setTiltakKode(FORSAMOENK.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(FORSAMOENK.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(FORSAMOENK, tub);
     }
     @Test
     public void FORSFAGGRU() {
         tilsagnGruppe.setTiltakNavn("Forsøk fag- og yrkesopplæring gruppe");
-        tilsagnGruppe.setTiltakKode(FORSFAGGRU.getTiltakskode());
+        tilsagnGruppe.setTiltakKode(FORSFAGGRU.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnGruppe).build();
         opprettPdf(FORSFAGGRU, tub);
     }
     @Test
     public void FORSFAGENK() {
         tilsagnDeltaker.setTiltakNavn("Forsøk fag- og yrkesopplæring enkeltplass");
-        tilsagnDeltaker.setTiltakKode(FORSFAGENK.getTiltakskode());
+        tilsagnDeltaker.setTiltakKode(FORSFAGENK.name());
         TilsagnUnderBehandling tub = TilsagnUnderBehandling.builder().tilsagn(tilsagnDeltaker).build();
         opprettPdf(FORSFAGENK, tub);
     }
 
 
     private void opprettPdf(TiltakType tiltakType, TilsagnUnderBehandling tub) {
-        String pdfJson = tilsagnJsonMapper.opprettPdfJson(tub.getTilsagnsbrevId(), tub.getTilsagn());
-        System.out.println(pdfJson);
-        pdfGenService.tilsagnsbrevTilPdfBytes(tub, pdfJson);
+        byte[] pdfBytes = pdfGenService.tilsagnsbrevTilPdfBytes(tub.getTilsagn());
 
         PDDocument pdf = null;
         try {
-            pdf = PDDocument.load(new ByteArrayInputStream(tub.getPdfAltinn()));
-            pdf.save("src/test/resources/PDF/" + tiltakType.getTiltakskode() + ".pdf");
+            pdf = PDDocument.load(new ByteArrayInputStream(pdfBytes));
+            pdf.save("src/test/resources/PDF/" + tiltakType.name() + ".pdf");
             pdf.close();
         } catch (IOException e) {
             e.printStackTrace();

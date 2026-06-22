@@ -16,7 +16,9 @@ import no.nav.tag.tilsagnsbrev.integrasjon.persondata.PersondataService;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJournalpostMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnJsonMapper;
 import no.nav.tag.tilsagnsbrev.mapper.TilsagnTilAltinnMapper;
+import no.nav.tag.tilsagnsbrev.mapper.TiltakType;
 import no.nav.team_tiltak.felles.persondata.pdl.domene.Diskresjonskode;
+import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,19 +54,16 @@ public class Oppgaver {
 
     private void opprettPdfDok(TilsagnUnderBehandling tilsagnUnderBehandling){
         Tilsagn tilsagn = tilsagnUnderBehandling.getTilsagn();
-        Integer tilsagnsbrevId = tilsagnUnderBehandling.getTilsagnsbrevId();
 
         // Altinn PDF (ingen sladding)
         if (tilsagnUnderBehandling.getPdfAltinn() == null) {
-            String pdfJsonAltinn = tilsagnJsonMapper.opprettPdfJson(tilsagnsbrevId, tilsagn);
-            byte[] altinnPdf = pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJsonAltinn);
+            byte[] altinnPdf = pdfService.tilsagnsbrevTilPdfBytes(tilsagn);
             tilsagnUnderBehandling.setPdfAltinn(altinnPdf);
         }
         // Joark/Gosys PDF (sladding av deltaker ved diskresjon)
         if (tilsagnUnderBehandling.getPdfJoark() == null) {
             Tilsagn tilsagnJoark = tilsagnUnderBehandling.getDiskresjonskode().erKode6Eller7() ? tilsagn.getSladdetVersjon() : tilsagn;
-            String pdfJsonJoark = tilsagnJsonMapper.opprettPdfJson(tilsagnsbrevId, tilsagnJoark);
-            byte[] pdfJoark = pdfService.tilsagnsbrevTilPdfBytes(tilsagnUnderBehandling, pdfJsonJoark);
+            byte[] pdfJoark = pdfService.tilsagnsbrevTilPdfBytes(tilsagnJoark);
             tilsagnUnderBehandling.setPdfJoark(pdfJoark);
         }
     }
@@ -155,11 +154,13 @@ public class Oppgaver {
         try {
             tilsagnJsonMapper.opprettTilsagn(tilsagnUnderBehandling);
 
-            if (tilsagnUnderBehandling.getTilsagn().getTiltakType().erEkspertbistand()) {
-                log.info(
-                    "Melding med tilsagnsbrev-id {} er av type ekspertbistand og er mottatt etter " +
-                    "at Team-Fager har tatt over behandling av denne typen. Avbryter videre behandling.",
-                    tilsagnUnderBehandling.getTilsagnsbrevId()
+            TiltakType tiltakType = tilsagnUnderBehandling.getTilsagn().getTiltakType();
+            if (!tiltakType.isSkalBehandles()) {
+                Level level = TiltakType.EKSPEBIST == tiltakType ? Level.INFO : Level.WARN;
+                log.atLevel(level).log(
+                    "Melding med tilsagnsbrev-id {} er av type {} og skal ikke lenger behandles.",
+                    tilsagnUnderBehandling.getTilsagnsbrevId(),
+                    tiltakType
                 );
                 return;
             }
