@@ -1,0 +1,68 @@
+name: Bygg og deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Bygg og deploy image
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/bygg.yml
+    with:
+      push-image: true
+    secrets:
+      NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+
+  deploy-dev:
+    name: Deploy til dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Sjekk ut kode
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Deploy til dev-fss
+        uses: nais/deploy/actions/deploy@30ed20fc7021e78d03ca9544b0c561d37f826296 # v3
+        env:
+          CLUSTER: dev-fss
+          RESOURCE: nais/nais.yaml,nais/alerterator.yaml
+          VARS: nais/dev-fss.json
+          VAR: image=${{ needs.build.outputs.image }}
+
+  deploy-prod:
+    name: Deploy til prod
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [build, deploy-dev]
+    if: github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Sjekk ut kode
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Deploy til prod-fss
+        uses: nais/deploy/actions/deploy@30ed20fc7021e78d03ca9544b0c561d37f826296 # v3
+        env:
+          CLUSTER: prod-fss
+          RESOURCE: nais/nais.yaml,nais/alerterator.yaml
+          VARS: nais/prod-fss.json
+          VAR: image=${{ needs.build.outputs.image }}

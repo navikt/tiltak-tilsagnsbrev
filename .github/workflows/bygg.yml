@@ -1,0 +1,52 @@
+name: Bygg
+
+on:
+  workflow_call:
+    inputs:
+      push-image:
+        type: boolean
+        required: false
+        default: false
+    secrets:
+      NAIS_WORKLOAD_IDENTITY_PROVIDER:
+        required: false
+    outputs:
+      image:
+        description: Docker-image (settes bare når push-image er true)
+        value: ${{ jobs.build.outputs.image }}
+
+jobs:
+  build:
+    name: Bygg
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
+    steps:
+      - name: Sjekk ut kode
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Oppsett Java 21
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: maven
+
+      - name: Bygg og test med Maven
+        run: mvn package -B -Dsurefire.useFile=false
+
+      - name: Bygg og push Docker-image til GAR
+        if: inputs.push-image
+        uses: nais/docker-build-push@588f76a6f45aeb1e75d5e8417ec6ef6d79b2b39f # v0
+        id: docker-build-push
+        with:
+          team: arbeidsgiver
+          byosbom: target/classes/META-INF/sbom/application.cdx.json
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
