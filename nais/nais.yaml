@@ -19,8 +19,6 @@ spec:
     path: /tiltak-tilsagnsbrev/internal/healthcheck
     initialDelay: 60
     timeout: 10
-  ingresses:
-    - {{ingress}}
   vault:
     enabled: true
     paths:
