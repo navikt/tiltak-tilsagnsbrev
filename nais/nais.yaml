@@ -12,11 +12,11 @@ spec:
     min: {{min-replicas}}
     max: {{max-replicas}}
   liveness:
-    path: /tiltak-tilsagnsbrev/internal/healthcheck
+    path: /internal/healthcheck
     initialDelay: 60
     timeout: 10
   readiness:
-    path: /tiltak-tilsagnsbrev/internal/healthcheck
+    path: /internal/healthcheck
     initialDelay: 60
     timeout: 10
   vault:
@@ -38,7 +38,7 @@ spec:
   webproxy: true
   prometheus:
     enabled: true
-    path: /tiltak-tilsagnsbrev/internal/actuator/prometheus
+    path: /internal/actuator/prometheus
   resources:
     limits:
       memory: 1024Mi
