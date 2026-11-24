@@ -23,12 +23,12 @@
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 
-		<nav-token-security.version>5.0.27</nav-token-security.version>
+		<nav-token-security.version>5.0.30</nav-token-security.version>
 		<mockito.version>5.14.2</mockito.version>
 		<byte-buddy.version>1.15.11</byte-buddy.version>
 		<logstash-logback-encoder.version>9.0</logstash-logback-encoder.version>
 		<tiltak-persondata.version>2026.04.28_07.58-d9e06b02d7f3</tiltak-persondata.version>
-		<vault-jdbc.version>1.3.10</vault-jdbc.version>
+		<vault-jdbc.version>1.4.1</vault-jdbc.version>
 		<wiremock-standalone.version>3.13.2</wiremock-standalone.version>
 		<pdfbox.version>2.0.31</pdfbox.version>
 	</properties>
